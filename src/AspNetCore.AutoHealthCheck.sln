@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2041
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck", "AspNetCore.AutoHealthCheck\AspNetCore.AutoHealthCheck.csproj", "{B2553537-A52E-49A9-A36F-C42F5D441EEA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication", "WebApplication\WebApplication.csproj", "{B90A7A1C-6652-49B7-A75A-673003E054ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2553537-A52E-49A9-A36F-C42F5D441EEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2553537-A52E-49A9-A36F-C42F5D441EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2553537-A52E-49A9-A36F-C42F5D441EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2553537-A52E-49A9-A36F-C42F5D441EEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B90A7A1C-6652-49B7-A75A-673003E054ED} = {78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64B4BA9D-729D-4F8A-BBCF-F3E3FDA7E599}
+	EndGlobalSection
+EndGlobal
