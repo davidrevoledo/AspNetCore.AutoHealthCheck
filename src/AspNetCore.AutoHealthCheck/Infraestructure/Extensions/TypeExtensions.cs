@@ -21,33 +21,30 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using System.Collections.Generic;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Route information for a single endpoint
-    /// </summary>
-    public interface IRouteInformation
+    internal static class TypeExtensions
     {
-        /// <summary>
-        ///     Http method needed to be consumed
-        /// </summary>
-        string HttpMethod { get; }
-
-        /// <summary>
-        ///     Route needed to be consumed
-        /// </summary>
-        string Path { get; }
-
-        /// <summary>
-        ///     Route template definition
-        /// </summary>
-        string RouteTemplate { get; }
-
-        /// <summary>
-        ///     Route params key and type for url replacing
-        /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
+        internal static bool IsNumericType(this Type type)
+        {
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Byte:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.Single:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }

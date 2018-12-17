@@ -44,7 +44,7 @@ namespace AspNetCore.AutoHealthCheck
         }
 
         /// <summary>
-        ///     Get all the routes infmation an asp.net core application expose
+        ///     Get routes information an asp.net core application expose
         /// </summary>
         /// <returns>collection of route information</returns>
         public IEnumerable<IRouteInformation> GetAllEndpoints()
@@ -55,22 +55,34 @@ namespace AspNetCore.AutoHealthCheck
                 //  Check if the action needs to be ignored
                 if (CheckIfRouteShouldBeIgnored(action)) continue;
 
-                var info = new RouteInformation();
+                var info = new RouteInformation
+                {
+                    RouteTemplate = action.AttributeRouteInfo?.Template
+                };
 
                 // Path and Invocation of Razor Pages
                 if (action is PageActionDescriptor pageAction)
+                {
                     info.Path = pageAction.ViewEnginePath;
+                }
 
                 // Path of Route Attribute
                 if (action.AttributeRouteInfo != null)
                 {
-                    var e = action;
-                    info.Path = $"/{e.AttributeRouteInfo.Template}";
+                    info.Path = $"/{action.AttributeRouteInfo.Template}";
                 }
 
                 // Path and Invocation of Controller/Action
-                if (action is ControllerActionDescriptor actionDescriptor && info.Path == "")
-                    info.Path = $"/{actionDescriptor.ControllerName}/{actionDescriptor.ActionName}";
+                if (action is ControllerActionDescriptor actionDescriptor)
+                {
+                    if (string.IsNullOrWhiteSpace(info.Path))
+                    {
+                        info.Path = $"/{actionDescriptor.ControllerName}/{actionDescriptor.ActionName}";
+                    }
+
+                    // complete route params for transformation
+                    CompleteRouteParams(info, actionDescriptor);
+                }
 
                 // Extract HTTP Verb
                 if (action.ActionConstraints != null)
@@ -90,6 +102,36 @@ namespace AspNetCore.AutoHealthCheck
                 }
 
                 yield return info;
+            }
+        }
+
+        private static void CompleteRouteParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
+        {
+            if (info.RouteTemplate == null)
+                return;
+
+            // if the route template does not contains { or } then the route does not have any route param
+            if (!info.RouteTemplate.Contains("{") || !info.RouteTemplate.Contains("}"))
+                return;
+
+            // get-activities{id}/done/{filter}
+
+            var methodInfo = actionDescriptor.MethodInfo;
+            var methodParams = methodInfo.GetParameters().ToList();
+
+            var splitedRoute = info.RouteTemplate.Split('{', '}');
+            foreach (var routeParam in splitedRoute)
+            {
+                if (string.IsNullOrWhiteSpace(routeParam))
+                    continue;
+
+                var param = methodParams.FirstOrDefault(p => p.Name == routeParam);
+
+                if (param == null)
+                    continue;
+
+                // add to the route information
+                info.RouteParams[routeParam] = param.ParameterType;
             }
         }
 

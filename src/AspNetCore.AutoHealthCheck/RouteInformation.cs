@@ -20,6 +20,9 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
+using System.Collections.Generic;
+
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
@@ -36,5 +39,15 @@ namespace AspNetCore.AutoHealthCheck
         ///     Route needed to be consumed
         /// </summary>
         public string Path { get; set; } = "";
+
+        /// <summary>
+        ///     Route template definition
+        /// </summary>
+        public string RouteTemplate { get; set; }
+
+        /// <summary>
+        ///     Route params key and type for url replacing
+        /// </summary>
+        public Dictionary<string, Type> RouteParams { get; set; } = new Dictionary<string, Type>();
     }
 }

@@ -39,19 +39,19 @@ namespace AspNetCore.AutoHealthCheck
     internal sealed class HealthChecker : IDisposable, IHealthChecker
     {
         private readonly IHttpClientFactory _clientFactory;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Lazy<IEnumerable<IRouteInformation>> _routes;
+        private readonly IEndpointBuilder _endpointBuilder;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private int _disposeSignaled;
 
         public HealthChecker(
             IAspNetRouteDiscover aspNetRouteDiscover,
-            IHttpContextAccessor httpContextAccessor,
-            IHttpClientFactory clientFactory)
+            IHttpClientFactory clientFactory,
+            IEndpointBuilder endpointBuilder)
         {
-            _httpContextAccessor = httpContextAccessor;
             _clientFactory = clientFactory;
+            _endpointBuilder = endpointBuilder;
             _routes = new Lazy<IEnumerable<IRouteInformation>>(aspNetRouteDiscover.GetAllEndpoints);
         }
 
@@ -82,21 +82,13 @@ namespace AspNetCore.AutoHealthCheck
             {
                 await _semaphore.WaitAsync().ConfigureAwait(false);
 
-                // get meta endpoints information
-                var httpContext = _httpContextAccessor.HttpContext;
-                var host = $@"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-
                 var client = _clientFactory.CreateClient();
                 var watcher = Stopwatch.StartNew();
 
                 var results = _routes.Value.Select(route =>
                 {
-                    var endpointUrl = $"{host}{route.Path}";
-                    var httpMethod = route.GetHttpMethod();
-
-                    var request = new HttpRequestMessage(httpMethod, endpointUrl);
-                    request.Headers.Add("Accept", "application/json");
-                    request.Headers.Add("User-Agent", "AspNetCore.AutoHealthCheck");
+                    var request = _endpointBuilder.CreateFromRoute(route)
+                        .GetRequestCall();
 
                     return client.SendAsync(request);
                 }).ToList();

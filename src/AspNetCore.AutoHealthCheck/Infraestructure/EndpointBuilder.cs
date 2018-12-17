@@ -20,34 +20,25 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Route information for a single endpoint
-    /// </summary>
-    public interface IRouteInformation
+    internal class EndpointBuilder : IEndpointBuilder
     {
-        /// <summary>
-        ///     Http method needed to be consumed
-        /// </summary>
-        string HttpMethod { get; }
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        /// <summary>
-        ///     Route needed to be consumed
-        /// </summary>
-        string Path { get; }
+        public EndpointBuilder(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
-        /// <summary>
-        ///     Route template definition
-        /// </summary>
-        string RouteTemplate { get; }
+        public Endpoint CreateFromRoute(IRouteInformation routeInformation)
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            var host = $@"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
 
-        /// <summary>
-        ///     Route params key and type for url replacing
-        /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
+            return new Endpoint(routeInformation, host);
+        }
     }
 }

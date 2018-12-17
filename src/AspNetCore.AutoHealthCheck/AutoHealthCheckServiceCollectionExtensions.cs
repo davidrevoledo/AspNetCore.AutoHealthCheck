@@ -37,6 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IAspNetRouteDiscover, AspNetRouteDiscover>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IHealthChecker, HealthChecker>();
+            services.AddSingleton<IEndpointBuilder, EndpointBuilder>();
 
             services.AddHttpClient();
 
