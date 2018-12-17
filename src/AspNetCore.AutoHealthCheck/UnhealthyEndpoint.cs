@@ -36,5 +36,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     Indicate the http status result of the endpoint who is failing
         /// </summary>
         public int HttpStatusCode { get; set; }
+
+        /// <summary>
+        ///     Indicate the http verb who was used to check the endpoint
+        /// </summary>
+        public string HttpVerb { get; internal set; }
     }
 }

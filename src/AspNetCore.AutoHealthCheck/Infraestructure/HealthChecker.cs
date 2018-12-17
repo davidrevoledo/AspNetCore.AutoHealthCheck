@@ -135,7 +135,8 @@ namespace AspNetCore.AutoHealthCheck
                     healtyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
                     {
                         HttpStatusCode = (int)result.StatusCode,
-                        Route = result.RequestMessage.RequestUri.ToString()
+                        Route = result.RequestMessage.RequestUri.ToString(),
+                        HttpVerb = result.RequestMessage.Method.Method,
                     });
                 }
             }
