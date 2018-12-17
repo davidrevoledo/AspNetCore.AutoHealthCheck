@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication.Controllers
@@ -12,11 +13,12 @@ namespace WebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            throw new Exception();
             return new string[] { "value1", "value2" };
         }
 
         [HttpGet("querystring")]
-        public ActionResult<IEnumerable<string>> GetWithQueryStrings(int? a)
+        public ActionResult<IEnumerable<string>> GetWithQueryStrings([FromQuery] int? a)
         {
             throw new Exception();
             return new string[] { "value1", "value2" };
@@ -27,16 +29,17 @@ namespace WebApplication.Controllers
         {
             throw new Exception();
             return "value";
+
         }
 
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody, Required] string value)
         {
             throw new Exception();
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody, Required] string value)
         {
             throw new Exception();
         }
@@ -45,6 +48,34 @@ namespace WebApplication.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            throw new Exception();
+        }
+
+        [HttpPut("int/{id}")]
+        public void Put(int id, [FromBody, Required] int value)
+        {
+            throw new Exception();
+        }
+
+        [HttpPut("datetime/{id}")]
+        public void Put(int id, [FromBody, Required] DateTime value)
+        {
+            throw new Exception();
+        }
+
+        [HttpPut("bruno/{id}")]
+        public void Bruno(int id, [FromBody, Required] DateTime value)
+        {
+            throw new Exception();
+        }
+
+        [HttpPut("bruno2/{id}")]
+        public IActionResult Bruno2(int id, [FromBody, Required] DateTime value)
+        {
+            if (id == 0)
+                return StatusCode(400);
+
+            throw new Exception();
         }
     }
 }

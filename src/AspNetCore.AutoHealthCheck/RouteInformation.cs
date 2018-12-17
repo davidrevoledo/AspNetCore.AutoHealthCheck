@@ -49,5 +49,11 @@ namespace AspNetCore.AutoHealthCheck
         ///     Route params key and type for url replacing
         /// </summary>
         public Dictionary<string, Type> RouteParams { get; set; } = new Dictionary<string, Type>();
+
+        /// <summary>
+        ///     Body params key and type
+        ///     Just 1 for now will be supported
+        /// </summary>
+        public Dictionary<string, Type> BodyParams { get; set; } = new Dictionary<string, Type>();
     }
 }

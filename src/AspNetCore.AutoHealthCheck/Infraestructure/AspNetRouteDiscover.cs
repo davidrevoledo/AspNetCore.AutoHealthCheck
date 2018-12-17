@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -82,6 +83,12 @@ namespace AspNetCore.AutoHealthCheck
 
                     // complete route params for transformation
                     CompleteRouteParams(info, actionDescriptor);
+
+                    // complete query strings params
+                    CompleteQueryStringParams(info, actionDescriptor);
+
+                    // complete fromBody params
+                    CompleteFromBodyParams(info, actionDescriptor);
                 }
 
                 // Extract HTTP Verb
@@ -105,7 +112,29 @@ namespace AspNetCore.AutoHealthCheck
             }
         }
 
-        private static void CompleteRouteParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
+        private void CompleteFromBodyParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
+        {
+            var methodInfo = actionDescriptor.MethodInfo;
+            var methodParams = methodInfo.GetParameters().ToList();
+
+            foreach (var param in methodParams)
+            {
+                // check if param has FromQuery or FromBody Attribute to avoid them
+                if (param.GetCustomAttributes(typeof(FromBodyAttribute), false).Any())
+                {
+                    // add to the body information and break as 1 only will be supported
+                    info.BodyParams[param.Name] = param.ParameterType;
+                    break;
+                }
+            }
+        }
+
+        private void CompleteQueryStringParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
+        {
+            // find all parameteres who don't belong to the route template and are not nullable
+        }
+
+        private static void CompleteRouteParams(IRouteInformation info, ControllerActionDescriptor actionDescriptor)
         {
             if (info.RouteTemplate == null)
                 return;
@@ -115,7 +144,6 @@ namespace AspNetCore.AutoHealthCheck
                 return;
 
             // get-activities{id}/done/{filter}
-
             var methodInfo = actionDescriptor.MethodInfo;
             var methodParams = methodInfo.GetParameters().ToList();
 
@@ -128,6 +156,11 @@ namespace AspNetCore.AutoHealthCheck
                 var param = methodParams.FirstOrDefault(p => p.Name == routeParam);
 
                 if (param == null)
+                    continue;
+
+                // check if param has FromQuery or FromBody Attribute to avoid them
+                if (param.GetCustomAttributes(typeof(FromQueryAttribute), false).Any() ||
+                    param.GetCustomAttributes(typeof(FromBodyAttribute), false).Any())
                     continue;
 
                 // add to the route information

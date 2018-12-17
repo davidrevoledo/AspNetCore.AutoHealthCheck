@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -25,7 +28,52 @@ namespace AspNetCore.AutoHealthCheck
             request.Headers.Add("Accept", "application/json"); // todo : use accept
             request.Headers.Add("User-Agent", "AspNetCore.AutoHealthCheck");
 
+
+            CompleteWithBodyRequest(request);
+
             return request;
+        }
+
+        private void CompleteWithBodyRequest(HttpRequestMessage request)
+        {
+
+            if (!_routeInformation.BodyParams.Any())
+                return;
+
+            var bodyParam = _routeInformation.BodyParams.First();
+
+            string json;
+
+            switch (bodyParam.Value)
+            {
+                case Type type when type == typeof(string):
+                    json = "\"some string\"";
+                    break;
+
+                case Type type when type == typeof(bool):
+                    json = false.ToString();
+                    break;
+
+                case Type type when type.IsNumericType():
+                    json = 0.ToString();
+                    break;
+
+                case Type type when type == typeof(DateTime):
+                    json = "\"" + DateTime.UtcNow.ToString("o") + "\"";
+                    break;
+
+                case Type type when !type.IsAbstract && type.IsClass && (bodyParam.Value.GetConstructor(Type.EmptyTypes) != null):
+
+                    var body = Activator.CreateInstance(bodyParam.Value);
+                    json = JsonConvert.SerializeObject(body);
+                    break;
+
+                // not supported Nullable objects or others
+                default:
+                    return;
+            }
+
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
         }
 
         public string GetEndpointUrl()
@@ -49,7 +97,7 @@ namespace AspNetCore.AutoHealthCheck
                 {
                     case Type type when type.IsNumericType():
                         // replace for a fake number
-                        routePath = routePath.Replace(routeSection, 1.ToString());
+                        routePath = routePath.Replace(routeSection, 0.ToString());
                         break;
 
                     case Type type when type == typeof(string) || type == typeof(char):
@@ -58,7 +106,7 @@ namespace AspNetCore.AutoHealthCheck
                         break;
 
                     case Type type when type == typeof(bool):
-                        routePath = routePath.Replace(routeSection, true.ToString());
+                        routePath = routePath.Replace(routeSection, false.ToString());
                         break;
 
                     case Type type when type == typeof(DateTime):
