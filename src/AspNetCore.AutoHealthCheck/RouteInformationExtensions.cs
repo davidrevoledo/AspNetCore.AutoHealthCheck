@@ -19,13 +19,14 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
+
 using System.Net.Http;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    public static class RouteInformationExtensions
+    internal static class RouteInformationExtensions
     {
-        public static HttpMethod GetHttpMethod(this IRouteInformation route)
+        internal static HttpMethod GetHttpMethod(this IRouteInformation route)
         {
             var method = HttpMethod.Get; // default
 

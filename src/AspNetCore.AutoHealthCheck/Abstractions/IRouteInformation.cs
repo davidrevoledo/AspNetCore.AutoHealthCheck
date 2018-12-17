@@ -22,10 +22,19 @@
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Route information for a single endpoint
+    /// </summary>
     public interface IRouteInformation
     {
+        /// <summary>
+        ///     Http method needed to be consumed
+        /// </summary>
         string HttpMethod { get; }
 
+        /// <summary>
+        ///     Route needed to be consumed
+        /// </summary>
         string Path { get; }
     }
 }

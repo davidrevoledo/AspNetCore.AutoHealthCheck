@@ -19,6 +19,7 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Discover all the endpoints that an asp.net core application expose
+    /// </summary>
     public class AspNetRouteDiscover : IAspNetRouteDiscover
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
@@ -39,6 +43,10 @@ namespace AspNetCore.AutoHealthCheck
             _actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
         }
 
+        /// <summary>
+        ///     Get all the routes infmation an asp.net core application expose
+        /// </summary>
+        /// <returns>collection of route information</returns>
         public IEnumerable<IRouteInformation> GetAllEndpoints()
         {
             var routes = _actionDescriptorCollectionProvider.ActionDescriptors.Items;

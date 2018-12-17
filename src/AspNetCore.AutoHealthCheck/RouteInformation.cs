@@ -22,9 +22,19 @@
 
 namespace AspNetCore.AutoHealthCheck
 {
-    public class RouteInformation : IRouteInformation
+    /// <summary>
+    ///     Route information for a single endpoint
+    /// </summary>
+    internal sealed class RouteInformation : IRouteInformation
     {
+        /// <summary>
+        ///     Http method needed to be consumed
+        /// </summary>
         public string HttpMethod { get; set; } = "GET";
+
+        /// <summary>
+        ///     Route needed to be consumed
+        /// </summary>
         public string Path { get; set; } = "";
     }
 }

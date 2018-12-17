@@ -19,11 +19,15 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
+
 using System;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Attribute to mark controllers or controller's methods to avoid run healthcheck over them
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AvoidAutoHealtCheckAttribute : ActionFilterAttribute
     {

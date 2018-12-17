@@ -24,12 +24,24 @@ using System.Collections.Generic;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Healt check result information
+    /// </summary>
     public class HealthyResponse
     {
+        /// <summary>
+        ///     Indicate if the check was successfully
+        /// </summary>
         public bool Success { get; set; }
 
+        /// <summary>
+        ///     Indicate the elapsed time in seconds
+        /// </summary>
         public long ElapsedSecondsTest { get; set; }
-        
+
+        /// <summary>
+        ///     Indicate the endpoints who failed
+        /// </summary>
         public List<UnhealthyEndpoint> UnhealthyEndpoints { get; set; } = new List<UnhealthyEndpoint>();
     }
 }

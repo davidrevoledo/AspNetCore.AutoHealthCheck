@@ -25,12 +25,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Healt Checker engine to run over an asp.net core application
+    /// </summary>
     public interface IHealthChecker
     {
+        /// <summary>
+        ///     Indicate if the resource was disposed
+        /// </summary>
         bool Disposed { get; set; }
 
+        /// <summary>
+        ///     Perform the health check
+        /// </summary>
+        /// <returns>Response with the test result</returns>
         Task<IActionResult> Check();
 
+        /// <summary>
+        ///     Dispose the resource
+        /// </summary>
         void Dispose();
     }
 }

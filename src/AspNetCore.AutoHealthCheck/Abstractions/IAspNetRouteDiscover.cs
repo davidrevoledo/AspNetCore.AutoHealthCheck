@@ -24,8 +24,15 @@ using System.Collections.Generic;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Discover all the endpoints that an asp.net core application expose
+    /// </summary>
     public interface IAspNetRouteDiscover
     {
+        /// <summary>
+        ///     Get all the routes infmation an asp.net core application expose
+        /// </summary>
+        /// <returns>collection of route information</returns>
         IEnumerable<IRouteInformation> GetAllEndpoints();
     }
 }

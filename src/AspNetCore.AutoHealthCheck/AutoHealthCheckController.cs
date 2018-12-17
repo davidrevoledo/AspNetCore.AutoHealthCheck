@@ -26,9 +26,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Default controller to implement healt check
+    /// </summary>
     [Route("api/autoHealthCheck")]
     [ApiController]
-    public class AutoHealthCheckController : ControllerBase
+    public sealed class AutoHealthCheckController : ControllerBase
     {
         private readonly IHealthChecker _healthChecker;
 
@@ -37,6 +40,10 @@ namespace AspNetCore.AutoHealthCheck
             _healthChecker = healthChecker;
         }
 
+        /// <summary>
+        ///     Default endpoint to process the health check
+        /// </summary>
+        /// <returns></returns>
         [AvoidAutoHealtCheck]
         [Route("")]
         [AllowAnonymous]

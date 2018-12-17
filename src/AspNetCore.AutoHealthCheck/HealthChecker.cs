@@ -33,7 +33,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    public class HealthChecker : IDisposable, IHealthChecker
+    /// <summary>
+    ///     Deafult Healt Checker engine to run over an asp.net core application
+    /// </summary>
+    internal sealed class HealthChecker : IDisposable, IHealthChecker
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -52,6 +55,9 @@ namespace AspNetCore.AutoHealthCheck
             _routes = new Lazy<IEnumerable<IRouteInformation>>(aspNetRouteDiscover.GetAllEndpoints);
         }
 
+        /// <summary>
+        ///     Dispose the resource
+        /// </summary>
         public void Dispose()
         {
             if (Interlocked.Exchange(ref _disposeSignaled, 1) != 0)
@@ -61,8 +67,15 @@ namespace AspNetCore.AutoHealthCheck
             Disposed = true;
         }
 
+        /// <summary>
+        ///     Indicate if the resource was disposed
+        /// </summary>
         public bool Disposed { get; set; }
 
+        /// <summary>
+        ///     Perform the health check
+        /// </summary>
+        /// <returns>Response with the test result</returns>
         public async Task<IActionResult> Check()
         {
             try
@@ -112,7 +125,7 @@ namespace AspNetCore.AutoHealthCheck
             };
 
             // check if all responses are out of error server range
-            if (results.All(r => !Enumerable.Range(500, 599).Contains((int) r.StatusCode)))
+            if (results.All(r => !Enumerable.Range(500, 599).Contains((int)r.StatusCode)))
             {
                 healtyResponse.Success = true;
                 testStatusCodeResult = HttpStatusCode.OK;
@@ -124,12 +137,12 @@ namespace AspNetCore.AutoHealthCheck
                 // build the unhealthy response including all the failing endpoints
                 foreach (var result in results)
                 {
-                    if (!Enumerable.Range(500, 599).Contains((int) result.StatusCode))
+                    if (!Enumerable.Range(500, 599).Contains((int)result.StatusCode))
                         continue;
 
                     healtyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
                     {
-                        HttpStatusCode = (int) result.StatusCode,
+                        HttpStatusCode = (int)result.StatusCode,
                         Route = result.RequestMessage.RequestUri.ToString()
                     });
                 }
@@ -137,7 +150,7 @@ namespace AspNetCore.AutoHealthCheck
 
             return new JsonResult(healtyResponse)
             {
-                StatusCode = (int) testStatusCodeResult
+                StatusCode = (int)testStatusCodeResult
             };
         }
     }

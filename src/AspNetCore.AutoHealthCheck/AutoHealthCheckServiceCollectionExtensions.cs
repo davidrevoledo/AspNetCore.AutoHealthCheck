@@ -27,6 +27,11 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AutoHealthCheckServiceCollectionExtensions
     {
+        /// <summary>
+        ///     Add Auto health check to the asp.net core application without configurations
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddAutoHealthCheck(this IServiceCollection services)
         {
             services.AddSingleton<IAspNetRouteDiscover, AspNetRouteDiscover>();
@@ -37,5 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
+
+        // todo : add configurations
     }
 }
