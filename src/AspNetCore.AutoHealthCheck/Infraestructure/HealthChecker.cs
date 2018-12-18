@@ -80,19 +80,23 @@ namespace AspNetCore.AutoHealthCheck
             try
             {
                 await _semaphore.WaitAsync().ConfigureAwait(false);
-
-                var client = _clientFactory.CreateClient();
                 var watcher = Stopwatch.StartNew();
+                var results = new List<Task<HttpResponseMessage>>();
 
-                var results = _routes.Value.Select(route =>
+                if (_routes.Value.Any())
                 {
-                    var request = _endpointBuilder.CreateFromRoute(route)
-                        .GetRequestCall();
+                    var client = _clientFactory.CreateClient();
 
-                    return client.SendAsync(request);
-                }).ToList();
+                    results = _routes.Value.Select(route =>
+                   {
+                       var request = _endpointBuilder.CreateFromRoute(route)
+                           .GetRequestCall();
 
-                await Task.WhenAll(results).ConfigureAwait(false);
+                       return client.SendAsync(request);
+                   }).ToList();
+
+                    await Task.WhenAll(results).ConfigureAwait(false);
+                }
 
                 // check test timing
                 watcher.Stop();
@@ -116,7 +120,7 @@ namespace AspNetCore.AutoHealthCheck
             };
 
             // check if all responses are out of error server range
-            if (results.All(r => !Enumerable.Range(500, 599).Contains((int)r.StatusCode)))
+            if (!results.Any() || results.All(r => !Enumerable.Range(500, 599).Contains((int)r.StatusCode)))
             {
                 healtyResponse.Success = true;
                 testStatusCodeResult = HttpStatusCode.OK;

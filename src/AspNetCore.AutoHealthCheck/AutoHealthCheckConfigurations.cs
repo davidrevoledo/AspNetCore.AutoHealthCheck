@@ -20,17 +20,17 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+using System.Collections.Generic;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Context for auto health check framework
-    /// </summary>
-    public class AutoHealthCheckContext
+    public class AutoHealthCheckConfigurations
     {
+        private readonly IEnumerable<string> _regexToExludeRoutes = new List<string>();
 
+        private AutoHealthCheckConfigurations()
+        {
+
+        }
     }
 }

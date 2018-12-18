@@ -20,17 +20,21 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Tests
 {
-    /// <summary>
-    ///     Context for auto health check framework
-    /// </summary>
-    public class AutoHealthCheckContext
+    public class RouteInformationTests
     {
+        [Fact]
+        public void RouteInformation_default_method_should_be_get()
+        {
+            // arrange
+            var routeInformation = new RouteInformation();
 
+            // act
+            // asserts
+            Assert.Equal("GET", routeInformation.HttpMethod);
+        }
     }
 }
