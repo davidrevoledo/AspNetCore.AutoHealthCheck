@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -28,7 +29,6 @@ namespace AspNetCore.AutoHealthCheck
             request.Headers.Add("Accept", "application/json"); // todo : use accept
             request.Headers.Add("User-Agent", "AspNetCore.AutoHealthCheck");
 
-
             CompleteWithBodyRequest(request);
 
             return request;
@@ -36,18 +36,16 @@ namespace AspNetCore.AutoHealthCheck
 
         private void CompleteWithBodyRequest(HttpRequestMessage request)
         {
-
             if (!_routeInformation.BodyParams.Any())
                 return;
 
             var bodyParam = _routeInformation.BodyParams.First();
 
             string json;
-
             switch (bodyParam.Value)
             {
-                case Type type when type == typeof(string):
-                    json = "\"some string\"";
+                case Type type when type == typeof(string) || type == typeof(char):
+                    json = "\"f\"";
                     break;
 
                 case Type type when type == typeof(bool):
@@ -63,7 +61,6 @@ namespace AspNetCore.AutoHealthCheck
                     break;
 
                 case Type type when !type.IsAbstract && type.IsClass && (bodyParam.Value.GetConstructor(Type.EmptyTypes) != null):
-
                     var body = Activator.CreateInstance(bodyParam.Value);
                     json = JsonConvert.SerializeObject(body);
                     break;
@@ -79,46 +76,86 @@ namespace AspNetCore.AutoHealthCheck
         public string GetEndpointUrl()
         {
             var routePath = $"{_host}{_routeInformation.Path}";
-
             routePath = TransformRouteParams(routePath);
 
-            return routePath;
+            var routeBuilder = new StringBuilder(routePath);
+
+            // complete query string
+            var queryValues = new Dictionary<string, string>();
+            foreach (var queryParam in _routeInformation.QueryParams)
+            {
+                var queryValueToReplace = GetDefaultJsonValue(queryParam.Value);
+
+                if (string.IsNullOrWhiteSpace(queryValueToReplace))
+                    continue;
+
+                queryValues.Add(queryParam.Key, queryValueToReplace);
+            }
+
+            var first = true;
+            foreach (var item in queryValues)
+            {
+                if (first)
+                {
+                    routeBuilder.Append('?');
+                    first = false;
+                }
+                else
+                {
+                    routeBuilder.Append('&');
+                }
+
+                routeBuilder.Append(item.Key);
+                routeBuilder.Append('=');
+                routeBuilder.Append(item.Value);
+            }
+
+            return routeBuilder.ToString();
         }
 
         private string TransformRouteParams(string routePath)
         {
-            // replace route objects
+            if (!_routeInformation.RouteParams.Any())
+                return routePath;
+
+            var routeResult = new StringBuilder(routePath);
+
             foreach (var routeParam in _routeInformation.RouteParams)
             {
                 var routeSection = $"{{{routeParam.Key}}}";
+                var routeValue = GetDefaultJsonValue(routeParam.Value);
 
-                // route params should be a primitive code
-                switch (routeParam.Value)
-                {
-                    case Type type when type.IsNumericType():
-                        // replace for a fake number
-                        routePath = routePath.Replace(routeSection, 0.ToString());
-                        break;
+                if (string.IsNullOrWhiteSpace(routeValue))
+                    continue;
 
-                    case Type type when type == typeof(string) || type == typeof(char):
-                        // replace for a fake string
-                        routePath = routePath.Replace(routeSection, "f");
-                        break;
-
-                    case Type type when type == typeof(bool):
-                        routePath = routePath.Replace(routeSection, false.ToString());
-                        break;
-
-                    case Type type when type == typeof(DateTime):
-                        var now = DateTime.UtcNow.ToString("o");
-                        routePath = routePath.Replace(routeSection, WebUtility.UrlEncode(now));
-                        break;
-
-                        // for all Nullable types then null will be the default
-                }
+                routeResult.Replace(routeSection, routeValue);
             }
 
-            return routePath;
+            return routeResult.ToString();
+        }
+
+        private static string GetDefaultJsonValue(Type valueType)
+        {
+            switch (valueType)
+            {
+                case Type type when type.IsNumericType():
+                    // replace for a fake number
+                    return 0.ToString();
+
+                case Type type when type == typeof(string) || type == typeof(char):
+                    // replace for a fake string
+                    return "f";
+
+                case Type type when type == typeof(bool):
+                    return false.ToString();
+
+                case Type type when type == typeof(DateTime):
+                    return DateTime.UtcNow.ToString("o");
+
+                // for all Nullable types then null will be the default
+                default:
+                    return string.Empty;
+            }
         }
     }
 }

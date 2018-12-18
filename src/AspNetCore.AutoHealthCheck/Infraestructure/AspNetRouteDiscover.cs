@@ -105,11 +105,11 @@ namespace AspNetCore.AutoHealthCheck
                     // complete route params for transformation
                     CompleteRouteParams(info, controllerAction);
 
-                    // complete query strings params
-                    CompleteQueryStringParams(info, controllerAction);
-
                     // complete fromBody params
                     CompleteFromBodyParams(info, controllerAction);
+
+                    // complete query strings params
+                    CompleteQueryStringParams(info, controllerAction);
                 }
 
                 yield return info;
@@ -159,6 +159,18 @@ namespace AspNetCore.AutoHealthCheck
         private static void CompleteQueryStringParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
         {
             // find all parameteres who don't belong to the route template and are not nullable
+            var methodInfo = actionDescriptor.MethodInfo;
+            var methodParams = methodInfo.GetParameters().ToList();
+            var routeConstraints = GetRouteConstraints(info).ToList();
+
+            foreach (var param in methodParams)
+            {
+                // save them all who are not body params or constraints with or without FromQuery
+                if (!routeConstraints.Contains(param.Name) && info.BodyParams.All(b => b.Key != param.Name))
+                {
+                    info.QueryParams[param.Name] = param.ParameterType;
+                }
+            }
         }
 
         private static void CompleteRouteParams(IRouteInformation info, ControllerActionDescriptor actionDescriptor)
@@ -175,7 +187,6 @@ namespace AspNetCore.AutoHealthCheck
                     continue;
 
                 var param = methodParams.FirstOrDefault(p => p.Name == routeParam);
-
                 if (param == null)
                     continue;
 
@@ -191,6 +202,9 @@ namespace AspNetCore.AutoHealthCheck
 
         private static IEnumerable<string> GetRouteConstraints(IRouteInformation info)
         {
+            if (info.RouteTemplate == null)
+                return new List<string>();
+
             // if the route template does not contains { or } then the route does not have any route param
             if (!info.RouteTemplate.Contains("{") || !info.RouteTemplate.Contains("}"))
                 return new List<string>();

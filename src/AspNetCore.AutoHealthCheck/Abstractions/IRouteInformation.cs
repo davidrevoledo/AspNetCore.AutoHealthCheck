@@ -55,5 +55,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     Just 1 for now will be supported
         /// </summary>
         Dictionary<string, Type> BodyParams { get; }
+
+        /// <summary>
+        ///     Query params key and type
+        /// </summary>
+        Dictionary<string, Type> QueryParams { get; }
     }
 }

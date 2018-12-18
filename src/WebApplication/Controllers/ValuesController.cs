@@ -48,7 +48,6 @@ namespace WebApplication.Controllers
         [HttpPut("int/{id}")]
         public void Put(int id, [FromBody, Required] int value)
         {
-            throw new Exception();
         }
 
         [HttpPut("datetime/{id}")]
@@ -61,12 +60,9 @@ namespace WebApplication.Controllers
         {
         }
 
-        [HttpPut("bruno2/{id}")]
+        [HttpGet("bruno2/{id}")]
         public IActionResult Bruno2(int id, DateTime value)
         {
-            if (id == 0)
-                return StatusCode(400);
-
             throw new Exception();
         }
     }
