@@ -35,16 +35,20 @@ namespace AspNetCore.AutoHealthCheck
             IRouteInformation info,
             ControllerActionDescriptor actionDescriptor)
         {
+            if (actionDescriptor == null)
+                return info;
+
             // find all parameteres who don't belong to the route template and are not nullable
             var methodInfo = actionDescriptor.MethodInfo;
             var methodParams = methodInfo.GetParameters().ToList();
             var routeConstraints = RoutingScraper.GetRouteConstraints(info).ToList();
 
-            bool IsAlreadyIncluded(MemberInfo requestedType)
+            bool IsAlreadyIncluded(string name)
             {
                 // save them all who are not body params or constraints with or without FromQuery
-                return routeConstraints.Contains(requestedType.Name) ||
-                       info.BodyParams.Any(b => b.Key == requestedType.Name);
+                return routeConstraints.Contains(name) ||
+                       info.BodyParams.Any(b => b.Key == name) ||
+                       info.QueryParams.Any(b => b.Key == name);
             }
 
             bool IsSupported(Type requestedType)
@@ -64,7 +68,7 @@ namespace AspNetCore.AutoHealthCheck
             foreach (var param in methodParams)
             {
                 // ignore existing ones
-                if (IsAlreadyIncluded(param.ParameterType))
+                if (IsAlreadyIncluded(param.Name))
                     continue;
 
                 var supportedType = IsSupported(param.ParameterType);
@@ -87,7 +91,7 @@ namespace AspNetCore.AutoHealthCheck
                     foreach (var property in getObjectProperties)
                     {
                         // ignore existing ones
-                        if (IsAlreadyIncluded(property.PropertyType))
+                        if (IsAlreadyIncluded(property.Name))
                             continue;
 
                         // we don't need recursivity for complex type as asp.net core does not support it

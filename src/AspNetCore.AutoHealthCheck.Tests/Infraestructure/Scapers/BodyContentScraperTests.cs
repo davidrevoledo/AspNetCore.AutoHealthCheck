@@ -71,7 +71,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Scapers
             // arrange
             var routeInformation = new RouteInformation
             {
-                RouteTemplate = "/api/{id}/test/{foo}",
+                RouteTemplate = "DoubleFromBody",
                 HttpMethod = "POST"
             };
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck.Tests.Controllers
@@ -44,6 +45,21 @@ namespace AspNetCore.AutoHealthCheck.Tests.Controllers
 
         [HttpPost("PostWithDuplicatedRouteAndBodyParam/{foo}")]
         public void PostWithDuplicatedRouteAndBodyParam([FromBody] string foo)
+        {
+        }
+
+        [HttpGet("UnsuportedQueryString")]
+        public void UnsuportedQueryString(List<string> ids)
+        {
+        }
+
+        [HttpGet("ComplexFilter")]
+        public void ComplexFilter([FromQuery] ComplexFilter filter)
+        {
+        }
+
+        [HttpGet("NestedComplexFilter")]
+        public void NestedComplexFilter([FromQuery] NestedComplexFilter filter)
         {
         }
     }
