@@ -21,5 +21,15 @@ namespace AspNetCore.AutoHealthCheck.Tests.Controllers
         public void SingleRouteParamString(string id)
         {
         }
+
+        [HttpDelete("")]
+        public void ParameterLessMethod()
+        {
+        }
+
+        [HttpPost("query/{id}/{foo}")]
+        public void FromQuery([FromQuery] string id, [FromBody] string foo)
+        {
+        }
     }
 }

@@ -26,7 +26,6 @@ namespace WebApplication.Controllers
         public ActionResult<string> Get(int id)
         {
             return "value";
-
         }
 
         [HttpPost]

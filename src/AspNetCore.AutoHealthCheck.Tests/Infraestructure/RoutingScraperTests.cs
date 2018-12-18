@@ -72,5 +72,49 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
             Assert.Equal(name, routeInformation.RouteParams.First().Key);
             Assert.Equal(type, routeInformation.RouteParams.First().Value);
         }
+
+        [Fact]
+        public void RouteScraper_should_ignore_route_constraints_if_they_are_body_or_query_params()
+        {
+            // arrange
+            var routeInformation = new RouteInformation
+            {
+                RouteTemplate = "query/{id}"
+            };
+
+            // should avoid FromQueryAttribute or FromBodyAttribute
+            var description = new ControllerActionDescriptor
+            {
+                MethodInfo = typeof(FakeController).GetMethod("FromQuery")
+            };
+
+            // act
+            RoutingScraper.CoumpleteRoutingInformation(routeInformation, description);
+
+            // assert
+            Assert.Empty(routeInformation.RouteParams);
+        }
+
+        [Fact]
+        public void RouteScraper_should_ignore_route_constraints_if_they_missing_in_method()
+        {
+            // arrange
+            var routeInformation = new RouteInformation
+            {
+                RouteTemplate = "{id}"
+            };
+
+            // should avoid FromQueryAttribute or FromBodyAttribute
+            var description = new ControllerActionDescriptor
+            {
+                MethodInfo = typeof(FakeController).GetMethod("ParameterLessMethod")
+            };
+
+            // act
+            RoutingScraper.CoumpleteRoutingInformation(routeInformation, description);
+
+            // assert
+            Assert.Empty(routeInformation.RouteParams);
+        }
     }
 }
