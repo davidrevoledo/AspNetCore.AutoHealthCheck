@@ -13,21 +13,18 @@ namespace WebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            throw new Exception();
             return new string[] { "value1", "value2" };
         }
 
         [HttpGet("querystring")]
         public ActionResult<IEnumerable<string>> GetWithQueryStrings([FromQuery] int? a)
         {
-            throw new Exception();
             return new string[] { "value1", "value2" };
         }
 
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            throw new Exception();
             return "value";
 
         }
@@ -35,20 +32,17 @@ namespace WebApplication.Controllers
         [HttpPost]
         public void Post([FromBody, Required] string value)
         {
-            throw new Exception();
         }
 
         [HttpPut("{id}")]
         public void Put(int id, [FromBody, Required] string value)
         {
-            throw new Exception();
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            throw new Exception();
         }
 
         [HttpPut("int/{id}")]
@@ -60,17 +54,15 @@ namespace WebApplication.Controllers
         [HttpPut("datetime/{id}")]
         public void Put(int id, [FromBody, Required] DateTime value)
         {
-            throw new Exception();
         }
 
         [HttpPut("bruno/{id}")]
         public void Bruno(int id, [FromBody, Required] DateTime value)
         {
-            throw new Exception();
         }
 
         [HttpPut("bruno2/{id}")]
-        public IActionResult Bruno2(int id, [FromBody, Required] DateTime value)
+        public IActionResult Bruno2(int id, DateTime value)
         {
             if (id == 0)
                 return StatusCode(400);

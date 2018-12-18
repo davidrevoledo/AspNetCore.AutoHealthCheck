@@ -80,15 +80,6 @@ namespace AspNetCore.AutoHealthCheck
                     {
                         info.Path = $"/{actionDescriptor.ControllerName}/{actionDescriptor.ActionName}";
                     }
-
-                    // complete route params for transformation
-                    CompleteRouteParams(info, actionDescriptor);
-
-                    // complete query strings params
-                    CompleteQueryStringParams(info, actionDescriptor);
-
-                    // complete fromBody params
-                    CompleteFromBodyParams(info, actionDescriptor);
                 }
 
                 // Extract HTTP Verb
@@ -108,28 +99,64 @@ namespace AspNetCore.AutoHealthCheck
                     }
                 }
 
+                //  when need to update this after the http completition 
+                if (action is ControllerActionDescriptor controllerAction)
+                {
+                    // complete route params for transformation
+                    CompleteRouteParams(info, controllerAction);
+
+                    // complete query strings params
+                    CompleteQueryStringParams(info, controllerAction);
+
+                    // complete fromBody params
+                    CompleteFromBodyParams(info, controllerAction);
+                }
+
                 yield return info;
             }
         }
 
-        private void CompleteFromBodyParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
+        private static void CompleteFromBodyParams(IRouteInformation info, ControllerActionDescriptor actionDescriptor)
         {
+            // avoid get and delete methods
+            if (info.HttpMethod == "GET" || info.HttpMethod == "DELETE")
+                return;
+
             var methodInfo = actionDescriptor.MethodInfo;
             var methodParams = methodInfo.GetParameters().ToList();
 
+            // first check if there is any param marked as body to give it more priority
             foreach (var param in methodParams)
             {
                 // check if param has FromQuery or FromBody Attribute to avoid them
                 if (param.GetCustomAttributes(typeof(FromBodyAttribute), false).Any())
                 {
-                    // add to the body information and break as 1 only will be supported
+                    info.BodyParams[param.Name] = param.ParameterType;
+                    break;
+                }
+            }
+
+            // only 1 will be supported for now
+            if (info.BodyParams.Any())
+                return;
+
+            // now check if there is params not marked as body who does not belong to the route constraint 
+            // part of the route.
+            // this is done because Asp.Net Core support getting object with HttPost without marking them with [FromBody]
+            var routeConstraints = GetRouteConstraints(info).ToList();
+
+            foreach (var param in methodParams)
+            {
+                // it will take the first one always
+                if (!routeConstraints.Contains(param.Name))
+                {
                     info.BodyParams[param.Name] = param.ParameterType;
                     break;
                 }
             }
         }
 
-        private void CompleteQueryStringParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
+        private static void CompleteQueryStringParams(RouteInformation info, ControllerActionDescriptor actionDescriptor)
         {
             // find all parameteres who don't belong to the route template and are not nullable
         }
@@ -139,16 +166,10 @@ namespace AspNetCore.AutoHealthCheck
             if (info.RouteTemplate == null)
                 return;
 
-            // if the route template does not contains { or } then the route does not have any route param
-            if (!info.RouteTemplate.Contains("{") || !info.RouteTemplate.Contains("}"))
-                return;
-
-            // get-activities{id}/done/{filter}
             var methodInfo = actionDescriptor.MethodInfo;
             var methodParams = methodInfo.GetParameters().ToList();
 
-            var splitedRoute = info.RouteTemplate.Split('{', '}');
-            foreach (var routeParam in splitedRoute)
+            foreach (var routeParam in GetRouteConstraints(info))
             {
                 if (string.IsNullOrWhiteSpace(routeParam))
                     continue;
@@ -166,6 +187,15 @@ namespace AspNetCore.AutoHealthCheck
                 // add to the route information
                 info.RouteParams[routeParam] = param.ParameterType;
             }
+        }
+
+        private static IEnumerable<string> GetRouteConstraints(IRouteInformation info)
+        {
+            // if the route template does not contains { or } then the route does not have any route param
+            if (!info.RouteTemplate.Contains("{") || !info.RouteTemplate.Contains("}"))
+                return new List<string>();
+
+            return info.RouteTemplate.Split('{', '}');
         }
 
         private static bool CheckIfRouteShouldBeIgnored(ActionDescriptor action)
