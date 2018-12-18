@@ -43,16 +43,16 @@ namespace AspNetCore.AutoHealthCheck
                 .Where(c => !string.IsNullOrWhiteSpace(c) && !c.Contains("/"));
         }
 
-        public static void CoumpleteRoutingInformation(
+        public static IRouteInformation CoumpleteRoutingInformation(
             IRouteInformation info,
             ControllerActionDescriptor actionDescriptor)
         {
             if (info.RouteTemplate == null || actionDescriptor == null)
-                return;
+                return info;
 
             var routeConstraints = GetRouteConstraints(info).ToList();
             if (!routeConstraints.Any())
-                return;
+                return info;
 
             var methodInfo = actionDescriptor.MethodInfo;
             var methodParams = methodInfo.GetParameters().ToList();
@@ -70,6 +70,8 @@ namespace AspNetCore.AutoHealthCheck
                 // add to the route information
                 info.RouteParams[routeParam] = param.ParameterType;
             }
+
+            return info;
         }
     }
 }

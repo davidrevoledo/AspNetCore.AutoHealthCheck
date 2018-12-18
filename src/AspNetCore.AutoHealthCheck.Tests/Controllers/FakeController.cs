@@ -31,5 +31,20 @@ namespace AspNetCore.AutoHealthCheck.Tests.Controllers
         public void FromQuery([FromQuery] string id, [FromBody] string foo)
         {
         }
+
+        [HttpPost("doubleFromBody")]
+        public void DoubleFromBody([FromBody] int id, [FromBody] string foo)
+        {
+        }
+
+        [HttpPost("postWithoutFromBody")]
+        public void PostWithOutFromBody(string foo)
+        {
+        }
+
+        [HttpPost("PostWithDuplicatedRouteAndBodyParam/{foo}")]
+        public void PostWithDuplicatedRouteAndBodyParam([FromBody] string foo)
+        {
+        }
     }
 }
