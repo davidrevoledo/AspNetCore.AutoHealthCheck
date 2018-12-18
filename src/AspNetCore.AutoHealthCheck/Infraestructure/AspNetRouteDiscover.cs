@@ -104,7 +104,7 @@ namespace AspNetCore.AutoHealthCheck
                 if (action is ControllerActionDescriptor controllerAction)
                 {
                     // complete route params for transformation
-                    CompleteRouteParams(info, controllerAction);
+                    RoutingScraper.CoumpleteRoutingInformation(info, controllerAction);
 
                     // complete fromBody params
                     CompleteFromBodyParams(info, controllerAction);
@@ -144,7 +144,7 @@ namespace AspNetCore.AutoHealthCheck
             // now check if there is params not marked as body who does not belong to the route constraint 
             // part of the route.
             // this is done because Asp.Net Core support getting object with HttPost without marking them with [FromBody]
-            var routeConstraints = GetRouteConstraints(info).ToList();
+            var routeConstraints = RoutingScraper.GetRouteConstraints(info).ToList();
 
             foreach (var param in methodParams)
             {
@@ -162,7 +162,7 @@ namespace AspNetCore.AutoHealthCheck
             // find all parameteres who don't belong to the route template and are not nullable
             var methodInfo = actionDescriptor.MethodInfo;
             var methodParams = methodInfo.GetParameters().ToList();
-            var routeConstraints = GetRouteConstraints(info).ToList();
+            var routeConstraints = RoutingScraper.GetRouteConstraints(info).ToList();
 
             bool IsAlreadyIncluded(MemberInfo requestedType)
             {
@@ -220,44 +220,6 @@ namespace AspNetCore.AutoHealthCheck
                     }
                 }
             }
-        }
-
-        private static void CompleteRouteParams(IRouteInformation info, ControllerActionDescriptor actionDescriptor)
-        {
-            if (info.RouteTemplate == null)
-                return;
-
-            var methodInfo = actionDescriptor.MethodInfo;
-            var methodParams = methodInfo.GetParameters().ToList();
-
-            foreach (var routeParam in GetRouteConstraints(info))
-            {
-                if (string.IsNullOrWhiteSpace(routeParam))
-                    continue;
-
-                var param = methodParams.FirstOrDefault(p => p.Name == routeParam);
-                if (param == null)
-                    continue;
-
-                // check if param has FromQuery or FromBody Attribute to avoid them
-                if (param.ContainsAttribute<FromQueryAttribute>() || param.ContainsAttribute<FromBodyAttribute>())
-                    continue;
-
-                // add to the route information
-                info.RouteParams[routeParam] = param.ParameterType;
-            }
-        }
-
-        private static IEnumerable<string> GetRouteConstraints(IRouteInformation info)
-        {
-            if (info.RouteTemplate == null)
-                return new List<string>();
-
-            // if the route template does not contains { or } then the route does not have any route param
-            if (!info.RouteTemplate.Contains("{") || !info.RouteTemplate.Contains("}"))
-                return new List<string>();
-
-            return info.RouteTemplate.Split('{', '}');
         }
 
         private static bool CheckIfRouteShouldBeIgnored(ActionDescriptor action)
