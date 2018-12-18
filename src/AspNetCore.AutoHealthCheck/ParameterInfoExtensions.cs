@@ -21,35 +21,22 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    internal static class TypeExtensions
+    internal static class ParameterInfoExtensions
     {
-        internal static bool SupportParameterLessConstructor(this Type type)
+        internal static bool ContainsAttribute<T>(this ParameterInfo param)
+            where T : Attribute
         {
-            return type.GetConstructor(Type.EmptyTypes) != null;
+            return ContainsAttribute(param, typeof(T));
         }
 
-        internal static bool IsNumericType(this Type type)
+        internal static bool ContainsAttribute(this ParameterInfo param, Type type)
         {
-            switch (Type.GetTypeCode(type))
-            {
-                case TypeCode.Byte:
-                case TypeCode.SByte:
-                case TypeCode.UInt16:
-                case TypeCode.UInt32:
-                case TypeCode.UInt64:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Single:
-                    return true;
-                default:
-                    return false;
-            }
+            return param.GetCustomAttributes(type, false).Any();
         }
     }
 }

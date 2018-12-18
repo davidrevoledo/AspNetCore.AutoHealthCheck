@@ -60,7 +60,7 @@ namespace AspNetCore.AutoHealthCheck
                     json = "\"" + DateTime.UtcNow.ToString("o") + "\"";
                     break;
 
-                case Type type when !type.IsAbstract && type.IsClass && (bodyParam.Value.GetConstructor(Type.EmptyTypes) != null):
+                case Type type when !type.IsAbstract && type.IsClass && bodyParam.Value.SupportParameterLessConstructor():
                     var body = Activator.CreateInstance(bodyParam.Value);
                     json = JsonConvert.SerializeObject(body);
                     break;
@@ -89,7 +89,7 @@ namespace AspNetCore.AutoHealthCheck
                 if (string.IsNullOrWhiteSpace(queryValueToReplace))
                     continue;
 
-                queryValues.Add(queryParam.Key, queryValueToReplace);
+                queryValues.Add(queryParam.Key, WebUtility.UrlEncode(queryValueToReplace));
             }
 
             var first = true;

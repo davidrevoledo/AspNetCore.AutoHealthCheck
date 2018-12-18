@@ -55,15 +55,19 @@ namespace WebApplication.Controllers
         {
         }
 
-        [HttpPut("bruno/{id}")]
-        public void Bruno(int id, [FromBody, Required] DateTime value)
-        {
-        }
-
-        [HttpGet("bruno2/{id}")]
-        public IActionResult Bruno2(int id, DateTime value)
+        [HttpGet("complexGet/{id}")]
+        public IActionResult Bruno2(int id, [FromQuery] ComplexGetParam param)
         {
             throw new Exception();
         }
+    }
+
+    public class ComplexGetParam
+    {
+        public DateTime DateTime { get; set; }
+
+        public string Value { get; set; }
+
+        public int Number { get; set; }
     }
 }
