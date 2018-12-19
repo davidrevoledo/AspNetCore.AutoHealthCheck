@@ -36,7 +36,6 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
             {
                 Path = "/api/get",
                 HttpMethod = "GET"
-
             }, "https://www.microsoft.com");
 
             // act
@@ -57,7 +56,6 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
             {
                 Path = "api/get",
                 HttpMethod = "GET"
-
             }, "https://www.microsoft.com");
 
             // act

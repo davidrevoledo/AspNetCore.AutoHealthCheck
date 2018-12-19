@@ -60,13 +60,4 @@ namespace WebApplication.Controllers
             throw new Exception();
         }
     }
-
-    public class ComplexGetParam
-    {
-        public DateTime DateTime { get; set; }
-
-        public string Value { get; set; }
-
-        public int Number { get; set; }
-    }
 }

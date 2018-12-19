@@ -2,8 +2,13 @@
 
 namespace AspNetCore.AutoHealthCheck.Tests.Controllers
 {
-    public class ComplexFilter
+    public class NestedComplexFilter
     {
+        public class SubItem
+        {
+            public string Foo { get; set; }
+        }
+
         public string Name { get; set; }
 
         public int Id { get; set; }
