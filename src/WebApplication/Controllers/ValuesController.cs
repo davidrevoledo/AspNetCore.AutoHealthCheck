@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication.Controllers
@@ -56,6 +57,13 @@ namespace WebApplication.Controllers
 
         [HttpGet("complexGet/{id}")]
         public IActionResult ComplexGet(int id, [FromQuery] ComplexGetParam param)
+        {
+            //throw new Exception();
+            return Ok();
+        }
+
+        [HttpPost("array")]
+        public IActionResult ComplexGet(List<ComplexGetParam> array)
         {
             throw new Exception();
         }
