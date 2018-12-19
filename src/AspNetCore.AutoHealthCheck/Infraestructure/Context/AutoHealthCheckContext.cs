@@ -37,6 +37,11 @@ namespace AspNetCore.AutoHealthCheck
 
         }
 
+        internal AutoHealthCheckContext(IAutoHealthCheckConfigurations configurations)
+        {
+            Configurations = configurations;
+        }
+
         /// <summary>
         ///     Configurations
         /// </summary>

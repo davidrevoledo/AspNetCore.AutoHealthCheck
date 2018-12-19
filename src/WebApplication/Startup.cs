@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Net;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,10 @@ namespace WebApplication
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddAutoHealthCheck();
+            services.AddAutoHealthCheck(configurations =>
+                {
+                    configurations.DefaultUnHealthyResponseCode = HttpStatusCode.Accepted;
+                });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

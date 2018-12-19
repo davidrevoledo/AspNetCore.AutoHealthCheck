@@ -29,8 +29,17 @@ namespace AspNetCore.AutoHealthCheck
     /// </summary>
     internal class AutoHealthCheckContextAccesor : IAutoHealthCheckContextAccesor
     {
-        private static readonly Lazy<IAutoHealthCheckContext> _currentContext =
-            new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext());
+        private readonly Lazy<IAutoHealthCheckContext> _currentContext;
+
+        internal AutoHealthCheckContextAccesor()
+        {
+            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext());
+        }
+
+        public AutoHealthCheckContextAccesor(IAutoHealthCheckConfigurations configurations)
+        {
+            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext(configurations));
+        }
 
         /// <summary>
         ///     Current context

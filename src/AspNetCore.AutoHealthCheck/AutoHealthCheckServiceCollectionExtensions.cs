@@ -20,6 +20,7 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using AspNetCore.AutoHealthCheck;
 using AspNetCore.AutoHealthCheck.Extensibility;
 using Microsoft.AspNetCore.Http;
@@ -32,23 +33,36 @@ namespace Microsoft.Extensions.DependencyInjection
         ///     Add Auto health check to the asp.net core application without configurations
         /// </summary>
         /// <param name="services"></param>
+        /// <param name="configurationsBuilder">configurations</param>
         /// <returns></returns>
-        public static IServiceCollection AddAutoHealthCheck(this IServiceCollection services)
+        public static IServiceCollection AddAutoHealthCheck(
+            this IServiceCollection services,
+            Action<AutoHealthCheckConfigurations> configurationsBuilder = null)
         {
             services.AddSingleton<IRouteDiscover, RouteDiscover>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IHealthChecker, HealthChecker>();
             services.AddSingleton<IEndpointBuilder, EndpointBuilder>();
-            services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
             services.AddSingleton<IInternalRouteInformationEvaluator, InternalRouteInformationEvaluator>();
             services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
             services.AddSingleton<IEndpointMessageTranslator, EndpointMessageTranslator>();
+
+            if (configurationsBuilder == null)
+            {
+                services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
+            }
+            else
+            {
+                // register accessor with user custom configurations
+                var defaultConfigurations = new AutoHealthCheckConfigurations();
+                configurationsBuilder.Invoke(defaultConfigurations);
+                var accesor = new AutoHealthCheckContextAccesor(defaultConfigurations);
+                services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
+            }
 
             services.AddHttpClient();
 
             return services;
         }
-
-        // todo : add configurations
     }
 }
