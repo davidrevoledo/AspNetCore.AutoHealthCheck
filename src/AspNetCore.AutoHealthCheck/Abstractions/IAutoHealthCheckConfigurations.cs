@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 
@@ -31,36 +30,29 @@ namespace AspNetCore.AutoHealthCheck
     /// <summary>
     ///     Auto health check configurations
     /// </summary>
-    public class AutoHealthCheckConfigurations : IAutoHealthCheckConfigurations
+    public interface IAutoHealthCheckConfigurations
     {
-        internal AutoHealthCheckConfigurations()
-        {
-            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int)s.StatusCode);
-            DefaultUnHealthyResponseCode = HttpStatusCode.InternalServerError;
-            DefaultHealthyResponseCode = HttpStatusCode.OK;
-        }
-
-        /// <summary>
-        ///     Regex to exclude routes
-        ///     Each regex here will be evaluated foreach route to avoid them to be checked
-        /// </summary>
-        public List<string> RegexToExludeRoutes { get; set; } = new List<string>();
-
         /// <summary>
         ///     Pass check rule to determine if a response is
         ///     Whit this method each endoint will be evaluated if the result was excpeted
         ///     Deafault is status code should be out from 500-599 range (Internal Server Errors)
         /// </summary>
-        public Func<HttpResponseMessage, bool> PassCheckRule { get; set; }
+        Func<HttpResponseMessage, bool> PassCheckRule { get; }
+
+        /// <summary>
+        ///     Regex to exclude routes
+        ///     Each regex here will be evaluated foreach route to avoid them to be checked
+        /// </summary>
+        List<string> RegexToExludeRoutes { get; }
 
         /// <summary>
         ///     Default http code to return when an endpoint fail default 500
         /// </summary>
-        public HttpStatusCode DefaultUnHealthyResponseCode { get; set; }
+        HttpStatusCode DefaultUnHealthyResponseCode { get; }
 
         /// <summary>
         ///     Default http code to return when all the endpoint are ok default 200
         /// </summary>
-        public HttpStatusCode DefaultHealthyResponseCode { get; set; }
+        HttpStatusCode DefaultHealthyResponseCode { get; }
     }
 }

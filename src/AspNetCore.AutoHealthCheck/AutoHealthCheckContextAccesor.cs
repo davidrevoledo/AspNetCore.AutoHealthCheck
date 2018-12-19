@@ -20,31 +20,21 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using AspNetCore.AutoHealthCheck;
-using Microsoft.AspNetCore.Http;
+using System;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace AspNetCore.AutoHealthCheck
 {
-    public static class AutoHealthCheckServiceCollectionExtensions
+    /// <summary>
+    ///     Context accesor
+    /// </summary>
+    internal class AutoHealthCheckContextAccesor : IAutoHealthCheckContextAccesor
     {
+        private static readonly Lazy<IAutoHealthCheckContext> _currentContext =
+            new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext());
+
         /// <summary>
-        ///     Add Auto health check to the asp.net core application without configurations
+        ///     Current context
         /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddAutoHealthCheck(this IServiceCollection services)
-        {
-            services.AddSingleton<IAspNetRouteDiscover, AspNetRouteDiscover>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IHealthChecker, HealthChecker>();
-            services.AddSingleton<IEndpointBuilder, EndpointBuilder>();
-            services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
-
-            services.AddHttpClient();
-
-            return services;
-        }
-
-        // todo : add configurations
+        public IAutoHealthCheckContext Context => _currentContext.Value;
     }
 }

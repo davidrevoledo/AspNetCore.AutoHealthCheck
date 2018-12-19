@@ -20,31 +20,16 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using AspNetCore.AutoHealthCheck;
-using Microsoft.AspNetCore.Http;
-
-namespace Microsoft.Extensions.DependencyInjection
+namespace AspNetCore.AutoHealthCheck
 {
-    public static class AutoHealthCheckServiceCollectionExtensions
+    /// <summary>
+    ///     Context for auto health check framework
+    /// </summary>
+    public interface IAutoHealthCheckContext
     {
         /// <summary>
-        ///     Add Auto health check to the asp.net core application without configurations
+        ///     Configurations
         /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddAutoHealthCheck(this IServiceCollection services)
-        {
-            services.AddSingleton<IAspNetRouteDiscover, AspNetRouteDiscover>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<IHealthChecker, HealthChecker>();
-            services.AddSingleton<IEndpointBuilder, EndpointBuilder>();
-            services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
-
-            services.AddHttpClient();
-
-            return services;
-        }
-
-        // todo : add configurations
+        IAutoHealthCheckConfigurations Configurations { get; }
     }
 }

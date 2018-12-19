@@ -41,16 +41,19 @@ namespace AspNetCore.AutoHealthCheck
         private readonly Lazy<IEnumerable<IRouteInformation>> _routes;
         private readonly IEndpointBuilder _endpointBuilder;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
 
         private int _disposeSignaled;
 
         public HealthChecker(
             IAspNetRouteDiscover aspNetRouteDiscover,
             IHttpClientFactory clientFactory,
-            IEndpointBuilder endpointBuilder)
+            IEndpointBuilder endpointBuilder,
+            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
         {
             _clientFactory = clientFactory;
             _endpointBuilder = endpointBuilder;
+            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
             _routes = new Lazy<IEnumerable<IRouteInformation>>(aspNetRouteDiscover.GetAllEndpoints);
         }
 
@@ -102,52 +105,13 @@ namespace AspNetCore.AutoHealthCheck
                 watcher.Stop();
 
                 // at this point task is finished
-                return ReturnCheckResult(watcher, results.Select(r => r.Result).ToArray());
+                var currentContext = _autoHealthCheckContextAccesor.Context;
+                return HealtCheckResultProcessor.ProcessResult(currentContext, watcher, results.Select(r => r.Result).ToArray());
             }
             finally
             {
                 _semaphore.Release();
             }
-        }
-
-        private static IActionResult ReturnCheckResult(Stopwatch watcher, HttpResponseMessage[] results)
-        {
-            HttpStatusCode testStatusCodeResult;
-
-            var healtyResponse = new HealthyResponse
-            {
-                ElapsedSecondsTest = watcher.ElapsedMilliseconds / 1000
-            };
-
-            // check if all responses are out of error server range
-            if (!results.Any() || results.All(r => !Enumerable.Range(500, 599).Contains((int)r.StatusCode)))
-            {
-                healtyResponse.Success = true;
-                testStatusCodeResult = HttpStatusCode.OK;
-            }
-            else
-            {
-                testStatusCodeResult = HttpStatusCode.InternalServerError;
-
-                // build the unhealthy response including all the failing endpoints
-                foreach (var result in results)
-                {
-                    if (!Enumerable.Range(500, 599).Contains((int)result.StatusCode))
-                        continue;
-
-                    healtyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
-                    {
-                        HttpStatusCode = (int)result.StatusCode,
-                        Route = result.RequestMessage.RequestUri.ToString(),
-                        HttpVerb = result.RequestMessage.Method.Method,
-                    });
-                }
-            }
-
-            return new JsonResult(healtyResponse)
-            {
-                StatusCode = (int)testStatusCodeResult
-            };
         }
     }
 }

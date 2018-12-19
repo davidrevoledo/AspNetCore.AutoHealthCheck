@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Runtime.CompilerServices;
+
 [assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
@@ -29,8 +30,16 @@ namespace AspNetCore.AutoHealthCheck
     /// <summary>
     ///     Context for auto health check framework
     /// </summary>
-    public class AutoHealthCheckContext
+    internal class AutoHealthCheckContext : IAutoHealthCheckContext
     {
+        internal AutoHealthCheckContext()
+        {
 
+        }
+
+        /// <summary>
+        ///     Configurations
+        /// </summary>
+        public virtual IAutoHealthCheckConfigurations Configurations { get; } = new AutoHealthCheckConfigurations();
     }
 }

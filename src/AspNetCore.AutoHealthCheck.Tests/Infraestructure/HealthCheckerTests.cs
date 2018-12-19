@@ -37,9 +37,13 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
             // arrange
             var dicover = new Mock<IAspNetRouteDiscover>();
             var httpclientFactory = new Mock<IHttpClientFactory>();
+            var contextAccesor = new Mock<IAutoHealthCheckContextAccesor>();
             var endpointBuilder = new Mock<IEndpointBuilder>();
 
-            var checker = new HealthChecker(dicover.Object, httpclientFactory.Object, endpointBuilder.Object);
+            contextAccesor.Setup(c => c.Context)
+                .Returns(new AutoHealthCheckContext());
+
+            var checker = new HealthChecker(dicover.Object, httpclientFactory.Object, endpointBuilder.Object, contextAccesor.Object);
 
             dicover.Setup(c => c.GetAllEndpoints())
                 .Returns(new List<RouteInformation>());
