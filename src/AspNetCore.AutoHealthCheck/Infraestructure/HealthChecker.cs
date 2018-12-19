@@ -38,25 +38,25 @@ namespace AspNetCore.AutoHealthCheck
     internal sealed class HealthChecker : IDisposable, IHealthChecker
     {
         private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
-        private readonly IHttpClientFactory _clientFactory;
         private readonly IEndpointBuilder _endpointBuilder;
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
         private readonly AsyncLazy<IEnumerable<IRouteInformation>> _routesFactory;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private readonly IEndpointCaller _endpointCaller;
 
         private int _disposeSignaled;
 
         public HealthChecker(
             IRouteDiscover aspNetRouteDiscover,
-            IHttpClientFactory clientFactory,
             IEndpointBuilder endpointBuilder,
             IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
-            IEndpointMessageTranslator endpointMessageTranslator)
+            IEndpointMessageTranslator endpointMessageTranslator, 
+            IEndpointCaller endpointCaller)
         {
-            _clientFactory = clientFactory;
             _endpointBuilder = endpointBuilder;
             _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
             _endpointMessageTranslator = endpointMessageTranslator;
+            _endpointCaller = endpointCaller;
 
             // route async
             _routesFactory = new AsyncLazy<IEnumerable<IRouteInformation>>(() => aspNetRouteDiscover.GetAllEndpoints());
@@ -96,8 +96,6 @@ namespace AspNetCore.AutoHealthCheck
 
                 if (routeInformations.Any())
                 {
-                    var client = _clientFactory.CreateClient();
-
                     // procecess in paraller
                     foreach (var route in routeInformations.AsParallel()
                         .WithMergeOptions(ParallelMergeOptions.FullyBuffered))
@@ -106,7 +104,7 @@ namespace AspNetCore.AutoHealthCheck
                         var message = await _endpointMessageTranslator.Transform(endpoint).ConfigureAwait(false);
 
                         // call endpoint
-                        var result = await client.SendAsync(message).ConfigureAwait(false);
+                        var result = await _endpointCaller.Send(message).ConfigureAwait(false);
                         results.Add(result);
                     }
                 }

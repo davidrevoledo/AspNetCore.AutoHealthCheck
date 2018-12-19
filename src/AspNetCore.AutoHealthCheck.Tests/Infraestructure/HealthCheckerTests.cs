@@ -21,8 +21,6 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -37,20 +35,20 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
         {
             // arrange
             var dicover = new Mock<IRouteDiscover>();
-            var httpclientFactory = new Mock<IHttpClientFactory>();
             var contextAccesor = new Mock<IAutoHealthCheckContextAccesor>();
             var endpointBuilder = new Mock<IEndpointBuilder>();
             var endpointTranslator = new Mock<IEndpointMessageTranslator>();
+            var endpointCaller = new Mock<IEndpointCaller>();
 
             contextAccesor.Setup(c => c.Context)
                 .Returns(new AutoHealthCheckContext());
 
             var checker = new HealthChecker(
                 dicover.Object,
-                httpclientFactory.Object,
                 endpointBuilder.Object,
                 contextAccesor.Object,
-                endpointTranslator.Object);
+                endpointTranslator.Object,
+                endpointCaller.Object);
 
             dicover.Setup(c => c.GetAllEndpoints())
                 .Returns(() =>

@@ -46,6 +46,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IInternalRouteInformationEvaluator, InternalRouteInformationEvaluator>();
             services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
             services.AddSingleton<IEndpointMessageTranslator, EndpointMessageTranslator>();
+            services.AddSingleton<IEndpointCaller, EndpointCaller>();
 
             if (configurationsBuilder == null)
             {
