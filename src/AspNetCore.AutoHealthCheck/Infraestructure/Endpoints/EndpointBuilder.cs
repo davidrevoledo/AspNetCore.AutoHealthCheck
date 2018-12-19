@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.AutoHealthCheck
@@ -42,14 +43,15 @@ namespace AspNetCore.AutoHealthCheck
         /// </summary>
         /// <param name="routeInformation">route information</param>
         /// <returns>endpoint definition</returns>
-        public IEndpoint CreateFromRoute(IRouteInformation routeInformation)
+        public Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation)
         {
             if (routeInformation == null) throw new ArgumentNullException(nameof(routeInformation));
 
             var httpContext = _httpContextAccessor.HttpContext;
             var host = $@"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
 
-            return new Endpoint(routeInformation, host);
+            IEndpoint endpoint = new Endpoint(routeInformation, host);
+            return Task.FromResult(endpoint);
         }
     }
 }

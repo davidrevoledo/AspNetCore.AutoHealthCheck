@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace AspNetCore.AutoHealthCheck
@@ -40,7 +41,7 @@ namespace AspNetCore.AutoHealthCheck
         /// </summary>
         /// <param name="endpoint">endpoint information</param>
         /// <returns>Http request to call the endpoint</returns>
-        public HttpRequestMessage Transform(IEndpoint endpoint)
+        public Task<HttpRequestMessage> Transform(IEndpoint endpoint)
         {
             var httpMethod = endpoint.RouteInformation.GetHttpMethod();
             var endpointUrl = GetEndpointUrl(endpoint);
@@ -53,7 +54,7 @@ namespace AspNetCore.AutoHealthCheck
             request.Headers.Add("Accept", "application/json");
 
             CompleteWithBodyRequest(endpoint, request);
-            return request;
+            return Task.FromResult(request);
         }
 
         private static void CompleteWithBodyRequest(IEndpoint endpoint, HttpRequestMessage request)

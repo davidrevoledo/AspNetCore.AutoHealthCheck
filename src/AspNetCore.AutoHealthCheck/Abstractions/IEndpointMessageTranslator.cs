@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -34,6 +35,6 @@ namespace AspNetCore.AutoHealthCheck
         /// </summary>
         /// <param name="endpoint">endpoint information</param>
         /// <returns>Http request to call the endpoint</returns>
-        HttpRequestMessage Transform(IEndpoint endpoint);
+        Task<HttpRequestMessage> Transform(IEndpoint endpoint);
     }
 }

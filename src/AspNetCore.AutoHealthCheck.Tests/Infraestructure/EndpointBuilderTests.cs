@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Xunit;
@@ -30,7 +31,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
     public class EndpointBuilderTests
     {
         [Fact]
-        public void EndpointBuilder_should_fail_if_route_is_null()
+        public async Task EndpointBuilder_should_fail_if_route_is_null()
         {
             // arrange
             var context = new Mock<IHttpContextAccessor>();
@@ -41,11 +42,11 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
 
             // act
             // assert
-            Assert.Throws<ArgumentNullException>(() => builder.CreateFromRoute(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => builder.CreateFromRoute(null));
         }
 
         [Fact]
-        public void EndpointBuilder_should_return_endpoint()
+        public async Task EndpointBuilder_should_return_endpoint()
         {
             // arrange
             var context = new Mock<IHttpContextAccessor>();
@@ -55,7 +56,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
                 .Returns(new DefaultHttpContext());
 
             // act
-            var endpoint = builder.CreateFromRoute(new RouteInformation());
+            var endpoint = await builder.CreateFromRoute(new RouteInformation());
 
             // assert
             Assert.IsType<Endpoint>(endpoint);

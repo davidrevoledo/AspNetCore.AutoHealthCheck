@@ -20,6 +20,7 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
@@ -27,7 +28,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
     public class EndpointMessageTranslatorTests
     {
         [Fact]
-        public void EndpointMessageTranslator_should_build_get_message()
+        public async Task EndpointMessageTranslator_should_build_get_message()
         {
             // arrange
             var translator = new EndpointMessageTranslator();
@@ -39,7 +40,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
             }, "https://www.microsoft.com");
 
             // act
-            var message = translator.Transform(endpoint);
+            var message = await translator.Transform(endpoint);
 
             // assert
             Assert.NotNull(message);
@@ -48,7 +49,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
         }
 
         [Fact]
-        public void EndpointMessageTranslator_should_heal_path_if_slash_is_missing()
+        public async Task EndpointMessageTranslator_should_heal_path_if_slash_is_missing()
         {
             // arrange
             var translator = new EndpointMessageTranslator();
@@ -60,7 +61,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
             }, "https://www.microsoft.com");
 
             // act
-            var message = translator.Transform(endpoint);
+            var message = await translator.Transform(endpoint);
 
             // assert
             Assert.NotNull(message);

@@ -20,6 +20,8 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Threading.Tasks;
+
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
@@ -32,6 +34,6 @@ namespace AspNetCore.AutoHealthCheck
         /// </summary>
         /// <param name="routeInformation">route information</param>
         /// <returns>endpoint definition</returns>
-        IEndpoint CreateFromRoute(IRouteInformation routeInformation);
+        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
     }
 }

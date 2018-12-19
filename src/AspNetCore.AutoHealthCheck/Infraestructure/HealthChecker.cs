@@ -89,7 +89,7 @@ namespace AspNetCore.AutoHealthCheck
             {
                 await _semaphore.WaitAsync().ConfigureAwait(false);
                 var watcher = Stopwatch.StartNew();
-                var results = new List<Task<HttpResponseMessage>>();
+                var results = new List<HttpResponseMessage>();
 
                 var routesDefinition = await _routesFactory;
                 var routeInformations = routesDefinition as IRouteInformation[] ?? routesDefinition.ToArray();
@@ -98,15 +98,17 @@ namespace AspNetCore.AutoHealthCheck
                 {
                     var client = _clientFactory.CreateClient();
 
-                    results = routeInformations.Select(route =>
+                    // procecess in paraller
+                    foreach (var route in routeInformations.AsParallel()
+                        .WithMergeOptions(ParallelMergeOptions.FullyBuffered))
                     {
-                        // call the endpoint
-                        var endpoint = _endpointBuilder.CreateFromRoute(route);
-                        var httpMessage = _endpointMessageTranslator.Transform(endpoint);
-                        return client.SendAsync(httpMessage);
-                    }).ToList();
+                        var endpoint = await _endpointBuilder.CreateFromRoute(route).ConfigureAwait(false);
+                        var message = await _endpointMessageTranslator.Transform(endpoint).ConfigureAwait(false);
 
-                    await Task.WhenAll(results).ConfigureAwait(false);
+                        // call endpoint
+                        var result = await client.SendAsync(message).ConfigureAwait(false);
+                        results.Add(result);
+                    }
                 }
 
                 // check test timing
@@ -114,8 +116,7 @@ namespace AspNetCore.AutoHealthCheck
 
                 // at this point task is finished
                 var currentContext = _autoHealthCheckContextAccesor.Context;
-                return await HealtCheckResultProcessor.ProcessResult(currentContext, watcher,
-                    results.Select(r => r.Result).ToArray());
+                return await HealtCheckResultProcessor.ProcessResult(currentContext, watcher, results.ToArray());
             }
             finally
             {
