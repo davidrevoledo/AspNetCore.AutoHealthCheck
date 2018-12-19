@@ -68,5 +68,11 @@ namespace AspNetCore.AutoHealthCheck
         ///     Plugins to process results
         /// </summary> 
         public IEnumerable<IHealtCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealtCheckResultPlugin>();
+
+        /// <summary>
+        ///     Http endpoints plugins to do some http transformation or completition
+        ///     Like add custom headers 
+        /// </summary>
+        public IEnumerable<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; } = new List<IHttpEndpointPlugin>();
     }
 }

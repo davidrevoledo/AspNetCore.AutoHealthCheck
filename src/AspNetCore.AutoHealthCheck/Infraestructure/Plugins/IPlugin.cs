@@ -20,35 +20,16 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-using AspNetCore.AutoHealthCheck.Infraestructure.Plugins;
-
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Infraestructure.Plugins
 {
     /// <summary>
-    ///     Health Check Result Plugin
+    ///     Base Plugin
     /// </summary>
-    public interface IHealtCheckResultPlugin : IPlugin
+    public interface IPlugin
     {
         /// <summary>
-        ///     Do something after a result
+        ///     Plugin name
         /// </summary>
-        /// <param name="result">result</param>
-        /// <returns></returns>
-        Task ActionAfterResult(HealthyResponse result);
-
-        /// <summary>
-        ///     Do something after a result success
-        /// </summary>
-        /// <param name="result">result</param>
-        /// <returns></returns>
-        Task ActionAfterSuccess(HealthyResponse result);
-
-        /// <summary>
-        ///     Do something after a fail result
-        /// </summary>
-        /// <param name="result">result</param>
-        /// <returns></returns>
-        Task ActionAfterFail(HealthyResponse result);
+        string Name { get; }
     }
 }

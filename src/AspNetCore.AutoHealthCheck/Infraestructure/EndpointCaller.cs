@@ -26,15 +26,19 @@ using System.Threading.Tasks;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Engine who call the endpoints via http 
+    ///     Engine who call the endpoints via http
     /// </summary>
     internal class EndpointCaller : IEndpointCaller
     {
+        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
         private readonly IHttpClientFactory _clientFactory;
 
-        public EndpointCaller(IHttpClientFactory clientFactory)
+        public EndpointCaller(
+            IHttpClientFactory clientFactory,
+            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
         {
             _clientFactory = clientFactory;
+            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
         }
 
         /// <summary>
@@ -42,10 +46,22 @@ namespace AspNetCore.AutoHealthCheck
         /// </summary>
         /// <param name="message">message</param>
         /// <returns>response</returns>
-        public Task<HttpResponseMessage> Send(HttpRequestMessage message)
+        public async Task<HttpResponseMessage> Send(HttpRequestMessage message)
         {
+            var context = _autoHealthCheckContextAccesor.Context;
+
+            // process before send actions
+            foreach (var httpPlugin in context.Configurations.HttpEndpointPlugins)
+                message = await httpPlugin.BeforeSend(message).ConfigureAwait(false);
+
             var client = _clientFactory.CreateClient();
-            return client.SendAsync(message);
+            var response = await client.SendAsync(message).ConfigureAwait(false);
+
+            // process after receive actions
+            foreach (var httpPlugin in context.Configurations.HttpEndpointPlugins)
+                response = await httpPlugin.AfterReceive(response).ConfigureAwait(false);
+
+            return response;
         }
     }
 }

@@ -20,35 +20,30 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Net.Http;
 using System.Threading.Tasks;
 using AspNetCore.AutoHealthCheck.Infraestructure.Plugins;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Health Check Result Plugin
+    ///     Endpoint plugins to allow extend how messages are sent or received
+    ///     ie : add custom headers etc
     /// </summary>
-    public interface IHealtCheckResultPlugin : IPlugin
+    public interface IHttpEndpointPlugin : IPlugin
     {
         /// <summary>
-        ///     Do something after a result
+        ///     Do something before send the http message
         /// </summary>
-        /// <param name="result">result</param>
+        /// <param name="request">http message</param>
         /// <returns></returns>
-        Task ActionAfterResult(HealthyResponse result);
+        Task<HttpRequestMessage> BeforeSend(HttpRequestMessage request);
 
         /// <summary>
-        ///     Do something after a result success
+        ///     Do something after receive the http response from endpoint
         /// </summary>
-        /// <param name="result">result</param>
+        /// <param name="response">response for endpoint</param>
         /// <returns></returns>
-        Task ActionAfterSuccess(HealthyResponse result);
-
-        /// <summary>
-        ///     Do something after a fail result
-        /// </summary>
-        /// <param name="result">result</param>
-        /// <returns></returns>
-        Task ActionAfterFail(HealthyResponse result);
+        Task<HttpResponseMessage> AfterReceive(HttpResponseMessage response);
     }
 }
