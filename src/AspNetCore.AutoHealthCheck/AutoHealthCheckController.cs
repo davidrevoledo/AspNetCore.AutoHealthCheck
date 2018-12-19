@@ -48,9 +48,9 @@ namespace AspNetCore.AutoHealthCheck
         [Route("")]
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public Task<IActionResult> Get()
         {
-            return await _healthChecker.Check().ConfigureAwait(false);
+            return _healthChecker.Check();
         }
     }
 }
