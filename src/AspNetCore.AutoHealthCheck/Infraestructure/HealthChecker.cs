@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using AspNetCore.AutoHealthCheck.Infraestructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
@@ -36,12 +37,12 @@ namespace AspNetCore.AutoHealthCheck
     /// </summary>
     internal sealed class HealthChecker : IDisposable, IHealthChecker
     {
-        private readonly IHttpClientFactory _clientFactory;
-        private readonly Lazy<IEnumerable<IRouteInformation>> _routes;
-        private readonly IEndpointBuilder _endpointBuilder;
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IHttpClientFactory _clientFactory;
+        private readonly IEndpointBuilder _endpointBuilder;
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
+        private readonly AsyncLazy<IEnumerable<IRouteInformation>> _routesFactory;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private int _disposeSignaled;
 
@@ -56,7 +57,9 @@ namespace AspNetCore.AutoHealthCheck
             _endpointBuilder = endpointBuilder;
             _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
             _endpointMessageTranslator = endpointMessageTranslator;
-            _routes = new Lazy<IEnumerable<IRouteInformation>>(aspNetRouteDiscover.GetAllEndpoints);
+
+            // route async
+            _routesFactory = new AsyncLazy<IEnumerable<IRouteInformation>>(() => aspNetRouteDiscover.GetAllEndpoints());
         }
 
         /// <summary>
@@ -88,18 +91,20 @@ namespace AspNetCore.AutoHealthCheck
                 var watcher = Stopwatch.StartNew();
                 var results = new List<Task<HttpResponseMessage>>();
 
-                if (_routes.Value.Any())
+                var routesDefinition = await _routesFactory;
+                var routeInformations = routesDefinition as IRouteInformation[] ?? routesDefinition.ToArray();
+
+                if (routeInformations.Any())
                 {
                     var client = _clientFactory.CreateClient();
 
-                    results = _routes.Value.Select(route =>
-                   {
-                       // call the endpoint
-                       var endpoint = _endpointBuilder.CreateFromRoute(route);
-                       var httpMessage = _endpointMessageTranslator.Transform(endpoint);
-                       return client.SendAsync(httpMessage);
-
-                   }).ToList();
+                    results = routeInformations.Select(route =>
+                    {
+                        // call the endpoint
+                        var endpoint = _endpointBuilder.CreateFromRoute(route);
+                        var httpMessage = _endpointMessageTranslator.Transform(endpoint);
+                        return client.SendAsync(httpMessage);
+                    }).ToList();
 
                     await Task.WhenAll(results).ConfigureAwait(false);
                 }
@@ -109,7 +114,8 @@ namespace AspNetCore.AutoHealthCheck
 
                 // at this point task is finished
                 var currentContext = _autoHealthCheckContextAccesor.Context;
-                return HealtCheckResultProcessor.ProcessResult(currentContext, watcher, results.Select(r => r.Result).ToArray());
+                return await HealtCheckResultProcessor.ProcessResult(currentContext, watcher,
+                    results.Select(r => r.Result).ToArray());
             }
             finally
             {

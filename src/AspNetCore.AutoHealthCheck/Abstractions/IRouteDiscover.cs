@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -33,6 +34,6 @@ namespace AspNetCore.AutoHealthCheck
         ///     Get all the routes infmation an asp.net core application expose
         /// </summary>
         /// <returns>collection of route information</returns>
-        IEnumerable<IRouteInformation> GetAllEndpoints();
+        Task<IEnumerable<IRouteInformation>> GetAllEndpoints();
     }
 }

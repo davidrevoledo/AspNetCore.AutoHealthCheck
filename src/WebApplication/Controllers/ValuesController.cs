@@ -55,7 +55,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet("complexGet/{id}")]
-        public IActionResult Bruno2(int id, [FromQuery] ComplexGetParam param)
+        public IActionResult ComplexGet(int id, [FromQuery] ComplexGetParam param)
         {
             throw new Exception();
         }

@@ -22,19 +22,37 @@
 
 using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Default route evaluator to be over written to have more control
-    ///     if a route needs to be ignored by custom code
+    ///     Health Check Result Plugin
     /// </summary>
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    public interface IHealtCheckResultPlugin
     {
         /// <summary>
-        ///     Evalute route information and return if it needs to be ingored
+        ///     Plugin name
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>if route needs to be ignored</returns>
-        public Task<bool> Evaluate(IRouteInformation routeInformation) => Task.FromResult(true);
+        string Name { get; }
+
+        /// <summary>
+        ///     Do something after a result
+        /// </summary>
+        /// <param name="result">result</param>
+        /// <returns></returns>
+        Task ActionAfterResult(HealthyResponse result);
+
+        /// <summary>
+        ///     Do something after a result success
+        /// </summary>
+        /// <param name="result">result</param>
+        /// <returns></returns>
+        Task ActionAfterSuccess(HealthyResponse result);
+
+        /// <summary>
+        ///     Do something after a fail result
+        /// </summary>
+        /// <param name="result">result</param>
+        /// <returns></returns>
+        Task ActionAfterFail(HealthyResponse result);
     }
 }

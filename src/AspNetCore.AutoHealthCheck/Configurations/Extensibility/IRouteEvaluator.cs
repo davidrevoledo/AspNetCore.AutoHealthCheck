@@ -20,6 +20,8 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Threading.Tasks;
+
 namespace AspNetCore.AutoHealthCheck.Extensibility
 {
     /// <summary>
@@ -33,6 +35,6 @@ namespace AspNetCore.AutoHealthCheck.Extensibility
         /// </summary>
         /// <param name="routeInformation">route information</param>
         /// <returns>if route needs to be ignored</returns>
-        bool Evaluate(IRouteInformation routeInformation);
+        Task<bool> Evaluate(IRouteInformation routeInformation);
     }
 }

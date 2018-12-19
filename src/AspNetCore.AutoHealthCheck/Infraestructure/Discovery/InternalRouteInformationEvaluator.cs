@@ -21,7 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AspNetCore.AutoHealthCheck.Extensibility;
 
 namespace AspNetCore.AutoHealthCheck
@@ -39,14 +39,20 @@ namespace AspNetCore.AutoHealthCheck
             _routeEvaluator = routeEvaluator;
         }
 
-        public bool Evaluate(IRouteInformation routeInformation)
+        /// <summary>
+        ///     Internally evaluate a route to determine if needs to be included
+        ///     to check
+        /// </summary>
+        /// <param name="routeInformation">route information</param>
+        /// <returns>if the route candidate needs to be included</returns>
+        public Task<bool> Evaluate(IRouteInformation routeInformation)
         {
             var context = _autoHealthCheckContextAccesor.Context;
 
             // check if the route template is included in one of the regex to exclude routes
             // if so them ingore it
             if (context.Configurations.ExcludeRouteRegexs.Any(e => e.IsMatch(routeInformation.RouteTemplate)))
-                return false;
+                return Task.FromResult(false);
 
             return _routeEvaluator.Evaluate(routeInformation);
         }

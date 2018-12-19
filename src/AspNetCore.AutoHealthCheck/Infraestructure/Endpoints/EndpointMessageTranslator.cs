@@ -47,12 +47,12 @@ namespace AspNetCore.AutoHealthCheck
 
             var request = new HttpRequestMessage(httpMethod, endpointUrl);
 
-            // todo : configure accepts
-            request.Headers.Add("Accept", "application/json");
             request.Headers.Add("User-Agent", "AspNetCore.AutoHealthCheck");
 
-            CompleteWithBodyRequest(endpoint, request);
+            // todo : configure headers
+            request.Headers.Add("Accept", "application/json");
 
+            CompleteWithBodyRequest(endpoint, request);
             return request;
         }
 
@@ -98,7 +98,12 @@ namespace AspNetCore.AutoHealthCheck
 
         private static string GetEndpointUrl(IEndpoint endpoint)
         {
-            var routePath = $"{endpoint.Host}{endpoint.RouteInformation.Path}";
+            // heal in case endpoint not start with /
+            var endpointResourece = endpoint.RouteInformation.Path;
+            if (!endpointResourece.StartsWith("/"))
+                endpointResourece = $"/" + endpointResourece;
+
+            var routePath = $"{endpoint.Host}{endpointResourece}";
             routePath = TransformRouteParams(endpoint, routePath);
 
             var routeBuilder = new StringBuilder(routePath);

@@ -22,6 +22,7 @@
 
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AspNetCore.AutoHealthCheck.Extensibility;
 using Moq;
 using Xunit;
@@ -31,7 +32,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
     public class InternalRouteInformationEvaluatorTests
     {
         [Fact]
-        public void InternalRouteInformationEvaluator_should_ignore_route_if_any_regex_is_excluding_template()
+        public async Task InternalRouteInformationEvaluator_should_ignore_route_if_any_regex_is_excluding_template()
         {
             // arrange
             var contextAccessor = new Mock<IAutoHealthCheckContextAccesor>();
@@ -39,7 +40,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
             routeEvaluator.Setup(c => c.Evaluate(It.IsAny<IRouteInformation>()))
-                .Returns(true);
+                .Returns(Task.FromResult(true));
 
             contextAccessor.Setup(c => c.Context)
                 .Returns(contex.Object);
@@ -61,14 +62,14 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
             };
 
             // act
-            var include = evaluator.Evaluate(routeInformation);
+            var include = await evaluator.Evaluate(routeInformation);
 
             // assert
             Assert.False(include); // route should be ingored as there is numbers
         }
 
         [Fact]
-        public void InternalRouteInformationEvaluator_should_not_ignore_route_if_regex_does_not_match()
+        public async Task InternalRouteInformationEvaluator_should_not_ignore_route_if_regex_does_not_match()
         {
             // arrange
             var contextAccessor = new Mock<IAutoHealthCheckContextAccesor>();
@@ -76,7 +77,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
             routeEvaluator.Setup(c => c.Evaluate(It.IsAny<IRouteInformation>()))
-                .Returns(true);
+                .Returns(Task.FromResult(true));
 
             contextAccessor.Setup(c => c.Context)
                 .Returns(contex.Object);
@@ -98,14 +99,14 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
             };
 
             // act
-            var include = evaluator.Evaluate(routeInformation);
+            var include = await evaluator.Evaluate(routeInformation);
 
             // assert
             Assert.True(include); // this should be true as the regex does not match with the route
         }
 
         [Fact]
-        public void InternalRouteInformationEvaluator_should_ignore_route_if_evaluator_return_false()
+        public async Task InternalRouteInformationEvaluator_should_ignore_route_if_evaluator_return_false()
         {
             // arrange
             var contextAccessor = new Mock<IAutoHealthCheckContextAccesor>();
@@ -113,7 +114,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
             routeEvaluator.Setup(c => c.Evaluate(It.IsAny<IRouteInformation>()))
-                .Returns(false);
+                .Returns(Task.FromResult(false));
 
             contextAccessor.Setup(c => c.Context)
                 .Returns(contex.Object);
@@ -125,14 +126,14 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
 
             var routeInformation = new RouteInformation
             {
-                RouteTemplate = "get/api/3123" 
+                RouteTemplate = "get/api/3123"
             };
 
             // act
-            var include = evaluator.Evaluate(routeInformation);
+            var include = await evaluator.Evaluate(routeInformation);
 
             // assert
-            Assert.False(include); 
+            Assert.False(include);
         }
     }
 }

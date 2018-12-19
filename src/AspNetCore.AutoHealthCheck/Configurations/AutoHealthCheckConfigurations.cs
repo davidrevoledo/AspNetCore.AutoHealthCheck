@@ -63,5 +63,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     Default http code to return when all the endpoint are ok default 200
         /// </summary>
         public HttpStatusCode DefaultHealthyResponseCode { get; set; }
+
+        /// <summary>
+        ///     Plugins to process results
+        /// </summary> 
+        public IEnumerable<IHealtCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealtCheckResultPlugin>();
     }
 }

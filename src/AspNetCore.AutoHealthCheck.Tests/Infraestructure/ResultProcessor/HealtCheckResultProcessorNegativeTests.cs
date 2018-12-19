@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
@@ -33,7 +34,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
     public class HealtCheckResultProcessorNegativeTests
     {
         [Fact]
-        public void HealtCheckResultProcessor_should_fail_returning_500_with_default_rule()
+        public async Task HealtCheckResultProcessor_should_fail_returning_500_with_default_rule()
         {
             // arrange
             var watch = new Stopwatch();
@@ -50,7 +51,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             };
 
             // act
-            var result = HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
+            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
             Assert.IsType<JsonResult>(result);
@@ -70,7 +71,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
         }
 
         [Fact]
-        public void HealtCheckResultProcessor_should_fail_with_custom_rule()
+        public async Task HealtCheckResultProcessor_should_fail_with_custom_rule()
         {
             // arrange
             var watch = new Stopwatch();
@@ -90,7 +91,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             };
 
             // act
-            var result = HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
+            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
             Assert.IsType<JsonResult>(result);
@@ -108,7 +109,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
         }
 
         [Fact]
-        public void HealtCheckResultProcessor_should_fail_returning_custom_response_code_with_default_rule()
+        public async Task HealtCheckResultProcessor_should_fail_returning_custom_response_code_with_default_rule()
         {
             // arrange
             var watch = new Stopwatch();
@@ -128,7 +129,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             };
 
             // act
-            var result = HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
+            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
             Assert.IsType<JsonResult>(result);

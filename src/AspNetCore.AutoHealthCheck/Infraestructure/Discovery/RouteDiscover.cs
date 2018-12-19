@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -51,13 +52,22 @@ namespace AspNetCore.AutoHealthCheck
         ///     Get routes information an asp.net core application expose
         /// </summary>
         /// <returns>collection of route information</returns>
-        public IEnumerable<IRouteInformation> GetAllEndpoints()
+        public async Task<IEnumerable<IRouteInformation>> GetAllEndpoints()
         {
             var candidates = GetEndpointsCandidates();
 
             // after get all route candidates then evaluate them all to return only those who pass 
             // the evaluation
-            return candidates.Where(c => _internalRouteInformationEvaluator.Evaluate(c));
+            var results = new List<IRouteInformation>();
+            foreach (var candidate in candidates)
+            {
+                if (await _internalRouteInformationEvaluator.Evaluate(candidate).ConfigureAwait(false))
+                {
+                    results.Add(candidate);
+                }
+            }
+
+            return results;
         }
 
         private IEnumerable<IRouteInformation> GetEndpointsCandidates()

@@ -23,13 +23,14 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {
     internal class HealtCheckResultProcessor
     {
-        public static IActionResult ProcessResult(
+        public static async Task<IActionResult> ProcessResult(
             IAutoHealthCheckContext context,
             Stopwatch watcher,
             HttpResponseMessage[] results)
@@ -51,11 +52,13 @@ namespace AspNetCore.AutoHealthCheck
                     healtyResponse.Success = false;
                     healtyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
                     {
-                        HttpStatusCode = (int)result.StatusCode,
+                        HttpStatusCode = (int) result.StatusCode,
                         Route = result.RequestMessage?.RequestUri.ToString(),
                         HttpVerb = result.RequestMessage?.Method.Method
                     });
                 }
+
+            await ProcessResultPlugins(context, healtyResponse).ConfigureAwait(false);
 
             // get status code
             var responseCode = healtyResponse.Success
@@ -64,8 +67,27 @@ namespace AspNetCore.AutoHealthCheck
 
             return new JsonResult(healtyResponse)
             {
-                StatusCode = (int)responseCode
+                StatusCode = (int) responseCode
             };
+        }
+
+        private static async Task ProcessResultPlugins(IAutoHealthCheckContext context, HealthyResponse healtyResponse)
+        {
+            foreach (var resultPlugin in context.Configurations.ResultPlugins)
+            {
+                await resultPlugin.ActionAfterResult(healtyResponse).ConfigureAwait(false);
+
+                switch (healtyResponse.Success)
+                {
+                    case true:
+                        await resultPlugin.ActionAfterSuccess(healtyResponse).ConfigureAwait(false);
+                        break;
+
+                    case false:
+                        await resultPlugin.ActionAfterFail(healtyResponse).ConfigureAwait(false);
+                        break;
+                }
+            }
         }
     }
 }

@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +53,11 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
                 endpointTranslator.Object);
 
             dicover.Setup(c => c.GetAllEndpoints())
-                .Returns(new List<RouteInformation>());
+                .Returns(() =>
+                {
+                    IEnumerable<IRouteInformation> enumerable = new List<IRouteInformation>();
+                    return Task.FromResult(enumerable);
+                });
 
             // act
             var result = await checker.Check();
