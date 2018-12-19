@@ -20,32 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Net.Http;
+
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint to represent a webservices to be called
+    ///     Endpoint translator to get a HttpRequest message to call the endpoint
     /// </summary>
-    internal class Endpoint : IEndpoint
+    internal interface IEndpointMessageTranslator
     {
         /// <summary>
-        ///     Constructor for an endpoint
+        ///     Convert an endpoint to represent a HttpRequest message to call it
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <param name="host">host</param>
-        public Endpoint(IRouteInformation routeInformation, string host)
-        {
-            Host = host;
-            RouteInformation = routeInformation;
-        }
-
-        /// <summary>
-        ///     Base Host
-        /// </summary>
-        public string Host { get; }
-
-        /// <summary>
-        ///     Route Information
-        /// </summary>
-        public IRouteInformation RouteInformation { get; }
+        /// <param name="endpoint">endpoint information</param>
+        /// <returns>Http request to call the endpoint</returns>
+        HttpRequestMessage Transform(IEndpoint endpoint);
     }
 }

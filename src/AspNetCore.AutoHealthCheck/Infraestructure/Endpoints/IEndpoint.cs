@@ -25,27 +25,16 @@ namespace AspNetCore.AutoHealthCheck
     /// <summary>
     ///     Endpoint to represent a webservices to be called
     /// </summary>
-    internal class Endpoint : IEndpoint
+    internal interface IEndpoint
     {
-        /// <summary>
-        ///     Constructor for an endpoint
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <param name="host">host</param>
-        public Endpoint(IRouteInformation routeInformation, string host)
-        {
-            Host = host;
-            RouteInformation = routeInformation;
-        }
-
         /// <summary>
         ///     Base Host
         /// </summary>
-        public string Host { get; }
+        string Host { get; }
 
         /// <summary>
         ///     Route Information
         /// </summary>
-        public IRouteInformation RouteInformation { get; }
+        IRouteInformation RouteInformation { get; }
     }
 }

@@ -22,8 +22,16 @@
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Endpoint builder 
+    /// </summary>
     internal interface IEndpointBuilder
     {
-        Endpoint CreateFromRoute(IRouteInformation routeInformation);
+        /// <summary>
+        ///     Create endpoint definition from route
+        /// </summary>
+        /// <param name="routeInformation">route information</param>
+        /// <returns>endpoint definition</returns>
+        IEndpoint CreateFromRoute(IRouteInformation routeInformation);
     }
 }

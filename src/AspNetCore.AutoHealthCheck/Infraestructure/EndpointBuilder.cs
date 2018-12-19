@@ -20,10 +20,14 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Endpoint builder 
+    /// </summary>
     internal class EndpointBuilder : IEndpointBuilder
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -33,8 +37,15 @@ namespace AspNetCore.AutoHealthCheck
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Endpoint CreateFromRoute(IRouteInformation routeInformation)
+        /// <summary>
+        ///     Create endpoint definition from route
+        /// </summary>
+        /// <param name="routeInformation">route information</param>
+        /// <returns>endpoint definition</returns>
+        public IEndpoint CreateFromRoute(IRouteInformation routeInformation)
         {
+            if (routeInformation == null) throw new ArgumentNullException(nameof(routeInformation));
+
             var httpContext = _httpContextAccessor.HttpContext;
             var host = $@"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
 

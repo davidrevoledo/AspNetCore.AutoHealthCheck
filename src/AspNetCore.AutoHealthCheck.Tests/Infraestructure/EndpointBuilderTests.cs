@@ -20,32 +20,45 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-namespace AspNetCore.AutoHealthCheck
+using System;
+using Microsoft.AspNetCore.Http;
+using Moq;
+using Xunit;
+
+namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
 {
-    /// <summary>
-    ///     Endpoint to represent a webservices to be called
-    /// </summary>
-    internal class Endpoint : IEndpoint
+    public class EndpointBuilderTests
     {
-        /// <summary>
-        ///     Constructor for an endpoint
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <param name="host">host</param>
-        public Endpoint(IRouteInformation routeInformation, string host)
+        [Fact]
+        public void EndpointBuilder_should_fail_if_route_is_null()
         {
-            Host = host;
-            RouteInformation = routeInformation;
+            // arrange
+            var context = new Mock<IHttpContextAccessor>();
+            var builder = new EndpointBuilder(context.Object);
+
+            context.Setup(c => c.HttpContext)
+                .Returns(new DefaultHttpContext());
+
+            // act
+            // assert
+            Assert.Throws<ArgumentNullException>(() => builder.CreateFromRoute(null));
         }
 
-        /// <summary>
-        ///     Base Host
-        /// </summary>
-        public string Host { get; }
+        [Fact]
+        public void EndpointBuilder_should_return_endpoint()
+        {
+            // arrange
+            var context = new Mock<IHttpContextAccessor>();
+            var builder = new EndpointBuilder(context.Object);
 
-        /// <summary>
-        ///     Route Information
-        /// </summary>
-        public IRouteInformation RouteInformation { get; }
+            context.Setup(c => c.HttpContext)
+                .Returns(new DefaultHttpContext());
+
+            // act
+            var endpoint = builder.CreateFromRoute(new RouteInformation());
+
+            // assert
+            Assert.IsType<Endpoint>(endpoint);
+        }
     }
 }

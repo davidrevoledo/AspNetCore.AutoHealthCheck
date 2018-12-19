@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,6 +41,7 @@ namespace AspNetCore.AutoHealthCheck
         private readonly IEndpointBuilder _endpointBuilder;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IEndpointMessageTranslator _endpointMessageTranslator;
 
         private int _disposeSignaled;
 
@@ -49,11 +49,13 @@ namespace AspNetCore.AutoHealthCheck
             IRouteDiscover aspNetRouteDiscover,
             IHttpClientFactory clientFactory,
             IEndpointBuilder endpointBuilder,
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
+            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
+            IEndpointMessageTranslator endpointMessageTranslator)
         {
             _clientFactory = clientFactory;
             _endpointBuilder = endpointBuilder;
             _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+            _endpointMessageTranslator = endpointMessageTranslator;
             _routes = new Lazy<IEnumerable<IRouteInformation>>(aspNetRouteDiscover.GetAllEndpoints);
         }
 
@@ -92,10 +94,11 @@ namespace AspNetCore.AutoHealthCheck
 
                     results = _routes.Value.Select(route =>
                    {
-                       var request = _endpointBuilder.CreateFromRoute(route)
-                           .GetRequestCall();
+                       // call the endpoint
+                       var endpoint = _endpointBuilder.CreateFromRoute(route);
+                       var httpMessage = _endpointMessageTranslator.Transform(endpoint);
+                       return client.SendAsync(httpMessage);
 
-                       return client.SendAsync(request);
                    }).ToList();
 
                     await Task.WhenAll(results).ConfigureAwait(false);

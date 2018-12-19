@@ -41,9 +41,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IEndpointBuilder, EndpointBuilder>();
             services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
             services.AddSingleton<IInternalRouteInformationEvaluator, InternalRouteInformationEvaluator>();
-
-            // default extensibility
             services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
+            services.AddSingleton<IEndpointMessageTranslator, EndpointMessageTranslator>();
 
             services.AddHttpClient();
 

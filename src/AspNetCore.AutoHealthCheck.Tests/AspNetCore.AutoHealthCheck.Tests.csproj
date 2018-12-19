@@ -20,4 +20,8 @@
     <ProjectReference Include="..\AspNetCore.AutoHealthCheck\AspNetCore.AutoHealthCheck.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infraestructure\Endpoints\" />
+  </ItemGroup>
+
 </Project>
