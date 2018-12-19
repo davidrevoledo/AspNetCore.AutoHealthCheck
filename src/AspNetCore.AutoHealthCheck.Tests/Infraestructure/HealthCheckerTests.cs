@@ -35,7 +35,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
         public async Task HealthChecker_should_return_ok_if_there_is_no_route()
         {
             // arrange
-            var dicover = new Mock<IAspNetRouteDiscover>();
+            var dicover = new Mock<IRouteDiscover>();
             var httpclientFactory = new Mock<IHttpClientFactory>();
             var contextAccesor = new Mock<IAutoHealthCheckContextAccesor>();
             var endpointBuilder = new Mock<IEndpointBuilder>();

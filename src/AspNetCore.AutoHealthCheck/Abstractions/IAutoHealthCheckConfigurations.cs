@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -43,7 +44,7 @@ namespace AspNetCore.AutoHealthCheck
         ///     Regex to exclude routes
         ///     Each regex here will be evaluated foreach route to avoid them to be checked
         /// </summary>
-        List<string> RegexToExludeRoutes { get; }
+        List<Regex> ExcludeRouteRegexs { get; }
 
         /// <summary>
         ///     Default http code to return when an endpoint fail default 500

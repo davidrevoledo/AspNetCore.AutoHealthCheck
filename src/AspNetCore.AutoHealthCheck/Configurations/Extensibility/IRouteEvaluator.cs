@@ -20,16 +20,19 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Extensibility
 {
     /// <summary>
-    ///     Context accesor
+    ///     route evaluator to be over written to have more control
+    ///     if a route needs to be ignored by custom code
     /// </summary>
-    public interface IAutoHealthCheckContextAccesor
+    public interface IRouteEvaluator
     {
         /// <summary>
-        ///     Current context
+        ///     Evalute route information and return if it needs to be ingored
         /// </summary>
-        IAutoHealthCheckContext Context { get; }
+        /// <param name="routeInformation">route information</param>
+        /// <returns>if route needs to be ignored</returns>
+        bool Evaluate(IRouteInformation routeInformation);
     }
 }

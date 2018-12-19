@@ -20,19 +20,10 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Collections.Generic;
-
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Discover all the endpoints that an asp.net core application expose
-    /// </summary>
-    public interface IAspNetRouteDiscover
+    internal interface IInternalRouteInformationEvaluator
     {
-        /// <summary>
-        ///     Get all the routes infmation an asp.net core application expose
-        /// </summary>
-        /// <returns>collection of route information</returns>
-        IEnumerable<IRouteInformation> GetAllEndpoints();
+        bool Evaluate(IRouteInformation routeInformation);
     }
 }

@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using AspNetCore.AutoHealthCheck;
+using AspNetCore.AutoHealthCheck.Extensibility;
 using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -34,11 +35,15 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddAutoHealthCheck(this IServiceCollection services)
         {
-            services.AddSingleton<IAspNetRouteDiscover, AspNetRouteDiscover>();
+            services.AddSingleton<IRouteDiscover, RouteDiscover>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IHealthChecker, HealthChecker>();
             services.AddSingleton<IEndpointBuilder, EndpointBuilder>();
             services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
+            services.AddSingleton<IInternalRouteInformationEvaluator, InternalRouteInformationEvaluator>();
+
+            // default extensibility
+            services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
 
             services.AddHttpClient();
 

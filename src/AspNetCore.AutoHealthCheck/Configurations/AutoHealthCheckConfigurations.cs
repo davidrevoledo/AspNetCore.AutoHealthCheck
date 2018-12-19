@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -44,7 +45,7 @@ namespace AspNetCore.AutoHealthCheck
         ///     Regex to exclude routes
         ///     Each regex here will be evaluated foreach route to avoid them to be checked
         /// </summary>
-        public List<string> RegexToExludeRoutes { get; set; } = new List<string>();
+        public List<Regex> ExcludeRouteRegexs { get; set; } = new List<Regex>();
 
         /// <summary>
         ///     Pass check rule to determine if a response is

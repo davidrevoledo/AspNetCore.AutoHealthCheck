@@ -46,7 +46,7 @@ namespace AspNetCore.AutoHealthCheck
         private int _disposeSignaled;
 
         public HealthChecker(
-            IAspNetRouteDiscover aspNetRouteDiscover,
+            IRouteDiscover aspNetRouteDiscover,
             IHttpClientFactory clientFactory,
             IEndpointBuilder endpointBuilder,
             IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)

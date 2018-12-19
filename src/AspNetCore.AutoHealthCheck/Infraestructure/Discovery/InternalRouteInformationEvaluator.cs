@@ -20,16 +20,35 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Linq;
+using System.Text.RegularExpressions;
+using AspNetCore.AutoHealthCheck.Extensibility;
+
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Context accesor
-    /// </summary>
-    public interface IAutoHealthCheckContextAccesor
+    internal class InternalRouteInformationEvaluator : IInternalRouteInformationEvaluator
     {
-        /// <summary>
-        ///     Current context
-        /// </summary>
-        IAutoHealthCheckContext Context { get; }
+        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IRouteEvaluator _routeEvaluator;
+
+        public InternalRouteInformationEvaluator(
+            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
+            IRouteEvaluator routeEvaluator)
+        {
+            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+            _routeEvaluator = routeEvaluator;
+        }
+
+        public bool Evaluate(IRouteInformation routeInformation)
+        {
+            var context = _autoHealthCheckContextAccesor.Context;
+
+            // check if the route template is included in one of the regex to exclude routes
+            // if so them ingore it
+            if (context.Configurations.ExcludeRouteRegexs.Any(e => e.IsMatch(routeInformation.RouteTemplate)))
+                return false;
+
+            return _routeEvaluator.Evaluate(routeInformation);
+        }
     }
 }

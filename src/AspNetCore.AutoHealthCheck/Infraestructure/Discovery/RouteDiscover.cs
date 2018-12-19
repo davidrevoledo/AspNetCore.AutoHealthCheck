@@ -34,13 +34,17 @@ namespace AspNetCore.AutoHealthCheck
     /// <summary>
     ///     Discover all the endpoints that an asp.net core application expose
     /// </summary>
-    public class AspNetRouteDiscover : IAspNetRouteDiscover
+    internal class RouteDiscover : IRouteDiscover
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
+        private readonly IInternalRouteInformationEvaluator _internalRouteInformationEvaluator;
 
-        public AspNetRouteDiscover(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
+        public RouteDiscover(
+            IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
+            IInternalRouteInformationEvaluator internalRouteInformationEvaluator)
         {
             _actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
+            _internalRouteInformationEvaluator = internalRouteInformationEvaluator;
         }
 
         /// <summary>
@@ -48,6 +52,15 @@ namespace AspNetCore.AutoHealthCheck
         /// </summary>
         /// <returns>collection of route information</returns>
         public IEnumerable<IRouteInformation> GetAllEndpoints()
+        {
+            var candidates = GetEndpointsCandidates();
+
+            // after get all route candidates then evaluate them all to return only those who pass 
+            // the evaluation
+            return candidates.Where(c => _internalRouteInformationEvaluator.Evaluate(c));
+        }
+
+        private IEnumerable<IRouteInformation> GetEndpointsCandidates()
         {
             var routes = _actionDescriptorCollectionProvider.ActionDescriptors.Items;
             foreach (var action in routes)
@@ -61,25 +74,15 @@ namespace AspNetCore.AutoHealthCheck
                 };
 
                 // Path and Invocation of Razor Pages
-                if (action is PageActionDescriptor pageAction)
-                {
-                    info.Path = pageAction.ViewEnginePath;
-                }
+                if (action is PageActionDescriptor pageAction) info.Path = pageAction.ViewEnginePath;
 
                 // Path of Route Attribute
-                if (action.AttributeRouteInfo != null)
-                {
-                    info.Path = $"/{action.AttributeRouteInfo.Template}";
-                }
+                if (action.AttributeRouteInfo != null) info.Path = $"/{action.AttributeRouteInfo.Template}";
 
                 // Path and Invocation of Controller/Action
                 if (action is ControllerActionDescriptor actionDescriptor)
-                {
                     if (string.IsNullOrWhiteSpace(info.Path))
-                    {
                         info.Path = $"/{actionDescriptor.ControllerName}/{actionDescriptor.ActionName}";
-                    }
-                }
 
                 // Extract HTTP Verb
                 if (action.ActionConstraints != null)
