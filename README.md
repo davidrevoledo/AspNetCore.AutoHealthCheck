@@ -1,5 +1,5 @@
 
-# AspNetCore.AutoHealtCheck
+AspNetCore.AutoHealtCheck
 ====================
 Check automatically your asp.net core applications with a lot of extensibility !
 
