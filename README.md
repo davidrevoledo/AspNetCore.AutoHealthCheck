@@ -74,6 +74,7 @@ with the following information:
 - elapsed test time.
 - endpoints who have failed.
 
+``` JSON
 {  
    "success":false,
    "elapsedSecondsTest":3,
@@ -85,6 +86,7 @@ with the following information:
       }
    ]
 }
+```
 
 ## <a name="customising"> Customising </a>
 
