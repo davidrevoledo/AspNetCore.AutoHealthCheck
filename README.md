@@ -127,6 +127,37 @@ In order to implement those plugins you have to implement `IHealtCheckResultPlug
 
 Then just add the plugin to the configurations in any time of the application lifetime.
 
+ie:  
+``` C#
+    public class ResultPlugin : IHealtCheckResultPlugin
+    {
+        private readonly ILogger _logger;
+
+        public ResultPlugin(ILogger logger)
+        {
+            _logger = logger;
+        }
+
+        public string Name => "name";
+
+        public Task ActionAfterResult(HealthyResponse result)
+        {
+            _logger.Log(LogLevel.Information, result.Success.ToString());
+            return Task.CompletedTask;
+        }
+
+        public Task ActionAfterSuccess(HealthyResponse result)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task ActionAfterFail(HealthyResponse result)
+        {
+            return Task.CompletedTask;
+        }
+    }
+```
+
 - `HttpEndpointPlugins` : Allow you to change the request content that are sent to check the endpoints of your asp.net application, here you can add custom headers, or query strings, things that are neccesary to hit your endpoints.
 
 To implement them you just have to implement this interface `IHttpEndpointPlugin` and call:
@@ -134,7 +165,25 @@ To implement them you just have to implement this interface `IHttpEndpointPlugin
   AfterReceive
   
   with the full request /response.
-  
+ 
+ ``` C#
+    public class ResultPlugin : IHttpEndpointPlugin
+    {
+        public string Name => throw new NotImplementedException();
+
+        public Task<HttpResponseMessage> AfterReceive(HttpResponseMessage response)
+        {
+            return Task.FromResult(response);
+        }
+
+        public Task<HttpRequestMessage> BeforeSend(HttpRequestMessage request)
+        {
+            request.Headers.Add("custom-header", "value");
+
+            return Task.FromResult(request);
+        }
+    }
+```
   
 ## <a name="license"> License </a>
 
