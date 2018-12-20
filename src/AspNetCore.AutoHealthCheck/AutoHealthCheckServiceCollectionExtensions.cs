@@ -57,7 +57,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 // register accessor with user custom configurations
                 var defaultConfigurations = new AutoHealthCheckConfigurations();
                 configurationsBuilder.Invoke(defaultConfigurations);
-                var accesor = new AutoHealthCheckContextAccesor(defaultConfigurations);
+                var accesor = new AutoHealthCheckContextAccesor();
+                accesor.SetConfigurations(defaultConfigurations);
                 services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
             }
 

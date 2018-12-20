@@ -21,14 +21,12 @@ namespace WebApplication
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddAutoHealthCheck(configurations =>
-                {
-                    configurations.DefaultUnHealthyResponseCode = HttpStatusCode.Accepted;
-                });
+            services.AddAutoHealthCheck(c => c.DefaultUnHealthyResponseCode = HttpStatusCode.Accepted);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseDeveloperExceptionPage();
             app.UseMvc();
         }
     }
