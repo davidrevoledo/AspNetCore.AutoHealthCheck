@@ -10,6 +10,7 @@
     <PackageReleaseNotes>First release</PackageReleaseNotes>
     <Copyright>Copyright 2018 (c) AspNetCore.AutoHealthCheck is licensed under the MIT License.</Copyright>
     <PackageTags>AspNetCore AspNet Testing Api Rest HealthCheck</PackageTags>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
