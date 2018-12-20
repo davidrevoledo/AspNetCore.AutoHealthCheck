@@ -186,6 +186,25 @@ To implement them you just have to implement this interface `IHttpEndpointPlugin
         }
     }
 ```
+
+If you want to avoid a controller / method to be called just need a filter `AvoidAutoHealtCheckAttribute`
+
+ ``` C#
+    [AvoidAutoHealtCheck]
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ValuesController : ControllerBase
+    {
+        [AvoidAutoHealtCheck]
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
+        
+     }
+```
+
   
 ## <a name="license"> License </a>
 
