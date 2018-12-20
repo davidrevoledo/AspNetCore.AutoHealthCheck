@@ -25,8 +25,6 @@ Check automatically your asp.net core applications with a lot of extensibility !
 -  Full Async support.
 
 ## <a name="installation"> Installation </a>
-> Install-Package Xamarin.Android.TriangleLabelView
-
 Grab the latest Inyector NuGet package and install in your solution. https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/
 ```sh
 PM > Install-Package AspNetCore.AutoHealthCheck 
