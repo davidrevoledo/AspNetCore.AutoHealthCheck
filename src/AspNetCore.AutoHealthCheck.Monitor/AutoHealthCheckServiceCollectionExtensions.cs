@@ -21,34 +21,26 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using AspNetCore.AutoHealthCheck.Configurations;
+using AspNetCore.AutoHealthCheck;
+using AspNetCore.AutoHealthCheck.Monitor;
+using Microsoft.Extensions.Hosting;
 
-namespace AspNetCore.AutoHealthCheck
+namespace Microsoft.Extensions.DependencyInjection
 {
-    /// <summary>
-    ///     Configurations to run automatically 
-    /// </summary>
-    public class AutomaticRunConfigurations
+    public static class AutoHealthCheckServiceCollectionExtensions
     {
         /// <summary>
-        ///     Indicates if the health check will run automatically or not.
+        ///     Add Auto health check monitor to run automatically
         /// </summary>
-        public bool AutomaticRunEnabled { get; set; } 
-
-        /// <summary>
-        ///     Indicates every how much the test need to be called automatically in Seconds.
-        ///     Default 60 seconds
-        /// </summary>
-        public int SecondsInterval { get; set; } = 60;
-
-        /// <summary>
-        ///     Define how the internal runtime to auto execute the check will be called
-        /// </summary>
-        public HealthCheckRuntimeMode RuntimeMode { get; set; } = HealthCheckRuntimeMode.Interval;
-
-        /// <summary>
-        ///     This indicates where the automatic 
-        /// </summary>
-        public Uri Address { get; set; }
+        /// <param name="services"></param>
+        /// <param name="optionsBuilder">configurations</param>
+        /// <returns></returns>
+        public static IServiceCollection AddAutoHealthCheckMonitor(
+            this IServiceCollection services,
+            Action<AutomaticRunConfigurations> optionsBuilder = null)
+        {
+            services.AddSingleton<IHostedService, AutoHealtCheckProcess>();
+            return services;
+        }
     }
 }

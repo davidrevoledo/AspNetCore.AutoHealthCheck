@@ -20,40 +20,13 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Configurations
 {
-    internal class AutoHealtCheckProcess : IHostedService, IDisposable
+    /// <summary>
+    ///     Define how the internal runtime to auto execute the check will be called
+    /// </summary>
+    public enum HealthCheckRuntimeMode
     {
-        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
-
-        public AutoHealtCheckProcess(
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
-        {
-            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            var context = _autoHealthCheckContextAccesor.Context;
-            while (true)
-            {
-                await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000, cancellationToken)
-                    .ConfigureAwait(false);
-            }
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
+        Interval
     }
 }

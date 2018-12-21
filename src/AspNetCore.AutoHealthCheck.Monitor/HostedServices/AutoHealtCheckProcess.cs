@@ -20,35 +20,40 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using Microsoft.Extensions.Hosting;
 using System;
-using AspNetCore.AutoHealthCheck.Configurations;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Monitor
 {
-    /// <summary>
-    ///     Configurations to run automatically 
-    /// </summary>
-    public class AutomaticRunConfigurations
+    internal class AutoHealtCheckProcess : IHostedService, IDisposable
     {
-        /// <summary>
-        ///     Indicates if the health check will run automatically or not.
-        /// </summary>
-        public bool AutomaticRunEnabled { get; set; } 
+        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
 
-        /// <summary>
-        ///     Indicates every how much the test need to be called automatically in Seconds.
-        ///     Default 60 seconds
-        /// </summary>
-        public int SecondsInterval { get; set; } = 60;
+        public AutoHealtCheckProcess(
+            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
+        {
+            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+        }
 
-        /// <summary>
-        ///     Define how the internal runtime to auto execute the check will be called
-        /// </summary>
-        public HealthCheckRuntimeMode RuntimeMode { get; set; } = HealthCheckRuntimeMode.Interval;
+        public void Dispose()
+        {
+        }
 
-        /// <summary>
-        ///     This indicates where the automatic 
-        /// </summary>
-        public Uri Address { get; set; }
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            var context = _autoHealthCheckContextAccesor.Context;
+            while (true)
+            {
+                await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
