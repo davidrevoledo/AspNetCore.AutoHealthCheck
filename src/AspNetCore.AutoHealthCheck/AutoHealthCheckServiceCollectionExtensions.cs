@@ -47,22 +47,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
             services.AddSingleton<IEndpointMessageTranslator, EndpointMessageTranslator>();
             services.AddSingleton<IEndpointCaller, EndpointCaller>();
-
-            if (configurationsBuilder == null)
-            {
-                services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
-            }
-            else
-            {
-                // register accessor with user custom configurations
-                var defaultConfigurations = new AutoHealthCheckConfigurations();
-                configurationsBuilder.Invoke(defaultConfigurations);
-                var accesor = new AutoHealthCheckContextAccesor();
-                accesor.SetConfigurations(defaultConfigurations);
-                services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
-            }
-
             services.AddHttpClient();
+
+            // resolve options
+            var options = new AutoHealthCheckConfigurations();
+            configurationsBuilder?.Invoke(options);
+            var accesor = new AutoHealthCheckContextAccesor();
+            accesor.SetConfigurations(options);
+            services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
 
             return services;
         }
