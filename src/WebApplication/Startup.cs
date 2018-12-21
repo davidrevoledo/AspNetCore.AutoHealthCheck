@@ -32,6 +32,7 @@ namespace WebApplication
         {
             app.UseDeveloperExceptionPage();
             app.UseMvc();
+            app.UseAutoHealthCheck();
         }
     }
 }

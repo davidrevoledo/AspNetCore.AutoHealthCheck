@@ -23,6 +23,7 @@
 using System;
 using AspNetCore.AutoHealthCheck;
 using AspNetCore.AutoHealthCheck.Extensibility;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
@@ -74,6 +75,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddHttpClient();
 
             return services;
+        }
+
+        public static IApplicationBuilder UseAutoHealthCheck(this IApplicationBuilder app)
+        {
+            return app;
         }
     }
 }

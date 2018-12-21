@@ -30,14 +30,11 @@ namespace AspNetCore.AutoHealthCheck
     internal class AutoHealtCheckProcess : IHostedService, IDisposable
     {
         private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
-        private readonly IHealthChecker _healthChecker;
 
         public AutoHealtCheckProcess(
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
-            IHealthChecker healthChecker)
+            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
         {
             _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
-            _healthChecker = healthChecker;
         }
 
         public void Dispose()
@@ -49,8 +46,6 @@ namespace AspNetCore.AutoHealthCheck
             var context = _autoHealthCheckContextAccesor.Context;
             while (true)
             {
-                await _healthChecker.Check().ConfigureAwait(false);
-
                 await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000, cancellationToken)
                     .ConfigureAwait(false);
             }
