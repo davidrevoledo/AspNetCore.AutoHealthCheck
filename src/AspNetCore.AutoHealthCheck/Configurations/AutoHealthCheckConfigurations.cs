@@ -65,6 +65,11 @@ namespace AspNetCore.AutoHealthCheck
         public HttpStatusCode DefaultHealthyResponseCode { get; set; }
 
         /// <summary>
+        ///     Automatic run configurations
+        /// </summary>
+        public AutomaticRunConfigurations AutomaticRunConfigurations { get; set; } = new AutomaticRunConfigurations();
+
+        /// <summary>
         ///     Plugins to process results
         /// </summary> 
         public IEnumerable<IHealtCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealtCheckResultPlugin>();

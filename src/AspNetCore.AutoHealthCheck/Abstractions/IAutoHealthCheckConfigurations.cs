@@ -66,5 +66,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     Like add custom headers 
         /// </summary>
         IEnumerable<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; }
+
+        /// <summary>
+        ///     Automatic run configurations
+        /// </summary>
+        AutomaticRunConfigurations AutomaticRunConfigurations { get; }
     }
 }

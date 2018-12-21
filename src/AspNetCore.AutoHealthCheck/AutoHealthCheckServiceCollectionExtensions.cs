@@ -24,6 +24,7 @@ using System;
 using AspNetCore.AutoHealthCheck;
 using AspNetCore.AutoHealthCheck.Extensibility;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -59,7 +60,15 @@ namespace Microsoft.Extensions.DependencyInjection
                 configurationsBuilder.Invoke(defaultConfigurations);
                 var accesor = new AutoHealthCheckContextAccesor();
                 accesor.SetConfigurations(defaultConfigurations);
+
+
                 services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
+
+                // check if the service need to run automatically
+                if (defaultConfigurations.AutomaticRunConfigurations.AutomaticRunEnabled)
+                {
+                    services.AddSingleton<IHostedService, AutoHealtCheckProcess>();
+                }
             }
 
             services.AddHttpClient();
