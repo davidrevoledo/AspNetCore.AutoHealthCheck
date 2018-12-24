@@ -25,7 +25,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.Monitor
+namespace AspNetCore.AutoHealthCheck
 {
     internal class AutoHealtCheckProcess : IHostedService, IDisposable
     {
