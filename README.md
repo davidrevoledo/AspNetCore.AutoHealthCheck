@@ -27,7 +27,7 @@ Check automatically your asp.net core applications with a lot of extensibility !
 
 ## <a name="installation"> Installation </a>
 
-Grab the latest Inyector NuGet package and install in your solution. https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/
+Grab the latest AspNetCore.AutoHealthCheck NuGet package and install in your solution. https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/
 ```sh
 PM > Install-Package AspNetCore.AutoHealthCheck 
 NET CLI - dotnet add package AspNetCore.AutoHealthCheck 
