@@ -49,6 +49,6 @@ namespace AspNetCore.AutoHealthCheck
         /// <summary>
         ///     This indicates where the automatic 
         /// </summary>
-        public Uri Address { get; set; }
+        public Uri BaseUrl { get; set; }
     }
 }

@@ -22,6 +22,7 @@
 
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,11 +31,14 @@ namespace AspNetCore.AutoHealthCheck
     internal class AutoHealtCheckProcess : IHostedService, IDisposable
     {
         private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IHttpClientFactory _clientFactory;
 
         public AutoHealtCheckProcess(
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
+            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
+            IHttpClientFactory clientFactory)
         {
             _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+            _clientFactory = clientFactory;
         }
 
         public void Dispose()
@@ -46,6 +50,11 @@ namespace AspNetCore.AutoHealthCheck
             var context = _autoHealthCheckContextAccesor.Context;
             while (true)
             {
+                var client = _clientFactory.CreateClient();
+
+                var endpointUrl = $"{context.Configurations.AutomaticRunConfigurations.BaseUrl}/api/autoHealthCheck";
+                var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
+                await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000, cancellationToken)
                     .ConfigureAwait(false);
             }
