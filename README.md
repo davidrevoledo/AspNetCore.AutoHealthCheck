@@ -23,6 +23,7 @@ Check automatically your asp.net core applications with a lot of extensibility !
 -  Allow configure rules to determine when an endpoint is unhealthy.
 -  Plugins to extend the behavior of the http calls. (ie. Headers, QueryParams, and so on).
 -  Allow to call custom actions (ie weebhooks) for health resutls.
+-  Automatic run on background using HostedServices
 -  Full Async support.
 
 ## <a name="installation"> Installation </a>
@@ -87,6 +88,18 @@ with the following information:
    ]
 }
 ```
+
+To activate background monitor just configure the options in startup.
+
+``` C#
+    services.AddAutoHealthCheck(c =>
+    {
+        c.AutomaticRunConfigurations.AutomaticRunEnabled = true;
+        c.AutomaticRunConfigurations.BaseUrl = new Uri("http://localhost:50387");
+        c.AutomaticRunConfigurations.SecondsInterval = 1;
+    });
+```
+The url is required as asp.net core doesn't know exactly the URI if it is running behing a proxy reverse server like IIS in the moment the asp.net core application starts.
 
 ## <a name="customising"> Customising </a>
 
