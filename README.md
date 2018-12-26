@@ -11,7 +11,8 @@ Check automatically your asp.net core applications with a lot of extensibility !
 |Build/Package|Status|
 |------|-------------|
 |master|[![Build status](https://ci.appveyor.com/api/projects/status/3s1txd8lrbvn82v2/branch/master?svg=true)](https://ci.appveyor.com/project/davidrevoledo/aspnetcore-autohealthcheck/branch/master)
-|dev| 
+|dev|[![Build status](https://ci.appveyor.com/api/projects/status/ak0heuv6ckkaoft3?svg=true)](https://ci.appveyor.com/project/davidrevoledo/aspnetcore-autohealthcheck-4hy94)
+
 
 # Contents
 
