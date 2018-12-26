@@ -20,37 +20,42 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Default controller to implement healt check
-    /// </summary>
-    [Route("api/autoHealthCheck")]
-    [ApiController]
-    public sealed class AutoHealthCheckController : ControllerBase
+    internal class AutoHealthCheckMiddleware
     {
         private readonly IHealthChecker _healthChecker;
+        private readonly RequestDelegate _next;
 
-        public AutoHealthCheckController(IHealthChecker healthChecker)
+        public AutoHealthCheckMiddleware(RequestDelegate next, IHealthChecker healthChecker)
         {
+            _next = next;
             _healthChecker = healthChecker;
         }
 
-        /// <summary>
-        ///     Default endpoint to process the health check
-        /// </summary>
-        /// <returns></returns>
-        [AvoidAutoHealtCheck]
-        [Route("")]
-        [AllowAnonymous]
-        [HttpGet]
-        public Task<IActionResult> Get()
+        public async Task Invoke(HttpContext httpContext)
         {
-            return _healthChecker.Check();
+            var httpMethod = httpContext.Request.Method;
+            var path = httpContext.Request.Path.Value;
+
+            if (httpMethod == "GET" && path == "/api/autoHealthCheck")
+            {
+                var healtCheckResult = await _healthChecker.Check().ConfigureAwait(false);
+
+                httpContext.Response.StatusCode = (int) healtCheckResult.HttpStatus;
+                httpContext.Response.ContentType = "application/json";
+                var jsonString = JsonConvert.SerializeObject(healtCheckResult);
+                await httpContext.Response.WriteAsync(jsonString, Encoding.UTF8);
+
+                return;
+            }
+
+            await _next(httpContext);
         }
     }
 }

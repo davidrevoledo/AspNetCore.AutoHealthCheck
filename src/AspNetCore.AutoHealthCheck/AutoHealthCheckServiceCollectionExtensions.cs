@@ -23,7 +23,6 @@
 using System;
 using AspNetCore.AutoHealthCheck;
 using AspNetCore.AutoHealthCheck.Extensibility;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
@@ -35,11 +34,11 @@ namespace Microsoft.Extensions.DependencyInjection
         ///     Add Auto health check to the asp.net core application without configurations
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="configurationsBuilder">configurations</param>
+        /// <param name="setupAction">configurations</param>
         /// <returns></returns>
         public static IServiceCollection AddAutoHealthCheck(
             this IServiceCollection services,
-            Action<AutoHealthCheckConfigurations> configurationsBuilder = null)
+            Action<AutoHealthCheckConfigurations> setupAction = null)
         {
             services.AddSingleton<IRouteDiscover, RouteDiscover>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -53,7 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             // resolve options
             var options = new AutoHealthCheckConfigurations();
-            configurationsBuilder?.Invoke(options);
+            setupAction?.Invoke(options);
             var accesor = new AutoHealthCheckContextAccesor();
             accesor.SetConfigurations(options);
             services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
@@ -65,11 +64,6 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             return services;
-        }
-
-        public static IApplicationBuilder UseAutoHealthCheck(this IApplicationBuilder app)
-        {
-            return app;
         }
     }
 }

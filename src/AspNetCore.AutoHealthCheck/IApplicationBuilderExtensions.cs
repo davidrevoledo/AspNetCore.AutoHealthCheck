@@ -20,30 +20,17 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using AspNetCore.AutoHealthCheck;
 
-namespace AspNetCore.AutoHealthCheck
+namespace Microsoft.AspNetCore.Builder
 {
-    /// <summary>
-    ///     Healt Checker engine to run over an asp.net core application
-    /// </summary>
-    public interface IHealthChecker
+    public static class IApplicationBuilderExtensions
     {
-        /// <summary>
-        ///     Indicate if the resource was disposed
-        /// </summary>
-        bool Disposed { get; set; }
-
-        /// <summary>
-        ///     Perform the health check
-        /// </summary>
-        /// <returns>Response with the test result</returns>
-        Task<HealthyResponse> Check();
-
-        /// <summary>
-        ///     Dispose the resource
-        /// </summary>
-        void Dispose();
+        public static IApplicationBuilder UseAutoHealthCheck(
+            this IApplicationBuilder app)
+        {
+            app.UseMiddleware<AutoHealthCheckMiddleware>();
+            return app;
+        }
     }
 }

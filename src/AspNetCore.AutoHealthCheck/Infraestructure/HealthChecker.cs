@@ -83,7 +83,7 @@ namespace AspNetCore.AutoHealthCheck
         ///     Perform the health check
         /// </summary>
         /// <returns>Response with the test result</returns>
-        public async Task<IActionResult> Check()
+        public async Task<HealthyResponse> Check()
         {
             try
             {

@@ -25,7 +25,7 @@ namespace WebApplication
 
             services.AddAutoHealthCheck(c =>
             {
-                c.AutomaticRunConfigurations.AutomaticRunEnabled = true;
+                c.AutomaticRunConfigurations.AutomaticRunEnabled = false;
                 c.AutomaticRunConfigurations.BaseUrl = new Uri("http://localhost:50387");
                 c.AutomaticRunConfigurations.SecondsInterval = 1;
                 c.ResultPlugins.Add(new ResultPlugin());
