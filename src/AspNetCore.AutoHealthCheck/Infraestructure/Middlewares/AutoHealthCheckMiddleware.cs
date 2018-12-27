@@ -20,7 +20,9 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -31,11 +33,16 @@ namespace AspNetCore.AutoHealthCheck
     {
         private readonly IHealthChecker _healthChecker;
         private readonly RequestDelegate _next;
+        private readonly AutoHealtCheckMiddlewareOptions _appOptions;
 
-        public AutoHealthCheckMiddleware(RequestDelegate next, IHealthChecker healthChecker)
+        public AutoHealthCheckMiddleware(
+            RequestDelegate next,
+            IHealthChecker healthChecker,
+            AutoHealtCheckMiddlewareOptions appOptions)
         {
             _next = next;
             _healthChecker = healthChecker;
+            _appOptions = appOptions;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -43,14 +50,17 @@ namespace AspNetCore.AutoHealthCheck
             var httpMethod = httpContext.Request.Method;
             var path = httpContext.Request.Path.Value;
 
-            if (httpMethod == "GET" && path == "/api/autoHealthCheck")
+            if (httpMethod == "GET" && Regex.IsMatch(path, $"^/{_appOptions.RoutePrefix}/?$"))
             {
                 var healtCheckResult = await _healthChecker.Check().ConfigureAwait(false);
 
-                httpContext.Response.StatusCode = (int) healtCheckResult.HttpStatus;
+                if (healtCheckResult == null)
+                    throw new ArgumentNullException(nameof(healtCheckResult));
+
+                httpContext.Response.StatusCode = (int)healtCheckResult.HttpStatus;
                 httpContext.Response.ContentType = "application/json";
                 var jsonString = JsonConvert.SerializeObject(healtCheckResult);
-                await httpContext.Response.WriteAsync(jsonString, Encoding.UTF8);
+                await httpContext.Response.WriteAsync(jsonString, Encoding.UTF8).ConfigureAwait(false);
 
                 return;
             }

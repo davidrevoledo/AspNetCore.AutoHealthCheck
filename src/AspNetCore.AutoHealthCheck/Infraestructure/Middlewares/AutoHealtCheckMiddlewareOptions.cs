@@ -20,22 +20,16 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using AspNetCore.AutoHealthCheck;
-
-namespace Microsoft.AspNetCore.Builder
+namespace AspNetCore.AutoHealthCheck
 {
-    public static class IApplicationBuilderExtensions
+    /// <summary>
+    ///     Options for auto health check middleware
+    /// </summary>
+    public sealed class AutoHealtCheckMiddlewareOptions
     {
-        public static IApplicationBuilder UseAutoHealthCheck(
-            this IApplicationBuilder app,
-            Action<AutoHealtCheckMiddlewareOptions> setupAction = null)
-        {
-            var options = new AutoHealtCheckMiddlewareOptions();
-            setupAction?.Invoke(options);
-
-            app.UseMiddleware<AutoHealthCheckMiddleware>(options);
-            return app;
-        }
+        /// <summary>
+        /// Gets or sets a route prefix for accessing the auto health check endpoint
+        /// </summary>
+        public string RoutePrefix { get; set; } = "api/autoHealthCheck";
     }
 }

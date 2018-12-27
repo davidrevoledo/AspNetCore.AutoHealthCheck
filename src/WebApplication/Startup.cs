@@ -36,7 +36,10 @@ namespace WebApplication
         {
             app.UseDeveloperExceptionPage();
             app.UseMvc();
-            app.UseAutoHealthCheck();
+            app.UseAutoHealthCheck(c =>
+            {
+                c.RoutePrefix = "insights/healtcheck";
+            });
         }
     }
 }
