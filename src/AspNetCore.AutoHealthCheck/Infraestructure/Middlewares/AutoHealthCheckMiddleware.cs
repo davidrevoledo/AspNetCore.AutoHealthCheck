@@ -31,9 +31,9 @@ namespace AspNetCore.AutoHealthCheck
 {
     internal class AutoHealthCheckMiddleware
     {
+        private readonly AutoHealtCheckMiddlewareOptions _appOptions;
         private readonly IHealthChecker _healthChecker;
         private readonly RequestDelegate _next;
-        private readonly AutoHealtCheckMiddlewareOptions _appOptions;
 
         public AutoHealthCheckMiddleware(
             RequestDelegate next,
@@ -57,7 +57,7 @@ namespace AspNetCore.AutoHealthCheck
                 if (healtCheckResult == null)
                     throw new ArgumentNullException(nameof(healtCheckResult));
 
-                httpContext.Response.StatusCode = (int)healtCheckResult.HttpStatus;
+                httpContext.Response.StatusCode = (int) healtCheckResult.HttpStatus;
                 httpContext.Response.ContentType = "application/json";
                 var jsonString = JsonConvert.SerializeObject(healtCheckResult);
                 await httpContext.Response.WriteAsync(jsonString, Encoding.UTF8).ConfigureAwait(false);

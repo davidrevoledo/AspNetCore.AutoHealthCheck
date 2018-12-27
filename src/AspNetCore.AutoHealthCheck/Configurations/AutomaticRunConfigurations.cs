@@ -26,14 +26,14 @@ using AspNetCore.AutoHealthCheck.Configurations;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Configurations to run automatically 
+    ///     Configurations to run automatically
     /// </summary>
     public class AutomaticRunConfigurations
     {
         /// <summary>
         ///     Indicates if the health check will run automatically or not.
         /// </summary>
-        public bool AutomaticRunEnabled { get; set; } 
+        public bool AutomaticRunEnabled { get; set; }
 
         /// <summary>
         ///     Indicates every how much the test need to be called automatically in Seconds.
@@ -47,7 +47,7 @@ namespace AspNetCore.AutoHealthCheck
         public HealthCheckRuntimeMode RuntimeMode { get; set; } = HealthCheckRuntimeMode.Interval;
 
         /// <summary>
-        ///     This indicates where the automatic 
+        ///     This indicates where the automatic
         /// </summary>
         public Uri BaseUrl { get; set; }
     }

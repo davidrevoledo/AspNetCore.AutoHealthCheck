@@ -28,7 +28,7 @@ namespace AspNetCore.AutoHealthCheck
     public sealed class AutoHealtCheckMiddlewareOptions
     {
         /// <summary>
-        /// Gets or sets a route prefix for accessing the auto health check endpoint
+        ///     Gets or sets a route prefix for accessing the auto health check endpoint
         /// </summary>
         public string RoutePrefix { get; set; } = "api/autoHealthCheck";
     }

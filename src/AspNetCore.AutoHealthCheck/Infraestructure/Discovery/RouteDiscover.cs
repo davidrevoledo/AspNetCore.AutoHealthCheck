@@ -60,12 +60,8 @@ namespace AspNetCore.AutoHealthCheck
             // the evaluation
             var results = new List<IRouteInformation>();
             foreach (var candidate in candidates)
-            {
                 if (await _internalRouteInformationEvaluator.Evaluate(candidate).ConfigureAwait(false))
-                {
                     results.Add(candidate);
-                }
-            }
 
             return results;
         }

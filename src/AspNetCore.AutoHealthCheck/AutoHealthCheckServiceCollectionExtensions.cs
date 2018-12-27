@@ -59,9 +59,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             // check if the service need to run automatically
             if (options.AutomaticRunConfigurations.AutomaticRunEnabled)
-            {
                 services.AddSingleton<IHostedService, AutoHealtCheckProcess>();
-            }
 
             return services;
         }

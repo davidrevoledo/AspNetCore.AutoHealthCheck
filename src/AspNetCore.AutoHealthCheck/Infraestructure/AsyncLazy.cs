@@ -23,6 +23,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+
 // from https://blog.stephencleary.com/2012/08/asynchronous-lazy-initialization.html
 
 namespace AspNetCore.AutoHealthCheck.Infraestructure

@@ -28,7 +28,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AspNetCore.AutoHealthCheck.Infraestructure;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -39,10 +38,10 @@ namespace AspNetCore.AutoHealthCheck
     {
         private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
         private readonly IEndpointBuilder _endpointBuilder;
+        private readonly IEndpointCaller _endpointCaller;
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
         private readonly AsyncLazy<IEnumerable<IRouteInformation>> _routesFactory;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
-        private readonly IEndpointCaller _endpointCaller;
 
         private int _disposeSignaled;
 
@@ -50,7 +49,7 @@ namespace AspNetCore.AutoHealthCheck
             IRouteDiscover aspNetRouteDiscover,
             IEndpointBuilder endpointBuilder,
             IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
-            IEndpointMessageTranslator endpointMessageTranslator, 
+            IEndpointMessageTranslator endpointMessageTranslator,
             IEndpointCaller endpointCaller)
         {
             _endpointBuilder = endpointBuilder;
@@ -95,8 +94,6 @@ namespace AspNetCore.AutoHealthCheck
                 var routeInformations = routesDefinition as IRouteInformation[] ?? routesDefinition.ToArray();
 
                 if (routeInformations.Any())
-                {
-                    // procecess in paraller
                     foreach (var route in routeInformations.AsParallel()
                         .WithMergeOptions(ParallelMergeOptions.FullyBuffered))
                     {
@@ -107,7 +104,6 @@ namespace AspNetCore.AutoHealthCheck
                         var result = await _endpointCaller.Send(message).ConfigureAwait(false);
                         results.Add(result);
                     }
-                }
 
                 // check test timing
                 watcher.Stop();

@@ -63,7 +63,7 @@ namespace AspNetCore.AutoHealthCheck
 
         /// <summary>
         ///     Http endpoints plugins to do some http transformation or completition
-        ///     Like add custom headers 
+        ///     Like add custom headers
         /// </summary>
         List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; }
 

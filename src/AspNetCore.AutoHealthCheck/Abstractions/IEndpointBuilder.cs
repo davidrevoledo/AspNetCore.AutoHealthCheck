@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder 
+    ///     Endpoint builder
     /// </summary>
     internal interface IEndpointBuilder
     {

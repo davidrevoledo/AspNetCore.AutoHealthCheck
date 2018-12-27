@@ -21,7 +21,6 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {

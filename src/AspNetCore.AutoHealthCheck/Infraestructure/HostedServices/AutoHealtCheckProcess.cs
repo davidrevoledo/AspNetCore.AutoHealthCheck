@@ -20,11 +20,11 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -55,7 +55,8 @@ namespace AspNetCore.AutoHealthCheck
                 var endpointUrl = $"{context.Configurations.AutomaticRunConfigurations.BaseUrl}/api/autoHealthCheck";
                 var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
                 await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000, cancellationToken)
+                await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000,
+                        cancellationToken)
                     .ConfigureAwait(false);
             }
         }
