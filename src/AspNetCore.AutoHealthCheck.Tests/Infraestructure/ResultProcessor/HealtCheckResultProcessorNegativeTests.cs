@@ -54,20 +54,12 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal(500, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.False(healthyResponse.Success);
-            Assert.Equal(2, healthyResponse.UnhealthyEndpoints.Count);
-            Assert.Equal(500, healthyResponse.UnhealthyEndpoints[0].HttpStatusCode);
-            Assert.Equal(502, healthyResponse.UnhealthyEndpoints[1].HttpStatusCode);
+            Assert.NotNull(result);
+            Assert.Equal(500, (int)result.HttpStatus);
+            Assert.False(result.Success);
+            Assert.Equal(2, result.UnhealthyEndpoints.Count);
+            Assert.Equal(500, result.UnhealthyEndpoints[0].HttpStatusCode);
+            Assert.Equal(502, result.UnhealthyEndpoints[1].HttpStatusCode);
         }
 
         [Fact]
@@ -94,18 +86,10 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal(500, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.False(healthyResponse.Success);
-            Assert.Single(healthyResponse.UnhealthyEndpoints);
+            Assert.NotNull(result);
+            Assert.Equal(500, (int) result.HttpStatus);
+            Assert.False(result.Success);
+            Assert.Single(result.UnhealthyEndpoints);
         }
 
         [Fact]
@@ -132,20 +116,12 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal((int)HttpStatusCode.AlreadyReported, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.False(healthyResponse.Success);
-            Assert.Equal(2, healthyResponse.UnhealthyEndpoints.Count);
-            Assert.Equal(500, healthyResponse.UnhealthyEndpoints[0].HttpStatusCode);
-            Assert.Equal(502, healthyResponse.UnhealthyEndpoints[1].HttpStatusCode);
+            Assert.NotNull(result);
+            Assert.Equal(HttpStatusCode.AlreadyReported, result.HttpStatus);
+            Assert.False(result.Success);
+            Assert.Equal(2, result.UnhealthyEndpoints.Count);
+            Assert.Equal(500, result.UnhealthyEndpoints[0].HttpStatusCode);
+            Assert.Equal(502, result.UnhealthyEndpoints[1].HttpStatusCode);
         }
     }
 }

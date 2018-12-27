@@ -61,17 +61,9 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
             var result = await checker.Check();
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal(200, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.True(healthyResponse.Success);
+            Assert.NotNull(result);
+            Assert.Equal(200, (int)result.HttpStatus);
+            Assert.True(result.Success);
         }
     }
 }
