@@ -43,7 +43,7 @@ paket add AspNetCore.AutoHealthCheck
 
 ## <a name="usage"> Usage </a>
 
-In your asp.net core application Startup you just need to Add HealthCheck Service. That's it ! 
+In your asp.net core application Startup you just need to Add HealthCheck Service and UseAutoHealthCheck in Configure. That's it ! 
 
 ``` c#
 public class Startup
@@ -66,12 +66,13 @@ public class Startup
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseMvc();
+            app.UseAutoHealthCheck();
         }
     }
 ```
 
 You can check the result calling your host route + `/api/autoHealthCheck`
-ie:  http://localhost:50387/api/autoHealthCheck
+ie:  http://localhost:50387/api/autoHealthCheck (You can configure the url)
 
 You will get a json with the health check response
 with the following information:
@@ -108,6 +109,14 @@ The url is required as asp.net core doesn't know exactly the URI if it is runnin
 
 ## <a name="customising"> Customising </a>
 
+1. [Intro](#customising_intro)
+2. [Installation](#installation)
+4. [Usage](#usage)
+5. [Customising](#customising)
+6. [License](#license)
+
+
+### <a name="customising_intro"> Intro </a>
 In order to customise the Check you can do the following:
 
 ``` c#
@@ -222,7 +231,6 @@ If you want to avoid a controller / method to be called just need a filter `Avoi
         
      }
 ```
-
   
 ## <a name="license"> License </a>
 
