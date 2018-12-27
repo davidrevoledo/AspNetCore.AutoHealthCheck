@@ -110,11 +110,10 @@ The url is required as asp.net core doesn't know exactly the URI if it is runnin
 ## <a name="customising"> Customising </a>
 
 1. [Intro](#customising_intro)
-2. [Installation](#installation)
-4. [Usage](#usage)
-5. [Customising](#customising)
-6. [License](#license)
-
+2. [Options](#customising_options)
+4. [Plugins](#customising_plugins)
+5. [Hide Endpoints](#customising_hideendpoints)
+6. [Custom Url](#customising_url)
 
 ### <a name="customising_intro"> Intro </a>
 In order to customise the Check you can do the following:
@@ -134,7 +133,9 @@ In order to customise the Check you can do the following:
         }
     }
 ```
-There are the folowing configurations.
+
+### <a name="customising_options"> Options </a>
+
 - `DefaultUnHealthyResponseCode` : Allow you to define the http code to return when a health check test has failed, defualt 500.
 
 - `DefaultHealthyResponseCode` : Allow you to define the http code to return when the check was successfully.
@@ -145,6 +146,8 @@ default : Will fail if the endpoint return an status code between 500 - 599.
 ie : ```c# c.PassCheckRule = response => !response.Headers.Contains("x-header"); ```
 
 - `ExcludeRouteRegexs` : Allow you to define a collection of refex to exclude endpoints to be called for the check.
+
+### <a name="customising_plugins"> Plugins </a>
 
 - `ResultPlugins` : Allow you to define plugins to do something custom with a health check results.  This is a really great feature as could open the door to plugins like a plugin that call a webhook each time the health check fail to do something like reset the service or send an email.
 
@@ -213,6 +216,7 @@ To implement them you just have to implement this interface `IHttpEndpointPlugin
         }
     }
 ```
+### <a name="customising_hideendpoints"> Hide endpoints </a>
 
 If you want to avoid a controller / method to be called just need a filter `AvoidAutoHealtCheckAttribute`
 
@@ -230,6 +234,17 @@ If you want to avoid a controller / method to be called just need a filter `Avoi
         }
         
      }
+```
+
+### <a name="customising_url"> Custom Url </a>
+
+To run the endpoint to run the check in a custom url you just need to configure it in `Configure` method like this:
+
+``` C#
+     app.UseAutoHealthCheck(c =>
+    {
+        c.RoutePrefix = "insights/healtcheck";
+    });
 ```
   
 ## <a name="license"> License </a>
