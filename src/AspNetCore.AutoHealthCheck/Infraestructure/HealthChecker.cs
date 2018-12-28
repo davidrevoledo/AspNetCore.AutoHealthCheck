@@ -36,7 +36,7 @@ namespace AspNetCore.AutoHealthCheck
     /// </summary>
     internal sealed class HealthChecker : IDisposable, IHealthChecker
     {
-        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
         private readonly IEndpointBuilder _endpointBuilder;
         private readonly IEndpointCaller _endpointCaller;
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
@@ -48,12 +48,12 @@ namespace AspNetCore.AutoHealthCheck
         public HealthChecker(
             IRouteDiscover aspNetRouteDiscover,
             IEndpointBuilder endpointBuilder,
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
+            IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
             IEndpointMessageTranslator endpointMessageTranslator,
             IEndpointCaller endpointCaller)
         {
             _endpointBuilder = endpointBuilder;
-            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+            _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
             _endpointMessageTranslator = endpointMessageTranslator;
             _endpointCaller = endpointCaller;
 
@@ -109,7 +109,7 @@ namespace AspNetCore.AutoHealthCheck
                 watcher.Stop();
 
                 // at this point task is finished
-                var currentContext = _autoHealthCheckContextAccesor.Context;
+                var currentContext = _autoHealthCheckContextAccessor.Context;
                 return await HealtCheckResultProcessor.ProcessResult(currentContext, watcher, results.ToArray());
             }
             finally

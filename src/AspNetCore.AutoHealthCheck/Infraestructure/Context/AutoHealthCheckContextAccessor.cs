@@ -20,16 +20,32 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
+
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <inheritdoc />
     /// <summary>
-    ///     Context accesor
+    ///     Context accessor
     /// </summary>
-    public interface IAutoHealthCheckContextAccesor
+    internal class AutoHealthCheckContextAccessor : IAutoHealthCheckContextAccessor
     {
+        private Lazy<IAutoHealthCheckContext> _currentContext;
+
+        public AutoHealthCheckContextAccessor()
+        {
+            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext());
+        }
+
+        /// <inheritdoc />
         /// <summary>
         ///     Current context
         /// </summary>
-        IAutoHealthCheckContext Context { get; }
+        public IAutoHealthCheckContext Context => _currentContext.Value;
+
+        internal void SetConfigurations(IAutoHealthCheckConfigurations configurations)
+        {
+            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext(configurations));
+        }
     }
 }

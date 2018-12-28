@@ -35,7 +35,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
         {
             // arrange
             var dicover = new Mock<IRouteDiscover>();
-            var contextAccesor = new Mock<IAutoHealthCheckContextAccesor>();
+            var contextAccesor = new Mock<IAutoHealthCheckContextAccessor>();
             var endpointBuilder = new Mock<IEndpointBuilder>();
             var endpointTranslator = new Mock<IEndpointMessageTranslator>();
             var endpointCaller = new Mock<IEndpointCaller>();

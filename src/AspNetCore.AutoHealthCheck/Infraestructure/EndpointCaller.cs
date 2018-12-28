@@ -30,15 +30,15 @@ namespace AspNetCore.AutoHealthCheck
     /// </summary>
     internal class EndpointCaller : IEndpointCaller
     {
-        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
         private readonly IHttpClientFactory _clientFactory;
 
         public EndpointCaller(
             IHttpClientFactory clientFactory,
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor)
+            IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor)
         {
             _clientFactory = clientFactory;
-            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+            _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace AspNetCore.AutoHealthCheck
         /// <returns>response</returns>
         public async Task<HttpResponseMessage> Send(HttpRequestMessage message)
         {
-            var context = _autoHealthCheckContextAccesor.Context;
+            var context = _autoHealthCheckContextAccessor.Context;
 
             // process before send actions
             foreach (var httpPlugin in context.Configurations.HttpEndpointPlugins)

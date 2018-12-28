@@ -53,9 +53,9 @@ namespace Microsoft.Extensions.DependencyInjection
             // resolve options
             var options = new AutoHealthCheckConfigurations();
             setupAction?.Invoke(options);
-            var accesor = new AutoHealthCheckContextAccesor();
-            accesor.SetConfigurations(options);
-            services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
+            var accessor = new AutoHealthCheckContextAccessor();
+            accessor.SetConfigurations(options);
+            services.AddSingleton<IAutoHealthCheckContextAccessor>(accessor);
 
             // check if the service need to run automatically
             if (options.AutomaticRunConfigurations.AutomaticRunEnabled)

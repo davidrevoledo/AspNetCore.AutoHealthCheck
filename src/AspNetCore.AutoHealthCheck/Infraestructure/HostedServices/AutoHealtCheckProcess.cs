@@ -30,14 +30,14 @@ namespace AspNetCore.AutoHealthCheck
 {
     internal class AutoHealtCheckProcess : IHostedService, IDisposable
     {
-        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
         private readonly IHttpClientFactory _clientFactory;
 
         public AutoHealtCheckProcess(
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
+            IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
             IHttpClientFactory clientFactory)
         {
-            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+            _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
             _clientFactory = clientFactory;
         }
 
@@ -47,7 +47,7 @@ namespace AspNetCore.AutoHealthCheck
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            var context = _autoHealthCheckContextAccesor.Context;
+            var context = _autoHealthCheckContextAccessor.Context;
             while (true)
             {
                 var client = _clientFactory.CreateClient();

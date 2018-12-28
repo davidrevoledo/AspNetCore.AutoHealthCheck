@@ -28,14 +28,14 @@ namespace AspNetCore.AutoHealthCheck
 {
     internal class InternalRouteInformationEvaluator : IInternalRouteInformationEvaluator
     {
-        private readonly IAutoHealthCheckContextAccesor _autoHealthCheckContextAccesor;
+        private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
         private readonly IRouteEvaluator _routeEvaluator;
 
         public InternalRouteInformationEvaluator(
-            IAutoHealthCheckContextAccesor autoHealthCheckContextAccesor,
+            IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
             IRouteEvaluator routeEvaluator)
         {
-            _autoHealthCheckContextAccesor = autoHealthCheckContextAccesor;
+            _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
             _routeEvaluator = routeEvaluator;
         }
 
@@ -47,7 +47,7 @@ namespace AspNetCore.AutoHealthCheck
         /// <returns>if the route candidate needs to be included</returns>
         public Task<bool> Evaluate(IRouteInformation routeInformation)
         {
-            var context = _autoHealthCheckContextAccesor.Context;
+            var context = _autoHealthCheckContextAccessor.Context;
 
             // check if the route template is included in one of the regex to exclude routes
             // if so them ingore it
