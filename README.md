@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="AspNetCore.AutoHealthCheck.png" alt="AspNetCore.AutoHealthCheck" width="100"/>
+</p>
 
 AspNetCore.AutoHealtCheck
 ====================
