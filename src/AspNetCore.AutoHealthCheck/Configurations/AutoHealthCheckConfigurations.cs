@@ -36,7 +36,7 @@ namespace AspNetCore.AutoHealthCheck
     {
         internal AutoHealthCheckConfigurations()
         {
-            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int)s.StatusCode);
+            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int) s.StatusCode);
             DefaultUnHealthyResponseCode = HttpStatusCode.InternalServerError;
             DefaultHealthyResponseCode = HttpStatusCode.OK;
         }
@@ -65,14 +65,19 @@ namespace AspNetCore.AutoHealthCheck
         public HttpStatusCode DefaultHealthyResponseCode { get; set; }
 
         /// <summary>
+        ///     Automatic run configurations
+        /// </summary>
+        public AutomaticRunConfigurations AutomaticRunConfigurations { get; set; } = new AutomaticRunConfigurations();
+
+        /// <summary>
         ///     Plugins to process results
-        /// </summary> 
-        public IEnumerable<IHealtCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealtCheckResultPlugin>();
+        /// </summary>
+        public List<IHealtCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealtCheckResultPlugin>();
 
         /// <summary>
         ///     Http endpoints plugins to do some http transformation or completition
-        ///     Like add custom headers 
+        ///     Like add custom headers
         /// </summary>
-        public IEnumerable<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; } = new List<IHttpEndpointPlugin>();
+        public List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; } = new List<IHttpEndpointPlugin>();
     }
 }

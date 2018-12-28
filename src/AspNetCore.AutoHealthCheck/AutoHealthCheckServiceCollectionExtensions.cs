@@ -24,6 +24,7 @@ using System;
 using AspNetCore.AutoHealthCheck;
 using AspNetCore.AutoHealthCheck.Extensibility;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -33,11 +34,11 @@ namespace Microsoft.Extensions.DependencyInjection
         ///     Add Auto health check to the asp.net core application without configurations
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="configurationsBuilder">configurations</param>
+        /// <param name="setupAction">configurations</param>
         /// <returns></returns>
         public static IServiceCollection AddAutoHealthCheck(
             this IServiceCollection services,
-            Action<AutoHealthCheckConfigurations> configurationsBuilder = null)
+            Action<AutoHealthCheckConfigurations> setupAction = null)
         {
             services.AddSingleton<IRouteDiscover, RouteDiscover>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -47,22 +48,18 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
             services.AddSingleton<IEndpointMessageTranslator, EndpointMessageTranslator>();
             services.AddSingleton<IEndpointCaller, EndpointCaller>();
-
-            if (configurationsBuilder == null)
-            {
-                services.AddSingleton<IAutoHealthCheckContextAccesor, AutoHealthCheckContextAccesor>();
-            }
-            else
-            {
-                // register accessor with user custom configurations
-                var defaultConfigurations = new AutoHealthCheckConfigurations();
-                configurationsBuilder.Invoke(defaultConfigurations);
-                var accesor = new AutoHealthCheckContextAccesor();
-                accesor.SetConfigurations(defaultConfigurations);
-                services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
-            }
-
             services.AddHttpClient();
+
+            // resolve options
+            var options = new AutoHealthCheckConfigurations();
+            setupAction?.Invoke(options);
+            var accesor = new AutoHealthCheckContextAccesor();
+            accesor.SetConfigurations(options);
+            services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
+
+            // check if the service need to run automatically
+            if (options.AutomaticRunConfigurations.AutomaticRunEnabled)
+                services.AddSingleton<IHostedService, AutoHealtCheckProcess>();
 
             return services;
         }

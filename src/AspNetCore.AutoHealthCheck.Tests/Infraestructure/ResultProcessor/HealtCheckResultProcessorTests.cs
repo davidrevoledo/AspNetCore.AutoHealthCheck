@@ -47,17 +47,9 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, new HttpResponseMessage[0]);
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal(200, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.True(healthyResponse.Success);
+            Assert.NotNull(result);
+            Assert.Equal(200, (int)result.HttpStatus);
+            Assert.True(result.Success);
         }
 
         [Fact]
@@ -83,17 +75,9 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal(200, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.True(healthyResponse.Success);
+            Assert.NotNull(result);
+            Assert.Equal(200, (int)result.HttpStatus);
+            Assert.True(result.Success);
         }
 
         [Fact]
@@ -122,17 +106,9 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal(200, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.True(healthyResponse.Success);
+            Assert.NotNull(result);
+            Assert.Equal(200, (int)result.HttpStatus);
+            Assert.True(result.Success);
         }
 
         [Fact]
@@ -161,17 +137,9 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
 
             // assert
-            Assert.IsType<JsonResult>(result);
-
-            var jsonResult = result as JsonResult;
-
-            Assert.NotNull(jsonResult);
-            Assert.Equal((int)HttpStatusCode.Continue, jsonResult.StatusCode);
-
-            var healthyResponse = jsonResult.Value as HealthyResponse;
-            Assert.NotNull(healthyResponse);
-
-            Assert.True(healthyResponse.Success);
+            Assert.NotNull(result);
+            Assert.Equal(HttpStatusCode.Continue, result.HttpStatus);
+            Assert.True(result.Success);
         }
     }
 }

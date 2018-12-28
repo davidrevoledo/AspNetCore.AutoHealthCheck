@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WebApplication.Plugins;
 
 namespace WebApplication
 {
@@ -21,13 +23,23 @@ namespace WebApplication
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddAutoHealthCheck(c => c.DefaultUnHealthyResponseCode = HttpStatusCode.Accepted);
+            services.AddAutoHealthCheck(c =>
+            {
+                c.AutomaticRunConfigurations.AutomaticRunEnabled = false;
+                c.AutomaticRunConfigurations.BaseUrl = new Uri("http://localhost:50387");
+                c.AutomaticRunConfigurations.SecondsInterval = 1;
+                c.ResultPlugins.Add(new ResultPlugin());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseDeveloperExceptionPage();
             app.UseMvc();
+            app.UseAutoHealthCheck(c =>
+            {
+                c.RoutePrefix = "insights/healtcheck";
+            });
         }
     }
 }

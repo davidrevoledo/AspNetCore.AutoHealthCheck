@@ -27,7 +27,7 @@ using Microsoft.AspNetCore.Http;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder 
+    ///     Endpoint builder
     /// </summary>
     internal class EndpointBuilder : IEndpointBuilder
     {

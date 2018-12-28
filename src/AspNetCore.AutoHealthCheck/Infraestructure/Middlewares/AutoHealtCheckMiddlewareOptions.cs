@@ -20,21 +20,16 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     route evaluator to be over written to have more control
-    ///     if a route needs to be ignored by custom code
+    ///     Options for auto health check middleware
     /// </summary>
-    public interface IRouteEvaluator
+    public sealed class AutoHealtCheckMiddlewareOptions
     {
         /// <summary>
-        ///     Evalute route information and return if it needs to be ingored
+        ///     Gets or sets a route prefix for accessing the auto health check endpoint
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>if route needs to be ignored</returns>
-        Task<bool> Evaluate(IRouteInformation routeInformation);
+        public string RoutePrefix { get; set; } = "api/autoHealthCheck";
     }
 }

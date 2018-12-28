@@ -24,13 +24,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {
     internal class HealtCheckResultProcessor
     {
-        public static async Task<IActionResult> ProcessResult(
+        public static async Task<HealthyResponse> ProcessResult(
             IAutoHealthCheckContext context,
             Stopwatch watcher,
             HttpResponseMessage[] results)
@@ -61,14 +60,11 @@ namespace AspNetCore.AutoHealthCheck
             await ProcessResultPlugins(context, healtyResponse).ConfigureAwait(false);
 
             // get status code
-            var responseCode = healtyResponse.Success
+            healtyResponse.HttpStatus = healtyResponse.Success
                 ? context.Configurations.DefaultHealthyResponseCode
                 : context.Configurations.DefaultUnHealthyResponseCode;
 
-            return new JsonResult(healtyResponse)
-            {
-                StatusCode = (int) responseCode
-            };
+            return healtyResponse;
         }
 
         private static async Task ProcessResultPlugins(IAutoHealthCheckContext context, HealthyResponse healtyResponse)

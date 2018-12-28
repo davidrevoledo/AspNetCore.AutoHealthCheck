@@ -36,14 +36,14 @@ namespace AspNetCore.AutoHealthCheck
             _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext());
         }
 
-        internal void SetConfigurations(IAutoHealthCheckConfigurations configurations)
-        {
-            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext(configurations));
-        }
-
         /// <summary>
         ///     Current context
         /// </summary>
         public IAutoHealthCheckContext Context => _currentContext.Value;
+
+        internal void SetConfigurations(IAutoHealthCheckConfigurations configurations)
+        {
+            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext(configurations));
+        }
     }
 }

@@ -20,21 +20,35 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using System;
+using AspNetCore.AutoHealthCheck.Configurations;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     route evaluator to be over written to have more control
-    ///     if a route needs to be ignored by custom code
+    ///     Configurations to run automatically
     /// </summary>
-    public interface IRouteEvaluator
+    public class AutomaticRunConfigurations
     {
         /// <summary>
-        ///     Evalute route information and return if it needs to be ingored
+        ///     Indicates if the health check will run automatically or not.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>if route needs to be ignored</returns>
-        Task<bool> Evaluate(IRouteInformation routeInformation);
+        public bool AutomaticRunEnabled { get; set; }
+
+        /// <summary>
+        ///     Indicates every how much the test need to be called automatically in Seconds.
+        ///     Default 60 seconds
+        /// </summary>
+        public int SecondsInterval { get; set; } = 60;
+
+        /// <summary>
+        ///     Define how the internal runtime to auto execute the check will be called
+        /// </summary>
+        public HealthCheckRuntimeMode RuntimeMode { get; set; } = HealthCheckRuntimeMode.Interval;
+
+        /// <summary>
+        ///     This indicates where the automatic
+        /// </summary>
+        public Uri BaseUrl { get; set; }
     }
 }

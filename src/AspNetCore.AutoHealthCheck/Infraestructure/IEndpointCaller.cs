@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Engine who call the endpoints via http 
+    ///     Engine who call the endpoints via http
     /// </summary>
     public interface IEndpointCaller
     {

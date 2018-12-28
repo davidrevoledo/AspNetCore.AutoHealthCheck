@@ -20,15 +20,17 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using System.Linq;
 
 namespace AspNetCore.AutoHealthCheck
 {
     internal class BodyContentScraper
     {
-        public static IRouteInformation CompleteBodyRequiredContent(IRouteInformation info, ControllerActionDescriptor actionDescriptor)
+        public static IRouteInformation CompleteBodyRequiredContent(
+            IRouteInformation info,
+            ControllerActionDescriptor actionDescriptor)
         {
             if (actionDescriptor == null)
                 return info;
@@ -43,14 +45,12 @@ namespace AspNetCore.AutoHealthCheck
 
             // first check if there is any param marked as body to give it more priority even if they are not the first param
             foreach (var param in methodParams)
-            {
                 // check if param has FromQuery or FromBody Attribute to avoid them
                 if (param.ContainsAttribute<FromBodyAttribute>() && !routeConstraints.Contains(param.Name))
                 {
                     info.BodyParams[param.Name] = param.ParameterType;
                     break;
                 }
-            }
 
             // only 1 will be supported for now
             if (info.BodyParams.Any())
@@ -60,14 +60,12 @@ namespace AspNetCore.AutoHealthCheck
             // part of the route.
             // this is done because Asp.Net Core support getting object with HttPost without marking them with [FromBody]
             foreach (var param in methodParams)
-            {
                 // it will take the first one always
                 if (!routeConstraints.Contains(param.Name))
                 {
                     info.BodyParams[param.Name] = param.ParameterType;
                     break;
                 }
-            }
 
             return info;
         }

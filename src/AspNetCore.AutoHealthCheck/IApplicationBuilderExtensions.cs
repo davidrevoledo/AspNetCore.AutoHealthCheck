@@ -20,37 +20,22 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using System;
+using AspNetCore.AutoHealthCheck;
 
-namespace AspNetCore.AutoHealthCheck
+namespace Microsoft.AspNetCore.Builder
 {
-    /// <summary>
-    ///     Default controller to implement healt check
-    /// </summary>
-    [Route("api/autoHealthCheck")]
-    [ApiController]
-    public sealed class AutoHealthCheckController : ControllerBase
+    public static class IApplicationBuilderExtensions
     {
-        private readonly IHealthChecker _healthChecker;
-
-        public AutoHealthCheckController(IHealthChecker healthChecker)
+        public static IApplicationBuilder UseAutoHealthCheck(
+            this IApplicationBuilder app,
+            Action<AutoHealtCheckMiddlewareOptions> setupAction = null)
         {
-            _healthChecker = healthChecker;
-        }
+            var options = new AutoHealtCheckMiddlewareOptions();
+            setupAction?.Invoke(options);
 
-        /// <summary>
-        ///     Default endpoint to process the health check
-        /// </summary>
-        /// <returns></returns>
-        [AvoidAutoHealtCheck]
-        [Route("")]
-        [AllowAnonymous]
-        [HttpGet]
-        public Task<IActionResult> Get()
-        {
-            return _healthChecker.Check();
+            app.UseMiddleware<AutoHealthCheckMiddleware>(options);
+            return app;
         }
     }
 }

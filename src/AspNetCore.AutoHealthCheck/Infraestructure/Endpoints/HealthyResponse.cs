@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Collections.Generic;
+using System.Net;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -33,6 +34,11 @@ namespace AspNetCore.AutoHealthCheck
         ///     Indicate if the check was successfully
         /// </summary>
         public bool Success { get; set; }
+
+        /// <summary>
+        ///     Http Status the check has finished
+        /// </summary>
+        public HttpStatusCode HttpStatus { get; set; }
 
         /// <summary>
         ///     Indicate the elapsed time in seconds

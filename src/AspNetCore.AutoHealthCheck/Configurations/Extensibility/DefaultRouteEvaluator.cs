@@ -35,6 +35,9 @@ namespace AspNetCore.AutoHealthCheck.Extensibility
         /// </summary>
         /// <param name="routeInformation">route information</param>
         /// <returns>if route needs to be ignored</returns>
-        public Task<bool> Evaluate(IRouteInformation routeInformation) => Task.FromResult(true);
+        public Task<bool> Evaluate(IRouteInformation routeInformation)
+        {
+            return Task.FromResult(true);
+        }
     }
 }

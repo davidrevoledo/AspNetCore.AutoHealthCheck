@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFA2E39C-2C5
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{270C7C3F-98AE-43D8-BB6B-18FAE0420F89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AutoHealthCheck.Tests", "AspNetCore.AutoHealthCheck.Tests\AspNetCore.AutoHealthCheck.Tests.csproj", "{32641493-0310-4380-B7CF-47F55D74F0A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Tests", "AspNetCore.AutoHealthCheck.Tests\AspNetCore.AutoHealthCheck.Tests.csproj", "{32641493-0310-4380-B7CF-47F55D74F0A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

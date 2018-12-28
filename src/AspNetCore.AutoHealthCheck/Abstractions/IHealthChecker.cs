@@ -21,7 +21,6 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCore.AutoHealthCheck
 {
@@ -39,7 +38,7 @@ namespace AspNetCore.AutoHealthCheck
         ///     Perform the health check
         /// </summary>
         /// <returns>Response with the test result</returns>
-        Task<IActionResult> Check();
+        Task<HealthyResponse> Check();
 
         /// <summary>
         ///     Dispose the resource

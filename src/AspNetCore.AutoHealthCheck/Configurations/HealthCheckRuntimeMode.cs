@@ -20,21 +20,13 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck.Configurations
 {
     /// <summary>
-    ///     route evaluator to be over written to have more control
-    ///     if a route needs to be ignored by custom code
+    ///     Define how the internal runtime to auto execute the check will be called
     /// </summary>
-    public interface IRouteEvaluator
+    public enum HealthCheckRuntimeMode
     {
-        /// <summary>
-        ///     Evalute route information and return if it needs to be ingored
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>if route needs to be ignored</returns>
-        Task<bool> Evaluate(IRouteInformation routeInformation);
+        Interval
     }
 }
