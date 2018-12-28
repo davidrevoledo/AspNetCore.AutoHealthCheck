@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck", "AspNetCore.AutoHealthCheck\AspNetCore.AutoHealthCheck.csproj", "{B2553537-A52E-49A9-A36F-C42F5D441EEA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}"
-	ProjectSection(SolutionItems) = preProject
-		..\AspNetCore.AutoHealthCheck.png = ..\AspNetCore.AutoHealthCheck.png
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "WebApplication\WebApplication.csproj", "{B90A7A1C-6652-49B7-A75A-673003E054ED}"
 EndProject
