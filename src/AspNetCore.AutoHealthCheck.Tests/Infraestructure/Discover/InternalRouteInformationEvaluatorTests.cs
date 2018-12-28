@@ -35,7 +35,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
         public async Task InternalRouteInformationEvaluator_should_ignore_route_if_any_regex_is_excluding_template()
         {
             // arrange
-            var contextAccessor = new Mock<IAutoHealthCheckContextAccesor>();
+            var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
             var contex = new Mock<IAutoHealthCheckContext>();
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
@@ -72,7 +72,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
         public async Task InternalRouteInformationEvaluator_should_not_ignore_route_if_regex_does_not_match()
         {
             // arrange
-            var contextAccessor = new Mock<IAutoHealthCheckContextAccesor>();
+            var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
             var contex = new Mock<IAutoHealthCheckContext>();
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
@@ -109,7 +109,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
         public async Task InternalRouteInformationEvaluator_should_ignore_route_if_evaluator_return_false()
         {
             // arrange
-            var contextAccessor = new Mock<IAutoHealthCheckContextAccesor>();
+            var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
             var contex = new Mock<IAutoHealthCheckContext>();
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
