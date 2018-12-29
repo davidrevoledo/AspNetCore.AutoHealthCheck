@@ -37,13 +37,13 @@ namespace AspNetCore.AutoHealthCheck
         {
             var healthyResponse = new HealthyResponse
             {
-                ElapsedSecondsTest = watcher.ElapsedMilliseconds / 1000
+                ElapsedSecondsTest = watcher.ElapsedMilliseconds / 1000,
+                Success = true  // default
             };
 
-            // check if all responses are out of error server range
-            if (!endpointResults.Any() || endpointResults.All(r => context.Configurations.PassCheckRule.Invoke(r)))
-                healthyResponse.Success = true;
-            else
+            // check if there is something to evaluate result.
+            if (endpointResults.Length != 0 || endpointResults.Length != 0)
+            {
                 foreach (var result in endpointResults)
                 {
                     if (context.Configurations.PassCheckRule.Invoke(result))
@@ -58,6 +58,20 @@ namespace AspNetCore.AutoHealthCheck
                     });
                 }
 
+                foreach (var probe in probeResults)
+                {
+                    if (probe.Succeed)
+                        continue;
+
+                    healthyResponse.Success = false;
+                    healthyResponse.UnhealthyProbes.Add(new UnhealthyProbe
+                    {
+                        Name = probe.Name,
+                        ErrorMessage = probe.ErrorMessage
+                    });
+                }
+            }
+
             await ProcessResultPlugins(context, healthyResponse).ConfigureAwait(false);
 
             // get status code
@@ -69,7 +83,7 @@ namespace AspNetCore.AutoHealthCheck
         }
 
         private static async Task ProcessResultPlugins(
-            IAutoHealthCheckContext context, 
+            IAutoHealthCheckContext context,
             HealthyResponse healthyResponse)
         {
             foreach (var resultPlugin in context.Configurations.ResultPlugins)

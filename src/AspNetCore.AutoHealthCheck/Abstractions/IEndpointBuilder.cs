@@ -25,12 +25,12 @@ using System.Threading.Tasks;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder
+    ///     Endpoint builder.
     /// </summary>
     internal interface IEndpointBuilder
     {
         /// <summary>
-        ///     Create endpoint definition from route
+        ///     Create endpoint definition from route.
         /// </summary>
         /// <param name="routeInformation">route information</param>
         /// <returns>endpoint definition</returns>

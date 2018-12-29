@@ -23,22 +23,22 @@
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Response for Endpoints who fail
+    ///     Response for Endpoints who failed.
     /// </summary>
-    public class UnhealthyEndpoint
+    public sealed class UnhealthyEndpoint
     {
         /// <summary>
-        ///     Indicate the route of the endpoint who is failing
+        ///     Indicate the route of the endpoint who is failing.
         /// </summary>
         public string Route { get; set; }
 
         /// <summary>
-        ///     Indicate the http status result of the endpoint who is failing
+        ///     Indicate the http status result of the endpoint who is failing.
         /// </summary>
         public int HttpStatusCode { get; set; }
 
         /// <summary>
-        ///     Indicate the http verb who was used to check the endpoint
+        ///     Indicate the http verb who was used to check the endpoint.
         /// </summary>
         public string HttpVerb { get; internal set; }
     }

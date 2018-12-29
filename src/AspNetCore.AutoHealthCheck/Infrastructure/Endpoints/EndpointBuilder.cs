@@ -26,9 +26,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Endpoint builder
-    /// </summary>
+    /// <inheritdoc />
     internal class EndpointBuilder : IEndpointBuilder
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -38,11 +36,7 @@ namespace AspNetCore.AutoHealthCheck
             _httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        ///     Create endpoint definition from route
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
+        /// <inheritdoc />
         public Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation)
         {
             if (routeInformation == null) throw new ArgumentNullException(nameof(routeInformation));

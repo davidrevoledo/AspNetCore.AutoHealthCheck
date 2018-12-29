@@ -31,16 +31,10 @@ using Newtonsoft.Json;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Endpoint translator to get a HttpRequest message to call the endpoint
-    /// </summary>
+    /// <inheritdoc />
     internal class EndpointMessageTranslator : IEndpointMessageTranslator
     {
-        /// <summary>
-        ///     Convert an endpoint to represent a HttpRequest message to call it
-        /// </summary>
-        /// <param name="endpoint">endpoint information</param>
-        /// <returns>Http request to call the endpoint</returns>
+        /// <inheritdoc />
         public Task<HttpRequestMessage> Transform(IEndpoint endpoint)
         {
             var httpMethod = endpoint.RouteInformation.GetHttpMethod();
@@ -100,11 +94,11 @@ namespace AspNetCore.AutoHealthCheck
         private static string GetEndpointUrl(IEndpoint endpoint)
         {
             // heal in case endpoint not start with /
-            var endpointResourece = endpoint.RouteInformation.Path;
-            if (!endpointResourece.StartsWith("/"))
-                endpointResourece = $"/" + endpointResourece;
+            var endpointResource = endpoint.RouteInformation.Path;
+            if (!endpointResource.StartsWith("/"))
+                endpointResource = $"/" + endpointResource;
 
-            var routePath = $"{endpoint.Host}{endpointResourece}";
+            var routePath = $"{endpoint.Host}{endpointResource}";
             routePath = TransformRouteParams(endpoint, routePath);
 
             var routeBuilder = new StringBuilder(routePath);

@@ -43,7 +43,7 @@ namespace AspNetCore.AutoHealthCheck
                 .Where(c => !string.IsNullOrWhiteSpace(c) && !c.Contains("/"));
         }
 
-        public static IRouteInformation CoumpleteRoutingInformation(
+        public static IRouteInformation CompleteRoutingInformation(
             IRouteInformation info,
             ControllerActionDescriptor actionDescriptor)
         {

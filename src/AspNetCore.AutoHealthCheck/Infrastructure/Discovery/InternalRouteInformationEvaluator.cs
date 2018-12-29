@@ -39,22 +39,16 @@ namespace AspNetCore.AutoHealthCheck
             _routeEvaluator = routeEvaluator;
         }
 
-        /// <summary>
-        ///     Internally evaluate a route to determine if needs to be included
-        ///     to check
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>if the route candidate needs to be included</returns>
+        /// <inheritdoc />
         public Task<bool> Evaluate(IRouteInformation routeInformation)
         {
             var context = _autoHealthCheckContextAccessor.Context;
 
             // check if the route template is included in one of the regex to exclude routes
-            // if so them ingore it
-            if (context.Configurations.ExcludeRouteRegexs.Any(e => e.IsMatch(routeInformation.RouteTemplate)))
-                return Task.FromResult(false);
-
-            return _routeEvaluator.Evaluate(routeInformation);
+            // if so them ignore it
+            return context.Configurations.ExcludeRouteRegexs.Any(e => e.IsMatch(routeInformation.RouteTemplate)) ?
+                Task.FromResult(false) :
+                _routeEvaluator.Evaluate(routeInformation);
         }
     }
 }

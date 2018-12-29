@@ -60,7 +60,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scraper
             var description = new ControllerActionDescriptor();
 
             // act
-            RoutingScraper.CoumpleteRoutingInformation(routeInformation, description);
+            RoutingScraper.CompleteRoutingInformation(routeInformation, description);
 
             // assert
             Assert.Empty(routeInformation.RouteParams);
@@ -87,7 +87,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scraper
             };
 
             // act
-            RoutingScraper.CoumpleteRoutingInformation(routeInformation, description);
+            RoutingScraper.CompleteRoutingInformation(routeInformation, description);
 
             // assert
             Assert.Single(routeInformation.RouteParams);
@@ -111,7 +111,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scraper
             };
 
             // act
-            RoutingScraper.CoumpleteRoutingInformation(routeInformation, description);
+            RoutingScraper.CompleteRoutingInformation(routeInformation, description);
 
             // assert
             Assert.Empty(routeInformation.RouteParams);
@@ -133,7 +133,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scraper
             };
 
             // act
-            RoutingScraper.CoumpleteRoutingInformation(routeInformation, description);
+            RoutingScraper.CompleteRoutingInformation(routeInformation, description);
 
             // assert
             Assert.Empty(routeInformation.RouteParams);

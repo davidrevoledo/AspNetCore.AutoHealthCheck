@@ -30,7 +30,7 @@ using Xunit;
 
 namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
 {
-    public class HealtCheckResultProcessorNegativeTests
+    public class HealthCheckResultProcessorNegativeTests
     {
         [Fact]
         public async Task HealthCheckResultProcessor_should_fail_returning_500_with_default_rule()

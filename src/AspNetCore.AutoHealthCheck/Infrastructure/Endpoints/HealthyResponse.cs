@@ -26,28 +26,33 @@ using System.Net;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Healt check result information
+    ///     Health check result information.
     /// </summary>
     public class HealthyResponse
     {
         /// <summary>
-        ///     Indicate if the check was successfully
+        ///     Indicate if the check was successfully.
         /// </summary>
         public bool Success { get; set; }
 
         /// <summary>
-        ///     Http Status the check has finished
+        ///     Http Status the check has finished.
         /// </summary>
         public HttpStatusCode HttpStatus { get; set; }
 
         /// <summary>
-        ///     Indicate the elapsed time in seconds
+        ///     Indicate the elapsed time in seconds.
         /// </summary>
         public long ElapsedSecondsTest { get; set; }
 
         /// <summary>
-        ///     Indicate the endpoints who failed
+        ///     Indicate the endpoints who failed.
         /// </summary>
         public List<UnhealthyEndpoint> UnhealthyEndpoints { get; set; } = new List<UnhealthyEndpoint>();
+
+        /// <summary>
+        ///     Indicate the probes who failed.
+        /// </summary>
+        public List<UnhealthyProbe> UnhealthyProbes { get; set; } = new List<UnhealthyProbe>();
     }
 }
