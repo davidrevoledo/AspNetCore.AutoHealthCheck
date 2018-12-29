@@ -27,7 +27,7 @@ using AspNetCore.AutoHealthCheck.Tests.Controllers;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scapers
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scraper
 {
     public class BodyContentScraperTests
     {

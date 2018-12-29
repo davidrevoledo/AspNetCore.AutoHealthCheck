@@ -29,9 +29,7 @@ using System.Text.RegularExpressions;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Auto health check configurations
-    /// </summary>
+    /// <inheritdoc />
     public class AutoHealthCheckConfigurations : IAutoHealthCheckConfigurations
     {
         internal AutoHealthCheckConfigurations()
@@ -40,6 +38,9 @@ namespace AspNetCore.AutoHealthCheck
             DefaultUnHealthyResponseCode = HttpStatusCode.InternalServerError;
             DefaultHealthyResponseCode = HttpStatusCode.OK;
         }
+
+        /// <inheritdoc />
+        public bool RunCustomProbesAsync { get; set; }
 
         /// <inheritdoc />
         public List<Regex> ExcludeRouteRegexs { get; set; } = new List<Regex>();

@@ -48,8 +48,8 @@ namespace AspNetCore.AutoHealthCheck.Tests.Controllers
         {
         }
 
-        [HttpGet("UnsuportedQueryString")]
-        public void UnsuportedQueryString(List<string> ids)
+        [HttpGet("UnsupportedQueryString")]
+        public void UnsupportedQueryString(List<string> ids)
         {
         }
 

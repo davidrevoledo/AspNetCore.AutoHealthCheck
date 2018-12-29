@@ -28,12 +28,12 @@ using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    internal class AutoHealtCheckProcess : IHostedService, IDisposable
+    internal class AutoHealthCheckProcess : IHostedService, IDisposable
     {
         private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
         private readonly IHttpClientFactory _clientFactory;
 
-        public AutoHealtCheckProcess(
+        public AutoHealthCheckProcess(
             IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
             IHttpClientFactory clientFactory)
         {

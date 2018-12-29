@@ -26,7 +26,7 @@ using AspNetCore.AutoHealthCheck.Tests.Controllers;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scapers
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scraper
 {
     public class RoutingScraperTests
     {
@@ -49,7 +49,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scapers
         }
 
         [Fact]
-        public void RouteScraper_should_ignore_route_params_if_constratints_are_emtpy()
+        public void RouteScraper_should_ignore_route_params_if_constraints_are_empty()
         {
             // arrange
             var routeInformation = new RouteInformation

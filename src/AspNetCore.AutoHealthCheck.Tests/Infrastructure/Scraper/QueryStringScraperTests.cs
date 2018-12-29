@@ -27,7 +27,7 @@ using AspNetCore.AutoHealthCheck.Tests.Controllers;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scapers
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scraper
 {
     public class QueryStringScraperTests
     {
@@ -87,13 +87,13 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Scapers
             // arrange
             var routeInformation = new RouteInformation
             {
-                RouteTemplate = "UnsuportedQueryString"
+                RouteTemplate = "UnsupportedQueryString"
             };
 
             // will not support for get a list as querystring
             var description = new ControllerActionDescriptor
             {
-                MethodInfo = typeof(FakeController).GetMethod("UnsuportedQueryString")
+                MethodInfo = typeof(FakeController).GetMethod("UnsupportedQueryString")
             };
 
             // act

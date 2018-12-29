@@ -27,29 +27,30 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    internal class HealtCheckResultProcessor
+    internal class HealthCheckResultProcessor
     {
         public static async Task<HealthyResponse> ProcessResult(
             IAutoHealthCheckContext context,
             Stopwatch watcher,
-            HttpResponseMessage[] results)
+            HttpResponseMessage[] endpointResults,
+            ProbeResult[] probeResults)
         {
-            var healtyResponse = new HealthyResponse
+            var healthyResponse = new HealthyResponse
             {
                 ElapsedSecondsTest = watcher.ElapsedMilliseconds / 1000
             };
 
             // check if all responses are out of error server range
-            if (!results.Any() || results.All(r => context.Configurations.PassCheckRule.Invoke(r)))
-                healtyResponse.Success = true;
+            if (!endpointResults.Any() || endpointResults.All(r => context.Configurations.PassCheckRule.Invoke(r)))
+                healthyResponse.Success = true;
             else
-                foreach (var result in results)
+                foreach (var result in endpointResults)
                 {
                     if (context.Configurations.PassCheckRule.Invoke(result))
                         continue;
 
-                    healtyResponse.Success = false;
-                    healtyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
+                    healthyResponse.Success = false;
+                    healthyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
                     {
                         HttpStatusCode = (int) result.StatusCode,
                         Route = result.RequestMessage?.RequestUri.ToString(),
@@ -57,30 +58,32 @@ namespace AspNetCore.AutoHealthCheck
                     });
                 }
 
-            await ProcessResultPlugins(context, healtyResponse).ConfigureAwait(false);
+            await ProcessResultPlugins(context, healthyResponse).ConfigureAwait(false);
 
             // get status code
-            healtyResponse.HttpStatus = healtyResponse.Success
+            healthyResponse.HttpStatus = healthyResponse.Success
                 ? context.Configurations.DefaultHealthyResponseCode
                 : context.Configurations.DefaultUnHealthyResponseCode;
 
-            return healtyResponse;
+            return healthyResponse;
         }
 
-        private static async Task ProcessResultPlugins(IAutoHealthCheckContext context, HealthyResponse healtyResponse)
+        private static async Task ProcessResultPlugins(
+            IAutoHealthCheckContext context, 
+            HealthyResponse healthyResponse)
         {
             foreach (var resultPlugin in context.Configurations.ResultPlugins)
             {
-                await resultPlugin.ActionAfterResult(healtyResponse).ConfigureAwait(false);
+                await resultPlugin.ActionAfterResult(healthyResponse).ConfigureAwait(false);
 
-                switch (healtyResponse.Success)
+                switch (healthyResponse.Success)
                 {
                     case true:
-                        await resultPlugin.ActionAfterSuccess(healtyResponse).ConfigureAwait(false);
+                        await resultPlugin.ActionAfterSuccess(healthyResponse).ConfigureAwait(false);
                         break;
 
                     case false:
-                        await resultPlugin.ActionAfterFail(healtyResponse).ConfigureAwait(false);
+                        await resultPlugin.ActionAfterFail(healthyResponse).ConfigureAwait(false);
                         break;
                 }
             }

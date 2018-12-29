@@ -27,7 +27,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middlewares
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middleware
 {
     public class AutoHealthCheckMiddlewareTests
     {
@@ -86,7 +86,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middlewares
         }
 
         [Fact]
-        public async Task AutoHealthCheckMiddleware_should_avoid_run_with_unmatching_url()
+        public async Task AutoHealthCheckMiddleware_should_avoid_run_with_un_match_url()
         {
             // arrange
             var engine = new Mock<IHealthChecker>();

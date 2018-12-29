@@ -30,20 +30,24 @@ using Xunit;
 
 namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
 {
-    public class HealtCheckResultProcessorTests
+    public class HealthCheckResultProcessorTests
     {
         [Fact]
-        public async Task HealtCheckResultProcessor_should_return_ok_with_emtpty_results()
+        public async Task HealthCheckResultProcessor_should_return_ok_with_empty_results()
         {
             // arrange
             var watch = new Stopwatch();
             watch.Start();
-            var contex = new Mock<IAutoHealthCheckContext>();
-            contex.Setup(c => c.Configurations)
+            var context = new Mock<IAutoHealthCheckContext>();
+            context.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations());
 
             // act
-            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, new HttpResponseMessage[0]);
+            var result = await HealthCheckResultProcessor.ProcessResult(
+                context.Object,
+                watch,
+                new HttpResponseMessage[0],
+                new ProbeResult[0]);
 
             // assert
             Assert.NotNull(result);
@@ -52,14 +56,14 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
         }
 
         [Fact]
-        public async Task HealtCheckResultProcessor_should_return_ok_with_default_rule()
+        public async Task HealthCheckResultProcessor_should_return_ok_with_default_rule()
         {
             // arrange
             var watch = new Stopwatch();
             watch.Start();
-            var contex = new Mock<IAutoHealthCheckContext>();
+            var context = new Mock<IAutoHealthCheckContext>();
 
-            contex.Setup(c => c.Configurations)
+            context.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations()); // default rule
 
             var messages = new List<HttpResponseMessage>
@@ -71,7 +75,10 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
             };
 
             // act
-            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
+            var result = await HealthCheckResultProcessor.ProcessResult(
+                context.Object,
+                watch, messages.ToArray(),
+                new ProbeResult[0]);
 
             // assert
             Assert.NotNull(result);
@@ -80,14 +87,14 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
         }
 
         [Fact]
-        public async Task HealtCheckResultProcessor_should_return_ok_with_custom_rule()
+        public async Task HealthCheckResultProcessor_should_return_ok_with_custom_rule()
         {
             // arrange
             var watch = new Stopwatch();
             watch.Start();
-            var contex = new Mock<IAutoHealthCheckContext>();
+            var context = new Mock<IAutoHealthCheckContext>();
 
-            contex.Setup(c => c.Configurations)
+            context.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations
                 {
                     PassCheckRule = m => m.StatusCode != HttpStatusCode.OK // if is ok should fail
@@ -102,7 +109,11 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
             };
 
             // act
-            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
+            var result = await HealthCheckResultProcessor.ProcessResult(
+                context.Object,
+                watch,
+                messages.ToArray(),
+                new ProbeResult[0]);
 
             // assert
             Assert.NotNull(result);
@@ -111,14 +122,14 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
         }
 
         [Fact]
-        public async Task HealtCheckResultProcessor_should_return_custom_response_code_with_default_rule()
+        public async Task HealthCheckResultProcessor_should_return_custom_response_code_with_default_rule()
         {
             // arrange
             var watch = new Stopwatch();
             watch.Start();
-            var contex = new Mock<IAutoHealthCheckContext>();
+            var context = new Mock<IAutoHealthCheckContext>();
 
-            contex.Setup(c => c.Configurations)
+            context.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations
                 {
                     DefaultHealthyResponseCode = HttpStatusCode.Continue
@@ -133,7 +144,11 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
             };
 
             // act
-            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, messages.ToArray());
+            var result = await HealthCheckResultProcessor.ProcessResult(
+                context.Object,
+                watch,
+                messages.ToArray(),
+                new ProbeResult[0]);
 
             // assert
             Assert.NotNull(result);
