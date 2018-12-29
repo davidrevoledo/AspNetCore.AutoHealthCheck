@@ -4,7 +4,8 @@
 
 AspNetCore.AutoHealtCheck
 ====================
-Check automatically your asp.net core applications with a lot of extensibility !
+- Check automatically \r asp.net core applications with a lot of extensibility !
+- Check how defensive your asp.net core application is.
 
 [![CodeFactor](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck/badge)](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck)
 ![NuGet](https://img.shields.io/nuget/dt/AspNetCore.AutoHealthCheck.svg)
@@ -23,6 +24,7 @@ Check automatically your asp.net core applications with a lot of extensibility !
 2. [Installation](#installation)
 4. [Usage](#usage)
 5. [Customising](#customising)
+5. [Extensibility](#extensibility)
 6. [License](#license)
 
 ## <a name="features"> Features </a>
@@ -33,20 +35,24 @@ Check automatically your asp.net core applications with a lot of extensibility !
 -  Allow to call custom actions (ie weebhooks) for health resutls.
 -  Automatic run on background using HostedServices
 -  Full Async support.
+-  Custom Probes.
+
+====================
 
 ## <a name="installation"> Installation </a>
 
-Grab the latest AspNetCore.AutoHealthCheck NuGet package and install in your solution. https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/
+Grab the latest AspNetCore.AutoHealthCheck NuGet package and install in the desired package. https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/
 ```sh
 PM > Install-Package AspNetCore.AutoHealthCheck 
 NET CLI - dotnet add package AspNetCore.AutoHealthCheck 
 paket add AspNetCore.AutoHealthCheck 
 
 ```
+====================
 
 ## <a name="usage"> Usage </a>
 
-In your asp.net core application Startup you just need to Add HealthCheck Service and UseAutoHealthCheck in Configure. That's it ! 
+In the asp.net core application Startup just need to Add HealthCheck Service and UseAutoHealthCheck in Configure. That's it ! 
 
 ``` c#
 public class Startup
@@ -74,10 +80,10 @@ public class Startup
     }
 ```
 
-You can check the result calling your host route + `/api/autoHealthCheck`
-ie:  http://localhost:50387/api/autoHealthCheck (You can configure the url)
+The check can be made calling the endpoint with the deafault route+ `/api/autoHealthCheck`
+ie:  http://localhost:50387/api/autoHealthCheck (The route can be configured also)
 
-You will get a json with the health check response
+A json will be returned with the check information
 with the following information:
 
 - if health check was successfully.
@@ -86,13 +92,20 @@ with the following information:
 
 ``` JSON
 {  
-   "success":false,
-   "elapsedSecondsTest":3,
-   "unhealthyEndpoints":[  
+   "Success":false,
+   "HttpStatus":500,
+   "ElapsedSecondsTest":3,
+   "UnhealthyEndpoints":[  
       {  
-         "route":"http://localhost:50387/api/Values/array",
-         "httpStatusCode":500,
-         "httpVerb":"POST"
+         "Route":"http://localhost:51555/api/Values/array",
+         "HttpStatusCode":500,
+         "HttpVerb":"POST"
+      }
+   ],
+   "UnhealthyProbes":[  
+      {  
+         "Name":"CustomProbe",
+         "ErrorMessage":"Custom message"
       }
    ]
 }
@@ -110,16 +123,17 @@ To activate background monitor just configure the options in startup.
 ```
 The url is required as asp.net core doesn't know exactly the URI if it is running behing a proxy reverse server like IIS in the moment the asp.net core application starts.
 
+====================
+
 ## <a name="customising"> Customising </a>
 
 1. [Intro](#customising_intro)
 2. [Options](#customising_options)
-4. [Plugins](#customising_plugins)
-5. [Hide Endpoints](#customising_hideendpoints)
-6. [Custom Url](#customising_url)
+3. [Hide Endpoints](#customising_hideendpoints)
+4. [Custom Url](#customising_url)
 
 ### <a name="customising_intro"> Intro </a>
-In order to customise the Check you can do the following:
+In order to customise the Check the following code is needed.
 
 ``` c#
         public void ConfigureServices(IServiceCollection services)
@@ -127,7 +141,7 @@ In order to customise the Check you can do the following:
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            // add the rest of your configurations.
+            // add the rest of the configurations.
             services.AddAutoHealthCheck(c =>
             {
                 c.DefaultUnHealthyResponseCode = HttpStatusCode.Accepted;
@@ -139,22 +153,59 @@ In order to customise the Check you can do the following:
 
 ### <a name="customising_options"> Options </a>
 
-- `DefaultUnHealthyResponseCode` : Allow you to define the http code to return when a health check test has failed, defualt 500.
+- `DefaultUnHealthyResponseCode` : Allow to define the http code to return when a health check test has failed, defualt 500.
 
-- `DefaultHealthyResponseCode` : Allow you to define the http code to return when the check was successfully.
+- `DefaultHealthyResponseCode` : Allow to define the http code to return when the check was successfully.
 
-- `PassCheckRule` : Allow you to define how to check if an endpoint is failing (for now is general) with this rule will check all the endpoints
+- `PassCheckRule` : Allow to define how to check if an endpoint is failing (for now is general) with this rule will check all the endpoints
 
 default : Will fail if the endpoint return an status code between 500 - 599.
 ie : ```c# c.PassCheckRule = response => !response.Headers.Contains("x-header"); ```
 
-- `ExcludeRouteRegexs` : Allow you to define a collection of refex to exclude endpoints to be called for the check.
+- `ExcludeRouteRegexs` : Allow to define a collection of refex to exclude endpoints to be called for the check.
 
-### <a name="customising_plugins"> Plugins </a>
+### <a name="customising_hideendpoints"> Hide endpoints </a>
 
-- `ResultPlugins` : Allow you to define plugins to do something custom with a health check results.  This is a really great feature as could open the door to plugins like a plugin that call a webhook each time the health check fail to do something like reset the service or send an email.
+If want to avoid a controller / method to be called just need a filter `AvoidAutoHealtCheckAttribute`
 
-In order to implement those plugins you have to implement `IHealtCheckResultPlugin` interface and resolve one of or all the methods.
+ ``` C#
+    [AvoidAutoHealtCheck]
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ValuesController : ControllerBase
+    {
+        [AvoidAutoHealtCheck]
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
+        
+     }
+```
+
+### <a name="customising_url"> Custom Url </a>
+
+To run the endpoint to run the check in a custom url just need to configure it in `Configure` method like this:
+
+``` C#
+     app.UseAutoHealthCheck(c =>
+    {
+        c.RoutePrefix = "insights/healtcheck";
+    });
+```
+====================
+
+## <a name="extensibility"> Extensibility </a>
+
+1. [Plugins](#plugins)
+2. [Probes](#probes)
+
+### <a name="plugins"> Plugins </a>
+
+- `ResultPlugins` : Allow to define plugins to do something custom with a health check results.  This is a really great feature as could open the door to plugins like a plugin that call a webhook each time the health check fail to do something like reset the service or send an email.
+
+In order to implement those plugins have to implement `IHealtCheckResultPlugin` interface and resolve one of or all the methods.
 
 `ActionAfterResult` Do something after a any result.
 `ActionAfterSuccess` Do something after a successfuly result.
@@ -193,9 +244,9 @@ ie:
     }
 ```
 
-- `HttpEndpointPlugins` : Allow you to change the request content that are sent to check the endpoints of your asp.net application, here you can add custom headers, or query strings, things that are neccesary to hit your endpoints.
+- `HttpEndpointPlugins` : Allow to change the request content that are sent to check the endpoints of the asp.net application, here custom headers can be added, or query strings, things that are neccesary to hit endpoints.
 
-To implement them you just have to implement this interface `IHttpEndpointPlugin` and call:
+To implement them just have to implement this interface `IHttpEndpointPlugin` and call:
   BeforeSend
   AfterReceive
   
@@ -219,37 +270,34 @@ To implement them you just have to implement this interface `IHttpEndpointPlugin
         }
     }
 ```
-### <a name="customising_hideendpoints"> Hide endpoints </a>
 
-If you want to avoid a controller / method to be called just need a filter `AvoidAutoHealtCheckAttribute`
+### <a name="probes"> Probes </a>
+
+If custom probes are neded in the check engine that can be done easily creating your owns.
+Just need to implement `IProbe` Interface like this.
 
  ``` C#
-    [AvoidAutoHealtCheck]
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ValuesController : ControllerBase
+    public class CustomProbe : IProbe
     {
-        [AvoidAutoHealtCheck]
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public string Name => typeof(CustomProbe).Name;
+
+        public Task<ProbeResult> Check()
         {
-            return new string[] { "value1", "value2" };
+            return Task.FromResult(ProbeResult.Error("Custom message"));
         }
-        
-     }
+    }
 ```
+If the probe was successfully just call `ProbeResult.Ok())` or `ProbeResult.Error` indicating the error message. that's it !
 
-### <a name="customising_url"> Custom Url </a>
+Not to allow probes to be called just register in Startup method **After** Calling `AddAutoHealthCheck`
 
-To run the endpoint to run the check in a custom url you just need to configure it in `Configure` method like this:
-
-``` C#
-     app.UseAutoHealthCheck(c =>
-    {
-        c.RoutePrefix = "insights/healtcheck";
-    });
+ ``` C#
+      services.AddAutoHealthCheck()
+              .AddCustomProbe<CustomProbe>();
 ```
-  
+ 
+====================
+
 ## <a name="license"> License </a>
 
 MIT License

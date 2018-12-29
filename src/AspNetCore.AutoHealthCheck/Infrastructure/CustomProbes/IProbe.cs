@@ -25,15 +25,19 @@ using System.Threading.Tasks;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Probe interface to run custom code.
     /// </summary>
-    internal interface IEndpointBuilder
+    public interface IProbe
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Probe name.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        string Name { get; }
+
+        /// <summary>
+        ///     Check if everything works well.
+        /// </summary>
+        /// <returns>If the probe was successfully.</returns>
+        Task<ProbeResult> Check();
     }
 }

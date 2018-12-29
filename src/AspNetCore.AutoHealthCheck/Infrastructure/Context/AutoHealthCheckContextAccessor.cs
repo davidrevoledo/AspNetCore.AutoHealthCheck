@@ -20,20 +20,39 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using System;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <inheritdoc />
     /// <summary>
-    ///     Endpoint builder.
+    ///     Context accessor
     /// </summary>
-    internal interface IEndpointBuilder
+    internal class AutoHealthCheckContextAccessor : IAutoHealthCheckContextAccessor
     {
+        private Lazy<IAutoHealthCheckContext> _currentContext;
+
+        public AutoHealthCheckContextAccessor()
+        {
+            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext());
+        }
+
+        /// <inheritdoc />
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Current context
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        public IAutoHealthCheckContext Context => _currentContext.Value;
+
+        /// <summary>
+        ///     Set configurations.
+        /// </summary>
+        /// <param name="configurations"></param>
+        internal void SetConfigurations(IAutoHealthCheckConfigurations configurations)
+        {
+            if (configurations == null)
+                throw new ArgumentNullException(nameof(configurations));
+
+            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext(configurations));
+        }
     }
 }

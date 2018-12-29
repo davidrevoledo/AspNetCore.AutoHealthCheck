@@ -20,20 +20,55 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Probe Check Result.
     /// </summary>
-    internal interface IEndpointBuilder
+    public class ProbeResult
     {
+        private ProbeResult()
+        {
+        }
+
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Indicate if the probe was successfully or not.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        public bool Succeed { get; protected set; }
+
+        /// <summary>
+        ///     Indicate the message if the probe was not successfully.
+        /// </summary>
+        public string ErrorMessage { get; protected set; }
+
+        /// <summary>
+        ///     Probe name.
+        /// </summary>
+        public string Name { get; internal set; }
+
+        /// <summary>
+        ///     Return an instance of a probe execution that was successfully.
+        /// </summary>
+        /// <returns></returns>
+        public static ProbeResult Ok()
+        {
+            return new ProbeResult
+            {
+                Succeed = true
+            };
+        }
+
+        /// <summary>
+        ///     Return an instance of a probe execution that failed.
+        /// </summary>
+        /// <param name="errorMessage">error message</param>
+        /// <returns></returns>
+        public static ProbeResult Error(string errorMessage)
+        {
+            return new ProbeResult
+            {
+                ErrorMessage = errorMessage
+            };
+        }
     }
 }

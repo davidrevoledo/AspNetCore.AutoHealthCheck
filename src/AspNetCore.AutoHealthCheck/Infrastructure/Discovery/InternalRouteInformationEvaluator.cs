@@ -20,20 +20,35 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Linq;
 using System.Threading.Tasks;
+using AspNetCore.AutoHealthCheck.Extensibility;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Endpoint builder.
-    /// </summary>
-    internal interface IEndpointBuilder
+    internal class InternalRouteInformationEvaluator : IInternalRouteInformationEvaluator
     {
-        /// <summary>
-        ///     Create endpoint definition from route.
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
+        private readonly IRouteEvaluator _routeEvaluator;
+
+        public InternalRouteInformationEvaluator(
+            IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
+            IRouteEvaluator routeEvaluator)
+        {
+            _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
+            _routeEvaluator = routeEvaluator;
+        }
+
+        /// <inheritdoc />
+        public Task<bool> Evaluate(IRouteInformation routeInformation)
+        {
+            var context = _autoHealthCheckContextAccessor.Context;
+
+            // check if the route template is included in one of the regex to exclude routes
+            // if so them ignore it
+            return context.Configurations.ExcludeRouteRegexs.Any(e => e.IsMatch(routeInformation.RouteTemplate)) ?
+                Task.FromResult(false) :
+                _routeEvaluator.Evaluate(routeInformation);
+        }
     }
 }

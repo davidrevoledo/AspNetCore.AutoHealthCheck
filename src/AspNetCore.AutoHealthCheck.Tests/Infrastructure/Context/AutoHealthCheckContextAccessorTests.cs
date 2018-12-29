@@ -20,20 +20,32 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using System;
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Context
 {
-    /// <summary>
-    ///     Endpoint builder.
-    /// </summary>
-    internal interface IEndpointBuilder
+    public class AutoHealthCheckContextAccessorTests
     {
-        /// <summary>
-        ///     Create endpoint definition from route.
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        [Fact]
+        public void AutoHealthCheckContextAccessor_should_fail_setting_null_configurations()
+        {
+            // arrange
+            var context = new AutoHealthCheckContextAccessor();
+
+            // act
+            // assert
+            Assert.Throws<ArgumentNullException>(() => context.SetConfigurations(null)); // should fail with null configs.
+        }
+
+        [Fact]
+        public void AutoHealthCheckContextAccessor_should_set_configurations()
+        {
+            // arrange
+            var context = new AutoHealthCheckContextAccessor();
+
+            // act
+            context.SetConfigurations(new AutoHealthCheckConfigurations());
+        }
     }
 }

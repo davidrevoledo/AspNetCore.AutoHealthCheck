@@ -20,20 +20,27 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Endpoint builder.
-    /// </summary>
-    internal interface IEndpointBuilder
+    /// <inheritdoc />
+
+    internal class Endpoint : IEndpoint
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Constructor for an endpoint.
         /// </summary>
         /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        /// <param name="host">host</param>
+        public Endpoint(IRouteInformation routeInformation, string host)
+        {
+            Host = host;
+            RouteInformation = routeInformation;
+        }
+
+        /// <inheritdoc />
+        public string Host { get; }
+
+        /// <inheritdoc />
+        public IRouteInformation RouteInformation { get; }
     }
 }

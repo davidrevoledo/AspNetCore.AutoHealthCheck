@@ -26,12 +26,12 @@ using System.Threading.Tasks;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint translator to get a HttpRequest message to call the endpoint
+    ///     Endpoint translator to get a HttpRequest message to call the endpoint.
     /// </summary>
     internal interface IEndpointMessageTranslator
     {
         /// <summary>
-        ///     Convert an endpoint to represent a HttpRequest message to call it
+        ///     Convert an endpoint to represent a HttpRequest message to call it.
         /// </summary>
         /// <param name="endpoint">endpoint information</param>
         /// <returns>Http request to call the endpoint</returns>

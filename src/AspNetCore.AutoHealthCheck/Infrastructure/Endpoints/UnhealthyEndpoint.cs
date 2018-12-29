@@ -20,20 +20,26 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Response for Endpoints who failed.
     /// </summary>
-    internal interface IEndpointBuilder
+    public sealed class UnhealthyEndpoint
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Indicate the route of the endpoint who is failing.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        public string Route { get; set; }
+
+        /// <summary>
+        ///     Indicate the http status result of the endpoint who is failing.
+        /// </summary>
+        public int HttpStatusCode { get; set; }
+
+        /// <summary>
+        ///     Indicate the http verb who was used to check the endpoint.
+        /// </summary>
+        public string HttpVerb { get; internal set; }
     }
 }
