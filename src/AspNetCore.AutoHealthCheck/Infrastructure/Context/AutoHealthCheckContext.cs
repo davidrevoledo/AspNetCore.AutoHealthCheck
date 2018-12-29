@@ -21,45 +21,42 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Moq;
-using Xunit;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
+namespace AspNetCore.AutoHealthCheck
 {
-    public class EndpointBuilderTests
+    /// <inheritdoc />  
+    internal class AutoHealthCheckContext : IAutoHealthCheckContext
     {
-        [Fact]
-        public async Task EndpointBuilder_should_fail_if_route_is_null()
+        internal AutoHealthCheckContext()
         {
-            // arrange
-            var context = new Mock<IHttpContextAccessor>();
-            var builder = new EndpointBuilder(context.Object);
-
-            context.Setup(c => c.HttpContext)
-                .Returns(new DefaultHttpContext());
-
-            // act
-            // assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => builder.CreateFromRoute(null));
         }
 
-        [Fact]
-        public async Task EndpointBuilder_should_return_endpoint()
+        internal AutoHealthCheckContext(IAutoHealthCheckConfigurations configurations)
         {
-            // arrange
-            var context = new Mock<IHttpContextAccessor>();
-            var builder = new EndpointBuilder(context.Object);
+            Configurations = configurations;
+        }
 
-            context.Setup(c => c.HttpContext)
-                .Returns(new DefaultHttpContext());
+        /// <inheritdoc />
+        public virtual IAutoHealthCheckConfigurations Configurations { get; } = new AutoHealthCheckConfigurations();
 
-            // act
-            var endpoint = await builder.CreateFromRoute(new RouteInformation());
+        /// <inheritdoc />
+        public List<Type> Probes { get; } = new List<Type>();
 
-            // assert
-            Assert.IsType<Endpoint>(endpoint);
+        internal IAutoHealthCheckContext AddProbe<TProbe>()
+            where TProbe : class, IProbe
+        {
+            if (Probes.All(p => p != typeof(TProbe)))
+            {
+                Probes.Add(typeof(TProbe));
+            }
+
+            return this;
         }
     }
 }

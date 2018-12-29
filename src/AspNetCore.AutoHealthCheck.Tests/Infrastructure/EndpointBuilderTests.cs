@@ -20,30 +20,46 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Runtime.CompilerServices;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Moq;
+using Xunit;
 
-[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure
 {
-    /// <summary>
-    ///     Context for auto health check framework
-    /// </summary>
-    internal class AutoHealthCheckContext : IAutoHealthCheckContext
+    public class EndpointBuilderTests
     {
-        internal AutoHealthCheckContext()
+        [Fact]
+        public async Task EndpointBuilder_should_fail_if_route_is_null()
         {
+            // arrange
+            var context = new Mock<IHttpContextAccessor>();
+            var builder = new EndpointBuilder(context.Object);
+
+            context.Setup(c => c.HttpContext)
+                .Returns(new DefaultHttpContext());
+
+            // act
+            // assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => builder.CreateFromRoute(null));
         }
 
-        internal AutoHealthCheckContext(IAutoHealthCheckConfigurations configurations)
+        [Fact]
+        public async Task EndpointBuilder_should_return_endpoint()
         {
-            Configurations = configurations;
-        }
+            // arrange
+            var context = new Mock<IHttpContextAccessor>();
+            var builder = new EndpointBuilder(context.Object);
 
-        /// <summary>
-        ///     Configurations
-        /// </summary>
-        public virtual IAutoHealthCheckConfigurations Configurations { get; } = new AutoHealthCheckConfigurations();
+            context.Setup(c => c.HttpContext)
+                .Returns(new DefaultHttpContext());
+
+            // act
+            var endpoint = await builder.CreateFromRoute(new RouteInformation());
+
+            // assert
+            Assert.IsType<Endpoint>(endpoint);
+        }
     }
 }

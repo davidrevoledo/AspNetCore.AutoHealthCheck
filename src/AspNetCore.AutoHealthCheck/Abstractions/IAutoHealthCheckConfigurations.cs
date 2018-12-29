@@ -35,8 +35,8 @@ namespace AspNetCore.AutoHealthCheck
     {
         /// <summary>
         ///     Pass check rule to determine if a response is
-        ///     Whit this method each endoint will be evaluated if the result was excpeted
-        ///     Deafault is status code should be out from 500-599 range (Internal Server Errors)
+        ///     Whit this method each endpoint will be evaluated if the result was excepted
+        ///     Default is status code should be out from 500-599 range (Internal Server Errors)
         /// </summary>
         Func<HttpResponseMessage, bool> PassCheckRule { get; }
 
@@ -62,7 +62,7 @@ namespace AspNetCore.AutoHealthCheck
         List<IHealtCheckResultPlugin> ResultPlugins { get; set; }
 
         /// <summary>
-        ///     Http endpoints plugins to do some http transformation or completition
+        ///     Http endpoints plugins to do some http transformation or completion
         ///     Like add custom headers
         /// </summary>
         List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; }
