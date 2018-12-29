@@ -21,16 +21,13 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using System.IO;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Moq;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Middlewares
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middlewares
 {
     public class AutoHealthCheckMiddlewareTests
     {

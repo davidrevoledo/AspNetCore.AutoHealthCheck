@@ -27,7 +27,7 @@ using AspNetCore.AutoHealthCheck.Extensibility;
 using Moq;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Discover
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Discover
 {
     public class InternalRouteInformationEvaluatorTests
     {

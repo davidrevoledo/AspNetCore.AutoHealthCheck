@@ -36,48 +36,30 @@ namespace AspNetCore.AutoHealthCheck
     {
         internal AutoHealthCheckConfigurations()
         {
-            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int) s.StatusCode);
+            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int)s.StatusCode);
             DefaultUnHealthyResponseCode = HttpStatusCode.InternalServerError;
             DefaultHealthyResponseCode = HttpStatusCode.OK;
         }
 
-        /// <summary>
-        ///     Regex to exclude routes
-        ///     Each regex here will be evaluated foreach route to avoid them to be checked
-        /// </summary>
+        /// <inheritdoc />
         public List<Regex> ExcludeRouteRegexs { get; set; } = new List<Regex>();
 
-        /// <summary>
-        ///     Pass check rule to determine if a response is
-        ///     Whit this method each endoint will be evaluated if the result was excpeted
-        ///     Deafault is status code should be out from 500-599 range (Internal Server Errors)
-        /// </summary>
+        /// <inheritdoc />
         public Func<HttpResponseMessage, bool> PassCheckRule { get; set; }
 
-        /// <summary>
-        ///     Default http code to return when an endpoint fail default 500
-        /// </summary>
+        /// <inheritdoc />
         public HttpStatusCode DefaultUnHealthyResponseCode { get; set; }
 
-        /// <summary>
-        ///     Default http code to return when all the endpoint are ok default 200
-        /// </summary>
+        /// <inheritdoc />
         public HttpStatusCode DefaultHealthyResponseCode { get; set; }
 
-        /// <summary>
-        ///     Automatic run configurations
-        /// </summary>
+        /// <inheritdoc />
         public AutomaticRunConfigurations AutomaticRunConfigurations { get; set; } = new AutomaticRunConfigurations();
 
-        /// <summary>
-        ///     Plugins to process results
-        /// </summary>
+        /// <inheritdoc />
         public List<IHealtCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealtCheckResultPlugin>();
 
-        /// <summary>
-        ///     Http endpoints plugins to do some http transformation or completition
-        ///     Like add custom headers
-        /// </summary>
+        /// <inheritdoc />
         public List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; } = new List<IHttpEndpointPlugin>();
     }
 }

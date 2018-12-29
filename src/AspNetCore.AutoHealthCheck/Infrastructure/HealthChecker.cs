@@ -31,8 +31,9 @@ using AspNetCore.AutoHealthCheck.Infraestructure;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <inheritdoc cref="IHealthChecker" />
     /// <summary>
-    ///     Deafult Healt Checker engine to run over an asp.net core application
+    ///     Default Health Checker engine to run over an asp.net core application
     /// </summary>
     internal sealed class HealthChecker : IDisposable, IHealthChecker
     {
@@ -42,6 +43,7 @@ namespace AspNetCore.AutoHealthCheck
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
         private readonly AsyncLazy<IEnumerable<IRouteInformation>> _routesFactory;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private readonly IServiceProvider _serviceProvider;
 
         private int _disposeSignaled;
 
@@ -50,20 +52,20 @@ namespace AspNetCore.AutoHealthCheck
             IEndpointBuilder endpointBuilder,
             IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
             IEndpointMessageTranslator endpointMessageTranslator,
-            IEndpointCaller endpointCaller)
+            IEndpointCaller endpointCaller,
+            IServiceProvider serviceProvider)
         {
             _endpointBuilder = endpointBuilder;
             _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
             _endpointMessageTranslator = endpointMessageTranslator;
             _endpointCaller = endpointCaller;
+            _serviceProvider = serviceProvider;
 
             // route async
             _routesFactory = new AsyncLazy<IEnumerable<IRouteInformation>>(() => aspNetRouteDiscover.GetAllEndpoints());
         }
 
-        /// <summary>
-        ///     Dispose the resource
-        /// </summary>
+        /// <inheritdoc cref="IDisposable" />
         public void Dispose()
         {
             if (Interlocked.Exchange(ref _disposeSignaled, 1) != 0)
@@ -73,11 +75,10 @@ namespace AspNetCore.AutoHealthCheck
             Disposed = true;
         }
 
-        /// <summary>
-        ///     Indicate if the resource was disposed
-        /// </summary>
+        /// <inheritdoc />
         public bool Disposed { get; set; }
 
+        /// <inheritdoc />
         /// <summary>
         ///     Perform the health check
         /// </summary>
@@ -91,10 +92,10 @@ namespace AspNetCore.AutoHealthCheck
                 var results = new List<HttpResponseMessage>();
 
                 var routesDefinition = await _routesFactory;
-                var routeInformations = routesDefinition as IRouteInformation[] ?? routesDefinition.ToArray();
+                var routeInformation = routesDefinition as IRouteInformation[] ?? routesDefinition.ToArray();
 
-                if (routeInformations.Any())
-                    foreach (var route in routeInformations.AsParallel()
+                if (routeInformation.Any())
+                    foreach (var route in routeInformation.AsParallel()
                         .WithMergeOptions(ParallelMergeOptions.FullyBuffered))
                     {
                         var endpoint = await _endpointBuilder.CreateFromRoute(route).ConfigureAwait(false);
@@ -105,16 +106,32 @@ namespace AspNetCore.AutoHealthCheck
                         results.Add(result);
                     }
 
-                // check test timing
-                watcher.Stop();
 
                 // at this point task is finished
                 var currentContext = _autoHealthCheckContextAccessor.Context;
+
+                await ExecuteCustomProbes(currentContext).ConfigureAwait(false);
+
+                // check test timing
+                watcher.Stop();
+
                 return await HealtCheckResultProcessor.ProcessResult(currentContext, watcher, results.ToArray());
             }
             finally
             {
                 _semaphore.Release();
+            }
+        }
+
+        private async Task ExecuteCustomProbes(IAutoHealthCheckContext currentContext)
+        {
+            // todo : add configuration to run all probes async
+            foreach (var probeType in currentContext.Probes)
+            {
+                if (!(_serviceProvider.GetService(probeType) is IProbe probe))
+                    continue;
+
+                await probe.Check().ConfigureAwait(false);
             }
         }
     }

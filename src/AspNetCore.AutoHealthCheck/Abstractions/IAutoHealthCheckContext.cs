@@ -20,6 +20,9 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
+using System.Collections.Generic;
+
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
@@ -31,5 +34,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     Configurations
         /// </summary>
         IAutoHealthCheckConfigurations Configurations { get; }
+
+        /// <summary>
+        ///     Get Custom probes work types.
+        /// </summary>
+        List<Type> Probes { get; }
     }
 }

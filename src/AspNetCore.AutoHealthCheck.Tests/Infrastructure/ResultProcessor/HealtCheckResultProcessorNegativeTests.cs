@@ -25,35 +25,15 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
 {
-    public class HealtCheckResultProcessorTests
+    public class HealtCheckResultProcessorNegativeTests
     {
         [Fact]
-        public async Task HealtCheckResultProcessor_should_return_ok_with_emtpty_results()
-        {
-            // arrange
-            var watch = new Stopwatch();
-            watch.Start();
-            var contex = new Mock<IAutoHealthCheckContext>();
-            contex.Setup(c => c.Configurations)
-                .Returns(new AutoHealthCheckConfigurations());
-
-            // act
-            var result = await HealtCheckResultProcessor.ProcessResult(contex.Object, watch, new HttpResponseMessage[0]);
-
-            // assert
-            Assert.NotNull(result);
-            Assert.Equal(200, (int)result.HttpStatus);
-            Assert.True(result.Success);
-        }
-
-        [Fact]
-        public async Task HealtCheckResultProcessor_should_return_ok_with_default_rule()
+        public async Task HealtCheckResultProcessor_should_fail_returning_500_with_default_rule()
         {
             // arrange
             var watch = new Stopwatch();
@@ -65,10 +45,8 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
 
             var messages = new List<HttpResponseMessage>
             {
-                new HttpResponseMessage(HttpStatusCode.OK),
-                new HttpResponseMessage(HttpStatusCode.AlreadyReported),
-                new HttpResponseMessage(HttpStatusCode.Ambiguous),
-                new HttpResponseMessage(HttpStatusCode.BadRequest)
+                new HttpResponseMessage(HttpStatusCode.InternalServerError),
+                new HttpResponseMessage(HttpStatusCode.BadGateway)
             };
 
             // act
@@ -76,12 +54,15 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(200, (int)result.HttpStatus);
-            Assert.True(result.Success);
+            Assert.Equal(500, (int)result.HttpStatus);
+            Assert.False(result.Success);
+            Assert.Equal(2, result.UnhealthyEndpoints.Count);
+            Assert.Equal(500, result.UnhealthyEndpoints[0].HttpStatusCode);
+            Assert.Equal(502, result.UnhealthyEndpoints[1].HttpStatusCode);
         }
 
         [Fact]
-        public async Task HealtCheckResultProcessor_should_return_ok_with_custom_rule()
+        public async Task HealtCheckResultProcessor_should_fail_with_custom_rule()
         {
             // arrange
             var watch = new Stopwatch();
@@ -97,9 +78,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             var messages = new List<HttpResponseMessage>
             {
                 new HttpResponseMessage(HttpStatusCode.AlreadyReported),
-                new HttpResponseMessage(HttpStatusCode.Ambiguous),
-                new HttpResponseMessage(HttpStatusCode.BadRequest),
-                new HttpResponseMessage(HttpStatusCode.InternalServerError),
+                new HttpResponseMessage(HttpStatusCode.OK)
             };
 
             // act
@@ -107,12 +86,13 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(200, (int)result.HttpStatus);
-            Assert.True(result.Success);
+            Assert.Equal(500, (int) result.HttpStatus);
+            Assert.False(result.Success);
+            Assert.Single(result.UnhealthyEndpoints);
         }
 
         [Fact]
-        public async Task HealtCheckResultProcessor_should_return_custom_response_code_with_default_rule()
+        public async Task HealtCheckResultProcessor_should_fail_returning_custom_response_code_with_default_rule()
         {
             // arrange
             var watch = new Stopwatch();
@@ -122,15 +102,13 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
             contex.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations
                 {
-                    DefaultHealthyResponseCode = HttpStatusCode.Continue
+                    DefaultUnHealthyResponseCode = HttpStatusCode.AlreadyReported
                 });
 
             var messages = new List<HttpResponseMessage>
             {
-                new HttpResponseMessage(HttpStatusCode.OK),
-                new HttpResponseMessage(HttpStatusCode.AlreadyReported),
-                new HttpResponseMessage(HttpStatusCode.Ambiguous),
-                new HttpResponseMessage(HttpStatusCode.BadRequest)
+                new HttpResponseMessage(HttpStatusCode.InternalServerError),
+                new HttpResponseMessage(HttpStatusCode.BadGateway)
             };
 
             // act
@@ -138,8 +116,11 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.ResultProcessor
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(HttpStatusCode.Continue, result.HttpStatus);
-            Assert.True(result.Success);
+            Assert.Equal(HttpStatusCode.AlreadyReported, result.HttpStatus);
+            Assert.False(result.Success);
+            Assert.Equal(2, result.UnhealthyEndpoints.Count);
+            Assert.Equal(500, result.UnhealthyEndpoints[0].HttpStatusCode);
+            Assert.Equal(502, result.UnhealthyEndpoints[1].HttpStatusCode);
         }
     }
 }

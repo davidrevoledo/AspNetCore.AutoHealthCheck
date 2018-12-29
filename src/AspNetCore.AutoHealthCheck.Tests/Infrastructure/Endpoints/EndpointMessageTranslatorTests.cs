@@ -23,7 +23,7 @@
 using System.Threading.Tasks;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure.Endpoints
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Endpoints
 {
     public class EndpointMessageTranslatorTests
     {

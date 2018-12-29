@@ -20,13 +20,13 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure
 {
     public class HealthCheckerTests
     {
@@ -34,23 +34,25 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infraestructure
         public async Task HealthChecker_should_return_ok_if_there_is_no_route()
         {
             // arrange
-            var dicover = new Mock<IRouteDiscover>();
-            var contextAccesor = new Mock<IAutoHealthCheckContextAccessor>();
+            var discover = new Mock<IRouteDiscover>();
+            var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
             var endpointBuilder = new Mock<IEndpointBuilder>();
             var endpointTranslator = new Mock<IEndpointMessageTranslator>();
             var endpointCaller = new Mock<IEndpointCaller>();
+            var serviceCollection = new Mock<IServiceProvider>();
 
-            contextAccesor.Setup(c => c.Context)
+            contextAccessor.Setup(c => c.Context)
                 .Returns(new AutoHealthCheckContext());
 
             var checker = new HealthChecker(
-                dicover.Object,
+                discover.Object,
                 endpointBuilder.Object,
-                contextAccesor.Object,
+                contextAccessor.Object,
                 endpointTranslator.Object,
-                endpointCaller.Object);
+                endpointCaller.Object,
+                serviceCollection.Object);
 
-            dicover.Setup(c => c.GetAllEndpoints())
+            discover.Setup(c => c.GetAllEndpoints())
                 .Returns(() =>
                 {
                     IEnumerable<IRouteInformation> enumerable = new List<IRouteInformation>();
