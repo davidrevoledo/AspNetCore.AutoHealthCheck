@@ -9,7 +9,7 @@ namespace WebApplication.Probes
 
         public Task<ProbeResult> Check()
         {
-            return Task.FromResult(new ProbeResult());
+            return Task.FromResult(ProbeResult.Error("Custom message"));
         }
     }
 }

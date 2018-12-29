@@ -25,21 +25,50 @@ namespace AspNetCore.AutoHealthCheck
     /// <summary>
     ///     Probe Check Result.
     /// </summary>
-    public sealed class ProbeResult
+    public class ProbeResult
     {
+        private ProbeResult()
+        {
+        }
+
         /// <summary>
         ///     Indicate if the probe was successfully or not.
         /// </summary>
-        public bool Succeed { get; set; }
+        public bool Succeed { get; protected set; }
 
         /// <summary>
         ///     Indicate the message if the probe was not successfully.
         /// </summary>
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; protected set; }
 
         /// <summary>
         ///     Probe name.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
+
+        /// <summary>
+        ///     Return an instance of a probe execution that was successfully.
+        /// </summary>
+        /// <returns></returns>
+        public static ProbeResult Ok()
+        {
+            return new ProbeResult
+            {
+                Succeed = true
+            };
+        }
+
+        /// <summary>
+        ///     Return an instance of a probe execution that failed.
+        /// </summary>
+        /// <param name="errorMessage">error message</param>
+        /// <returns></returns>
+        public static ProbeResult Error(string errorMessage)
+        {
+            return new ProbeResult
+            {
+                ErrorMessage = errorMessage
+            };
+        }
     }
 }

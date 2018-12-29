@@ -143,23 +143,30 @@ namespace AspNetCore.AutoHealthCheck
                         continue;
 
                     var result = await probe.Check().ConfigureAwait(false);
+                    // set probe name
+                    result.Name = probe.Name;
                     executionResult.Add(result);
                 }
             }
             else
             {
                 // run them all at same time
-                var tasks = currentContext.Probes.Select(p =>
+                var probeExecution = currentContext.Probes.Select(p =>
                 {
                     var probe = _serviceProvider.GetService(p) as IProbe;
-                    return probe.Check();
+                    return (task: probe.Check(), probeName: probe.Name);
                 })
                 .ToList();
 
-                await Task.WhenAll(tasks).ConfigureAwait(false);
+                await Task.WhenAll(probeExecution.Select(t => t.task))
+                    .ConfigureAwait(false);
 
-                var results = tasks.Select(t => t.Result);
-                executionResult.AddRange(results);
+                foreach (var (task, probeName) in probeExecution)
+                {
+                    var result = task.Result;
+                    result.Name = probeName;
+                    executionResult.Add(result);
+                }
             }
 
             return executionResult;
