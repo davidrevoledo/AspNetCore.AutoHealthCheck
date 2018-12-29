@@ -52,14 +52,14 @@ namespace AspNetCore.AutoHealthCheck
 
             if (httpMethod == "GET" && Regex.IsMatch(path, $"^/{_appOptions.RoutePrefix}/?$"))
             {
-                var healtCheckResult = await _healthChecker.Check().ConfigureAwait(false);
+                var healthCheckResult = await _healthChecker.Check().ConfigureAwait(false);
 
-                if (healtCheckResult == null)
-                    throw new ArgumentNullException(nameof(healtCheckResult));
+                if (healthCheckResult == null)
+                    throw new ArgumentNullException(nameof(healthCheckResult));
 
-                httpContext.Response.StatusCode = (int) healtCheckResult.HttpStatus;
+                httpContext.Response.StatusCode = (int)healthCheckResult.HttpStatus;
                 httpContext.Response.ContentType = "application/json";
-                var jsonString = JsonConvert.SerializeObject(healtCheckResult);
+                var jsonString = JsonConvert.SerializeObject(healthCheckResult);
                 await httpContext.Response.WriteAsync(jsonString, Encoding.UTF8).ConfigureAwait(false);
 
                 return;

@@ -22,13 +22,12 @@
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Endpoint to represent a webservices to be called
-    /// </summary>
+    /// <inheritdoc />
+
     internal class Endpoint : IEndpoint
     {
         /// <summary>
-        ///     Constructor for an endpoint
+        ///     Constructor for an endpoint.
         /// </summary>
         /// <param name="routeInformation">route information</param>
         /// <param name="host">host</param>
@@ -38,14 +37,10 @@ namespace AspNetCore.AutoHealthCheck
             RouteInformation = routeInformation;
         }
 
-        /// <summary>
-        ///     Base Host
-        /// </summary>
+        /// <inheritdoc />
         public string Host { get; }
 
-        /// <summary>
-        ///     Route Information
-        /// </summary>
+        /// <inheritdoc />
         public IRouteInformation RouteInformation { get; }
     }
 }

@@ -32,9 +32,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Discover all the endpoints that an asp.net core application expose
-    /// </summary>
+    /// <inheritdoc />
     internal class RouteDiscover : IRouteDiscover
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
@@ -48,10 +46,7 @@ namespace AspNetCore.AutoHealthCheck
             _internalRouteInformationEvaluator = internalRouteInformationEvaluator;
         }
 
-        /// <summary>
-        ///     Get routes information an asp.net core application expose
-        /// </summary>
-        /// <returns>collection of route information</returns>
+        /// <inheritdoc />
         public async Task<IEnumerable<IRouteInformation>> GetAllEndpoints()
         {
             var candidates = GetEndpointsCandidates();
@@ -107,10 +102,10 @@ namespace AspNetCore.AutoHealthCheck
                     }
                 }
 
-                //  when need to update this after the http completition 
+                //  when need to update this after the http completion 
                 if (action is ControllerActionDescriptor controllerAction)
                 {
-                    RoutingScraper.CoumpleteRoutingInformation(info, controllerAction);
+                    RoutingScraper.CompleteRoutingInformation(info, controllerAction);
                     BodyContentScraper.CompleteBodyRequiredContent(info, controllerAction);
                     QueryStringScraper.CompleteQueryStringRequiredParams(info, controllerAction);
                 }

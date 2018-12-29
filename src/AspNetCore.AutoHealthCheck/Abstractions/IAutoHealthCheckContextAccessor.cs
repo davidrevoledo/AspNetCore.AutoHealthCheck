@@ -23,12 +23,12 @@
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Context accesor
+    ///     Context accessor.
     /// </summary>
     public interface IAutoHealthCheckContextAccessor
     {
         /// <summary>
-        ///     Current context
+        ///     Current context.
         /// </summary>
         IAutoHealthCheckContext Context { get; }
     }

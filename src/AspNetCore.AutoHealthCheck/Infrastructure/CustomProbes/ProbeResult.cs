@@ -35,6 +35,11 @@ namespace AspNetCore.AutoHealthCheck
         /// <summary>
         ///     Indicate the message if the probe was not successfully.
         /// </summary>
-        public string ErrorMessage { get; set; } 
+        public string ErrorMessage { get; set; }
+
+        /// <summary>
+        ///     Probe name.
+        /// </summary>
+        public string Name { get; set; }
     }
 }

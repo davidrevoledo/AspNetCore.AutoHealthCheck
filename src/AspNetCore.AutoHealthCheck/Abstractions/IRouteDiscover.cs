@@ -26,12 +26,12 @@ using System.Threading.Tasks;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Discover all the endpoints that an asp.net core application expose
+    ///     Discover all the endpoints that an asp.net core application expose.
     /// </summary>
     public interface IRouteDiscover
     {
         /// <summary>
-        ///     Get all the routes infmation an asp.net core application expose
+        ///     Get all the routes information an asp.net core application expose.
         /// </summary>
         /// <returns>collection of route information</returns>
         Task<IEnumerable<IRouteInformation>> GetAllEndpoints();

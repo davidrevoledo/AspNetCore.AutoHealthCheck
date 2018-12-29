@@ -29,7 +29,7 @@ using System.Text.RegularExpressions;
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Auto health check configurations
+    ///     Auto health check configurations.
     /// </summary>
     public interface IAutoHealthCheckConfigurations
     {

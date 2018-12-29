@@ -38,7 +38,7 @@ namespace AspNetCore.AutoHealthCheck
             if (actionDescriptor == null)
                 return info;
 
-            // find all parameteres who don't belong to the route template and are not nullable
+            // find all params who don't belong to the route template and are not nullable
             var methodInfo = actionDescriptor.MethodInfo;
             var methodParams = methodInfo.GetParameters().ToList();
             var routeConstraints = RoutingScraper.GetRouteConstraints(info).ToList();
