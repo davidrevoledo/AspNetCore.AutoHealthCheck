@@ -36,16 +36,16 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Discover
         {
             // arrange
             var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
-            var contex = new Mock<IAutoHealthCheckContext>();
+            var context = new Mock<IAutoHealthCheckContext>();
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
             routeEvaluator.Setup(c => c.Evaluate(It.IsAny<IRouteInformation>()))
                 .Returns(Task.FromResult(true));
 
             contextAccessor.Setup(c => c.Context)
-                .Returns(contex.Object);
+                .Returns(context.Object);
 
-            contex.Setup(c => c.Configurations)
+            context.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations
                 {
                     ExcludeRouteRegexs = new List<Regex>
@@ -65,7 +65,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Discover
             var include = await evaluator.Evaluate(routeInformation);
 
             // assert
-            Assert.False(include); // route should be ingored as there is numbers
+            Assert.False(include); // route should be ignored as there is numbers
         }
 
         [Fact]
@@ -73,16 +73,16 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Discover
         {
             // arrange
             var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
-            var contex = new Mock<IAutoHealthCheckContext>();
+            var context = new Mock<IAutoHealthCheckContext>();
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
             routeEvaluator.Setup(c => c.Evaluate(It.IsAny<IRouteInformation>()))
                 .Returns(Task.FromResult(true));
 
             contextAccessor.Setup(c => c.Context)
-                .Returns(contex.Object);
+                .Returns(context.Object);
 
-            contex.Setup(c => c.Configurations)
+            context.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations
                 {
                     ExcludeRouteRegexs = new List<Regex>
@@ -110,16 +110,16 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Discover
         {
             // arrange
             var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
-            var contex = new Mock<IAutoHealthCheckContext>();
+            var context = new Mock<IAutoHealthCheckContext>();
             var routeEvaluator = new Mock<IRouteEvaluator>();
 
             routeEvaluator.Setup(c => c.Evaluate(It.IsAny<IRouteInformation>()))
                 .Returns(Task.FromResult(false));
 
             contextAccessor.Setup(c => c.Context)
-                .Returns(contex.Object);
+                .Returns(context.Object);
 
-            contex.Setup(c => c.Configurations)
+            context.Setup(c => c.Configurations)
                 .Returns(new AutoHealthCheckConfigurations());
 
             var evaluator = new InternalRouteInformationEvaluator(contextAccessor.Object, routeEvaluator.Object);

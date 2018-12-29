@@ -36,40 +36,45 @@ namespace AspNetCore.AutoHealthCheck
         /// <summary>
         ///     Pass check rule to determine if a response is
         ///     Whit this method each endpoint will be evaluated if the result was excepted
-        ///     Default is status code should be out from 500-599 range (Internal Server Errors)
+        ///     Default is status code should be out from 500-599 range (Internal Server Errors).
         /// </summary>
         Func<HttpResponseMessage, bool> PassCheckRule { get; }
 
         /// <summary>
         ///     Regex to exclude routes
-        ///     Each regex here will be evaluated foreach route to avoid them to be checked
+        ///     Each regex here will be evaluated foreach route to avoid them to be checked.
         /// </summary>
         List<Regex> ExcludeRouteRegexs { get; }
 
         /// <summary>
-        ///     Default http code to return when an endpoint fail default 500
+        ///     Default http code to return when an endpoint fail default 500.
         /// </summary>
         HttpStatusCode DefaultUnHealthyResponseCode { get; }
 
         /// <summary>
-        ///     Default http code to return when all the endpoint are ok default 200
+        ///     Default http code to return when all the endpoint are ok default 200.
         /// </summary>
         HttpStatusCode DefaultHealthyResponseCode { get; }
 
         /// <summary>
-        ///     Plugins to process results
+        ///     Plugins to process results.
         /// </summary>
         List<IHealtCheckResultPlugin> ResultPlugins { get; set; }
 
         /// <summary>
-        ///     Http endpoints plugins to do some http transformation or completion
+        ///     Http endpoints plugins to do some http transformation or completion.
         ///     Like add custom headers
         /// </summary>
         List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; }
 
         /// <summary>
-        ///     Automatic run configurations
+        ///     Automatic run configurations.
         /// </summary>
         AutomaticRunConfigurations AutomaticRunConfigurations { get; }
+
+        /// <summary>
+        ///    Indicate if probes should run async or not.
+        /// </summary>
+        bool RunCustomProbesAsync { get; }
     }
 }

@@ -20,24 +20,21 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Probe interface to run custom code.
+    ///     Probe Check Result.
     /// </summary>
-    public interface IProbe
+    public sealed class ProbeResult
     {
         /// <summary>
-        ///     Probe name.
+        ///     Indicate if the probe was successfully or not.
         /// </summary>
-        string Name { get; }
+        public bool Succeed { get; set; }
 
         /// <summary>
-        ///     Check if everything works well.
+        ///     Indicate the message if the probe was not successfully.
         /// </summary>
-        /// <returns>If the probe was successfully.</returns>
-        Task<ProbeResult> Check();
+        public string ErrorMessage { get; set; } 
     }
 }

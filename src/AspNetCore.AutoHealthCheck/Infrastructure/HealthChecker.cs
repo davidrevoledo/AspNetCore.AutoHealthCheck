@@ -110,12 +110,16 @@ namespace AspNetCore.AutoHealthCheck
                 // at this point task is finished
                 var currentContext = _autoHealthCheckContextAccessor.Context;
 
-                await ExecuteCustomProbes(currentContext).ConfigureAwait(false);
+                var probesResults = await ExecuteCustomProbes(currentContext).ConfigureAwait(false);
 
                 // check test timing
                 watcher.Stop();
 
-                return await HealtCheckResultProcessor.ProcessResult(currentContext, watcher, results.ToArray());
+                return await HealthCheckResultProcessor.ProcessResult(
+                    currentContext,
+                    watcher,
+                    results.ToArray(),
+                    probesResults.ToArray());
             }
             finally
             {
@@ -123,16 +127,42 @@ namespace AspNetCore.AutoHealthCheck
             }
         }
 
-        private async Task ExecuteCustomProbes(IAutoHealthCheckContext currentContext)
+        private async Task<IEnumerable<ProbeResult>> ExecuteCustomProbes(IAutoHealthCheckContext currentContext)
         {
-            // todo : add configuration to run all probes async
-            foreach (var probeType in currentContext.Probes)
-            {
-                if (!(_serviceProvider.GetService(probeType) is IProbe probe))
-                    continue;
+            var executionResult = new List<ProbeResult>();
 
-                await probe.Check().ConfigureAwait(false);
+            if (!currentContext.Probes.Any())
+                return executionResult;
+
+            // if they should not run async or there is just 1 probe then iterate over them.
+            if (!currentContext.Configurations.RunCustomProbesAsync || currentContext.Probes.Count == 1)
+            {
+                foreach (var probeType in currentContext.Probes)
+                {
+                    if (!(_serviceProvider.GetService(probeType) is IProbe probe))
+                        continue;
+
+                    var result = await probe.Check().ConfigureAwait(false);
+                    executionResult.Add(result);
+                }
             }
+            else
+            {
+                // run them all at same time
+                var tasks = currentContext.Probes.Select(p =>
+                {
+                    var probe = _serviceProvider.GetService(p) as IProbe;
+                    return probe.Check();
+                })
+                .ToList();
+
+                await Task.WhenAll(tasks).ConfigureAwait(false);
+
+                var results = tasks.Select(t => t.Result);
+                executionResult.AddRange(results);
+            }
+
+            return executionResult;
         }
     }
 }

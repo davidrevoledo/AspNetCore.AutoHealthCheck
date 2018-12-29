@@ -7,9 +7,9 @@ namespace WebApplication.Probes
     {
         public string Name => typeof(CustomProbe).Name;
 
-        public Task<bool> Check()
+        public Task<ProbeResult> Check()
         {
-            return Task.FromResult(false);
+            return Task.FromResult(new ProbeResult());
         }
     }
 }

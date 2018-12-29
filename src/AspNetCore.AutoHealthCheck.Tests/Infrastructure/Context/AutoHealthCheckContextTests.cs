@@ -93,9 +93,9 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Context
         {
             public string Name => typeof(FakeProbe).Name;
 
-            public Task<bool> Check()
+            public Task<ProbeResult> Check()
             {
-                throw new System.NotImplementedException();
+                return Task.FromResult(new ProbeResult());
             }
         }
 
@@ -103,7 +103,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Context
         {
             public abstract string Name { get; }
 
-            public abstract Task<bool> Check();
+            public abstract Task<ProbeResult> Check();
         }
     }
 }
