@@ -21,38 +21,31 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Context
 {
-    /// <inheritdoc />
-    /// <summary>
-    ///     Context accessor
-    /// </summary>
-    internal class AutoHealthCheckContextAccessor : IAutoHealthCheckContextAccessor
+    public class AutoHealthCheckContextAccessorTests
     {
-        private Lazy<IAutoHealthCheckContext> _currentContext;
-
-        public AutoHealthCheckContextAccessor()
+        [Fact]
+        public void AutoHealthCheckContextAccessor_should_fail_setting_null_configurations()
         {
-            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext());
+            // arrange
+            var context = new AutoHealthCheckContextAccessor();
+
+            // act
+            // assert
+            Assert.Throws<ArgumentNullException>(() => context.SetConfigurations(null)); // should fail with null configs.
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        ///     Current context
-        /// </summary>
-        public IAutoHealthCheckContext Context => _currentContext.Value;
-
-        /// <summary>
-        ///     Set configurations.
-        /// </summary>
-        /// <param name="configurations"></param>
-        internal void SetConfigurations(IAutoHealthCheckConfigurations configurations)
+        [Fact]
+        public void AutoHealthCheckContextAccessor_should_set_configurations()
         {
-            if (configurations == null)
-                throw new ArgumentNullException(nameof(configurations));
+            // arrange
+            var context = new AutoHealthCheckContextAccessor();
 
-            _currentContext = new Lazy<IAutoHealthCheckContext>(() => new AutoHealthCheckContext(configurations));
+            // act
+            context.SetConfigurations(new AutoHealthCheckConfigurations());
         }
     }
 }
