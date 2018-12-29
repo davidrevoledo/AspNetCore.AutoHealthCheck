@@ -51,6 +51,14 @@ namespace AspNetCore.AutoHealthCheck
         internal IAutoHealthCheckContext AddProbe<TProbe>()
             where TProbe : class, IProbe
         {
+            // validate type is not an interface
+            if (typeof(TProbe).IsInterface)
+                throw new InvalidOperationException("Probe cannot be an interface.");
+
+            // validate type is not abstract
+            if (typeof(TProbe).IsAbstract)
+                throw new InvalidOperationException("Probe cannot be abstract.");
+
             if (Probes.All(p => p != typeof(TProbe)))
             {
                 Probes.Add(typeof(TProbe));
