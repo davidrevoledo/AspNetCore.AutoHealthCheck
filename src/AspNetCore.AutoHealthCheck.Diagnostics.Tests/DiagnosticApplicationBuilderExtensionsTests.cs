@@ -1,52 +1,52 @@
-﻿//MIT License
-//Copyright(c) 2017 David Revoledo
+﻿////MIT License
+////Copyright(c) 2017 David Revoledo
 
-//Permission is hereby granted, free of charge, to any person obtaining a copy
-//of this software and associated documentation files (the "Software"), to deal
-//in the Software without restriction, including without limitation the rights
-//to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//copies of the Software, and to permit persons to whom the Software is
-//furnished to do so, subject to the following conditions:
+////Permission is hereby granted, free of charge, to any person obtaining a copy
+////of this software and associated documentation files (the "Software"), to deal
+////in the Software without restriction, including without limitation the rights
+////to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+////copies of the Software, and to permit persons to whom the Software is
+////furnished to do so, subject to the following conditions:
 
-//The above copyright notice and this permission notice shall be included in all
-//copies or substantial portions of the Software.
+////The above copyright notice and this permission notice shall be included in all
+////copies or substantial portions of the Software.
 
-//THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//SOFTWARE.
-// Project Lead - David Revoledo davidrevoledo@d-genix.com
+////THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+////IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+////FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+////AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+////LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+////OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+////SOFTWARE.
+//// Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using Microsoft.AspNetCore.Builder;
-using Moq;
-using Xunit;
+//using System;
+//using Microsoft.AspNetCore.Builder;
+//using Moq;
+//using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Diagnostics.Tests
-{
-    public class DiagnosticApplicationBuilderExtensionsTests
-    {
-        [Fact]
-        public void EnableDiagnosticsHealthChecksIntegration_should_fail_if_context_accessor_is_null()
-        {
-            // arrange
-            var applicationBuilder = new Mock<IApplicationBuilder>();
-            var serviceProvider = new Mock<IServiceProvider>();
+//namespace AspNetCore.AutoHealthCheck.Diagnostics.Tests
+//{
+//    public class DiagnosticApplicationBuilderExtensionsTests
+//    {
+//        [Fact]
+//        public void EnableDiagnosticsHealthChecksIntegration_should_fail_if_context_accessor_is_null()
+//        {
+//            // arrange
+//            var applicationBuilder = new Mock<IApplicationBuilder>();
+//            var serviceProvider = new Mock<IServiceProvider>();
 
-            applicationBuilder.Setup(c => c.ApplicationServices)
-                .Returns(serviceProvider.Object);
+//            applicationBuilder.Setup(c => c.ApplicationServices)
+//                .Returns(serviceProvider.Object);
 
-            serviceProvider.Setup(c => c.GetService(It.IsAny<Type>()))
-                .Returns(null);
+//            serviceProvider.Setup(c => c.GetService(It.IsAny<Type>()))
+//                .Returns(null);
 
-            // act
-            // assert
-            Assert.Throws<InvalidOperationException>(() =>
-                    applicationBuilder.Object.EnableDiagnosticsHealthChecksIntegration(Mode.FromDiagnosticHcToAutoHc)
-            );
-        }
-    }
-}
+//            // act
+//            // assert
+//            Assert.Throws<InvalidOperationException>(() =>
+//                    applicationBuilder.Object.EnableDiagnosticsHealthChecksIntegration(Mode.FromDiagnosticHcToAutoHc)
+//            );
+//        }
+//    }
+//}

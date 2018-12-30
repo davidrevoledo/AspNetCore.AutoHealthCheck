@@ -38,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services"></param>
         /// <param name="setupAction">configurations</param>
         /// <returns></returns>
-        public static IServiceCollection AddAutoHealthCheck(
+        public static IAutoHealthCheckBuilder AddAutoHealthCheck(
             this IServiceCollection services,
             Action<AutoHealthCheckConfigurations> setupAction = null)
         {
@@ -64,29 +64,29 @@ namespace Microsoft.Extensions.DependencyInjection
             if (options.AutomaticRunConfigurations.AutomaticRunEnabled)
                 services.AddSingleton<IHostedService, AutoHealthCheckProcess>();
 
-            return services;
+            return new DefaultAutoHealthCheckBuilder(services);
         }
 
         /// <summary>
         ///     Add custom probe work.
         /// </summary>
         /// <typeparam name="TProbe">Probe type to add to the work queue.</typeparam>
-        /// <param name="services"></param>
+        /// <param name="builder"></param>
         /// <returns></returns>
-        public static IServiceCollection AddCustomProbe<TProbe>(this IServiceCollection services)
+        public static IAutoHealthCheckBuilder AddCustomProbe<TProbe>(this IAutoHealthCheckBuilder builder)
             where TProbe : class, IProbe
         {
             if (_contextAccessor == null)
                 throw new InvalidOperationException("Please first call AddAutoHealthCheck method.");
 
             // register probe in the IOC engine.
-            services.AddTransient(typeof(TProbe));
+            builder.AddTransient(typeof(TProbe));
 
             // add the probe to context
-            var context = (AutoHealthCheckContext) _contextAccessor.Context;
+            var context = (AutoHealthCheckContext)_contextAccessor.Context;
             context.AddProbe<TProbe>();
 
-            return services;
+            return builder;
         }
     }
 }
