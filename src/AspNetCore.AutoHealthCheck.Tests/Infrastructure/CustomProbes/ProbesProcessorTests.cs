@@ -147,7 +147,10 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.CustomProbes
             serviceProvider.Setup(c => c.GetService(It.Is<Type>(x => x == typeof(WellProbe))))
                 .Returns(new WellProbe());
 
-            var context = new AutoHealthCheckContext();
+            var context = new AutoHealthCheckContext(new AutoHealthCheckConfigurations
+            {
+                RunCustomProbesAsync = false
+            });
             context.AddProbe<BadProbe>();
             context.AddProbe<WellProbe>();
             contextAccessor.Setup(c => c.Context)

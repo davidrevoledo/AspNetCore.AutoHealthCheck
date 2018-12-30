@@ -40,7 +40,7 @@ namespace AspNetCore.AutoHealthCheck
         }
 
         /// <inheritdoc />
-        public bool RunCustomProbesAsync { get; set; }
+        public bool RunCustomProbesAsync { get; set; } = true;
 
         /// <inheritdoc />
         public List<Regex> ExcludeRouteRegexs { get; set; } = new List<Regex>();
