@@ -52,9 +52,9 @@ namespace AspNetCore.AutoHealthCheck
             var path = httpContext.Request.Path.Value;
 
             // check request security
-            if (_appOptions.Security != null)
+            if (_appOptions.SecurityHandler != null)
             {
-                var validRequest = _appOptions.Security.Invoke(httpContext.Request);
+                var validRequest = _appOptions.SecurityHandler.Invoke(httpContext.Request);
                 if (!validRequest)
                 {
                     httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

@@ -36,8 +36,8 @@ namespace AspNetCore.AutoHealthCheck
         public string RoutePrefix { get; set; } = "api/autoHealthCheck";
 
         /// <summary>
-        ///     Security for the health check request.
+        ///     SecurityHandler for the health check request.
         /// </summary>
-        public Func<HttpRequest, bool> Security { get; set; }
+        public Func<HttpRequest, bool> SecurityHandler { get; set; }
     }
 }
