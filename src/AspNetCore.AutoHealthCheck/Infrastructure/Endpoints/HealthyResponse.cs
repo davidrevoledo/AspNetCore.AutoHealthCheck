@@ -20,20 +20,39 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Net;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Health check result information.
     /// </summary>
-    internal interface IEndpointBuilder
+    public class HealthyResponse
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Indicate if the check was successfully.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        public bool Success { get; set; }
+
+        /// <summary>
+        ///     Http Status the check has finished.
+        /// </summary>
+        public HttpStatusCode HttpStatus { get; set; }
+
+        /// <summary>
+        ///     Indicate the elapsed time in seconds.
+        /// </summary>
+        public long ElapsedSecondsTest { get; set; }
+
+        /// <summary>
+        ///     Indicate the endpoints who failed.
+        /// </summary>
+        public List<UnhealthyEndpoint> UnhealthyEndpoints { get; set; } = new List<UnhealthyEndpoint>();
+
+        /// <summary>
+        ///     Indicate the probes who failed.
+        /// </summary>
+        public List<UnhealthyProbe> UnhealthyProbes { get; set; } = new List<UnhealthyProbe>();
     }
 }

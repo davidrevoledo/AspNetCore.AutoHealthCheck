@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace WebApplication.Plugins
 {
-    public class ResultPlugin : IHealtCheckResultPlugin
+    public class ResultPlugin : IHealthCheckResultPlugin
     {
         public string Name => "TestResultPlugin";
 

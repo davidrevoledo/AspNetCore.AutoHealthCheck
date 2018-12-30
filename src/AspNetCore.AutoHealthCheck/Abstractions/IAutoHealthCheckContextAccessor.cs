@@ -20,20 +20,16 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Context accessor.
     /// </summary>
-    internal interface IEndpointBuilder
+    public interface IAutoHealthCheckContextAccessor
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Current context.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        IAutoHealthCheckContext Context { get; }
     }
 }

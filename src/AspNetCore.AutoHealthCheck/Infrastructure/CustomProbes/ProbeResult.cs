@@ -20,45 +20,63 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
 using System.Collections.Generic;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Route information for a single endpoint.
+    ///     Probe Check Result.
     /// </summary>
-    public interface IRouteInformation
+    public class ProbeResult
     {
-        /// <summary>
-        ///     Http method needed to be consumed.
-        /// </summary>
-        string HttpMethod { get; }
+        private ProbeResult()
+        {
+        }
 
         /// <summary>
-        ///     Route needed to be consumed.
+        ///     Indicate if the probe was successfully or not.
         /// </summary>
-        string Path { get; }
+        public bool Succeed { get; protected set; }
 
         /// <summary>
-        ///     Route template definition.
+        ///     Indicate the message if the probe was not successfully.
         /// </summary>
-        string RouteTemplate { get; }
+        public string ErrorMessage { get; protected set; }
 
         /// <summary>
-        ///     Route params key and type for url replacing.
+        ///     Custom information.
         /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
+        public Dictionary<string, string> CustomData { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
-        ///     Body params key and type
-        ///     Just 1 for now will be supported.
+        ///     Probe name.
         /// </summary>
-        Dictionary<string, Type> BodyParams { get; }
+        public string Name { get; internal set; }
 
         /// <summary>
-        ///     Query params key and type.
+        ///     Return an instance of a probe execution that was successfully.
         /// </summary>
-        Dictionary<string, Type> QueryParams { get; }
+        /// <returns></returns>
+        public static ProbeResult Ok()
+        {
+            return new ProbeResult
+            {
+                Succeed = true
+            };
+        }
+
+        /// <summary>
+        ///     Return an instance of a probe execution that failed.
+        /// </summary>
+        /// <param name="errorMessage">error message</param>
+        /// <returns></returns>
+        public static ProbeResult Error(string errorMessage)
+        {
+            return new ProbeResult
+            {
+                ErrorMessage = errorMessage,
+                Succeed = false
+            };
+        }
     }
 }

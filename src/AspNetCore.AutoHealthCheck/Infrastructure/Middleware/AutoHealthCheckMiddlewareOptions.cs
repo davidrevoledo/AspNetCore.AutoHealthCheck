@@ -20,20 +20,24 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using System;
+using Microsoft.AspNetCore.Http;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Options for auto health check middleware
     /// </summary>
-    internal interface IEndpointBuilder
+    public sealed class AutoHealthCheckMiddlewareOptions
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Gets or sets a route prefix for accessing the auto health check endpoint
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        public string RoutePrefix { get; set; } = "api/autoHealthCheck";
+
+        /// <summary>
+        ///     SecurityHandler for the health check request.
+        /// </summary>
+        public Func<HttpRequest, bool> SecurityHandler { get; set; }
     }
 }

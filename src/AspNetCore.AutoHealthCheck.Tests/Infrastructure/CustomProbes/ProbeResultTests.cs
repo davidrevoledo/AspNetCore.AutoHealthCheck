@@ -20,20 +20,36 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.CustomProbes
 {
-    /// <summary>
-    ///     Endpoint builder.
-    /// </summary>
-    internal interface IEndpointBuilder
+    public class ProbeResultTests
     {
-        /// <summary>
-        ///     Create endpoint definition from route.
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        [Fact]
+        public void ProbeResult_error_should_fail()
+        {
+            // arrange
+            // act
+            var result = ProbeResult.Error("error");
+
+            // assert
+            Assert.False(result.Succeed);
+            Assert.NotNull(result.ErrorMessage);
+            Assert.NotEmpty(result.ErrorMessage);
+            Assert.Equal("error", result.ErrorMessage);
+        }
+
+        [Fact]
+        public void ProbeResult_ok_should_be_successfully()
+        {
+            // arrange
+            // act
+            var result = ProbeResult.Ok();
+
+            // assert
+            Assert.True(result.Succeed);
+            Assert.Null(result.ErrorMessage);
+        }
     }
 }

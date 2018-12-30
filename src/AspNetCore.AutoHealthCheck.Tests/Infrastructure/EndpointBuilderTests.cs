@@ -20,20 +20,46 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Moq;
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure
 {
-    /// <summary>
-    ///     Endpoint builder.
-    /// </summary>
-    internal interface IEndpointBuilder
+    public class EndpointBuilderTests
     {
-        /// <summary>
-        ///     Create endpoint definition from route.
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        [Fact]
+        public async Task EndpointBuilder_should_fail_if_route_is_null()
+        {
+            // arrange
+            var context = new Mock<IHttpContextAccessor>();
+            var builder = new EndpointBuilder(context.Object);
+
+            context.Setup(c => c.HttpContext)
+                .Returns(new DefaultHttpContext());
+
+            // act
+            // assert
+            await Assert.ThrowsAsync<ArgumentNullException>(() => builder.CreateFromRoute(null));
+        }
+
+        [Fact]
+        public async Task EndpointBuilder_should_return_endpoint()
+        {
+            // arrange
+            var context = new Mock<IHttpContextAccessor>();
+            var builder = new EndpointBuilder(context.Object);
+
+            context.Setup(c => c.HttpContext)
+                .Returns(new DefaultHttpContext());
+
+            // act
+            var endpoint = await builder.CreateFromRoute(new RouteInformation());
+
+            // assert
+            Assert.IsType<Endpoint>(endpoint);
+        }
     }
 }

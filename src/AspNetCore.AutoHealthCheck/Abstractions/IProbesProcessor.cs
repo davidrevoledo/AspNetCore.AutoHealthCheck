@@ -20,20 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Probe processor engine.
     /// </summary>
-    internal interface IEndpointBuilder
+    public interface IProbesProcessor
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Execute custom probes.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        /// <returns>probe check information.</returns>
+        Task<IEnumerable<ProbeResult>> ExecuteCustomProbes();
     }
 }

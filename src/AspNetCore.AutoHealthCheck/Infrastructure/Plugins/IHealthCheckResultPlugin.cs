@@ -21,19 +21,34 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Threading.Tasks;
+using AspNetCore.AutoHealthCheck.Infraestructure.Plugins;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Health Check Result Plugin
     /// </summary>
-    internal interface IEndpointBuilder
+    public interface IHealthCheckResultPlugin : IPlugin
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Do something after a result
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        /// <param name="result">result</param>
+        /// <returns></returns>
+        Task ActionAfterResult(HealthyResponse result);
+
+        /// <summary>
+        ///     Do something after a result success
+        /// </summary>
+        /// <param name="result">result</param>
+        /// <returns></returns>
+        Task ActionAfterSuccess(HealthyResponse result);
+
+        /// <summary>
+        ///     Do something after a fail result
+        /// </summary>
+        /// <param name="result">result</param>
+        /// <returns></returns>
+        Task ActionAfterFail(HealthyResponse result);
     }
 }

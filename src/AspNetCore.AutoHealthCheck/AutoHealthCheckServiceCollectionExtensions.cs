@@ -30,6 +30,8 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AutoHealthCheckServiceCollectionExtensions
     {
+        private static AutoHealthCheckContextAccessor _contextAccessor;
+
         /// <summary>
         ///     Add Auto health check to the asp.net core application without configurations
         /// </summary>
@@ -48,18 +50,41 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
             services.AddSingleton<IEndpointMessageTranslator, EndpointMessageTranslator>();
             services.AddSingleton<IEndpointCaller, EndpointCaller>();
+            services.AddSingleton<IProbesProcessor, ProbesProcessor>();
             services.AddHttpClient();
 
             // resolve options
             var options = new AutoHealthCheckConfigurations();
             setupAction?.Invoke(options);
-            var accesor = new AutoHealthCheckContextAccesor();
-            accesor.SetConfigurations(options);
-            services.AddSingleton<IAutoHealthCheckContextAccesor>(accesor);
+            _contextAccessor = new AutoHealthCheckContextAccessor();
+            _contextAccessor.SetConfigurations(options);
+            services.AddSingleton<IAutoHealthCheckContextAccessor>(_contextAccessor);
 
             // check if the service need to run automatically
             if (options.AutomaticRunConfigurations.AutomaticRunEnabled)
-                services.AddSingleton<IHostedService, AutoHealtCheckProcess>();
+                services.AddSingleton<IHostedService, AutoHealthCheckProcess>();
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Add custom probe work.
+        /// </summary>
+        /// <typeparam name="TProbe">Probe type to add to the work queue.</typeparam>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddCustomProbe<TProbe>(this IServiceCollection services)
+            where TProbe : class, IProbe
+        {   
+            if (_contextAccessor == null)
+                throw new InvalidOperationException("Please first call AddAutoHealthCheck method.");
+
+            // register probe in the IOC engine.
+            services.AddTransient(typeof(TProbe));
+
+            // add the probe to context
+            var context = (AutoHealthCheckContext)_contextAccessor.Context;
+            context.AddProbe<TProbe>();
 
             return services;
         }

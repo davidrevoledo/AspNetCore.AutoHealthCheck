@@ -28,7 +28,7 @@ namespace AspNetCore.AutoHealthCheck
     {
         /// <summary>
         ///     Internally evaluate a route to determine if needs to be included
-        ///     to check
+        ///     to check.
         /// </summary>
         /// <param name="routeInformation">route information</param>
         /// <returns>if the route candidate needs to be included</returns>

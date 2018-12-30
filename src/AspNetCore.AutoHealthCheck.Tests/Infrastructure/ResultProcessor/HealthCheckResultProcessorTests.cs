@@ -20,20 +20,37 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Diagnostics;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Moq;
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
 {
-    /// <summary>
-    ///     Endpoint builder.
-    /// </summary>
-    internal interface IEndpointBuilder
+    public class HealthCheckResultProcessorTests
     {
-        /// <summary>
-        ///     Create endpoint definition from route.
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        [Fact]
+        public async Task HealthCheckResultProcessor_should_return_ok_with_empty_both_results()
+        {
+            // arrange
+            var watch = new Stopwatch();
+            watch.Start();
+            var context = new Mock<IAutoHealthCheckContext>();
+            context.Setup(c => c.Configurations)
+                .Returns(new AutoHealthCheckConfigurations());
+
+            // act
+            var result = await HealthCheckResultProcessor.ProcessResult(
+                context.Object,
+                watch,
+                new HttpResponseMessage[0],
+                new ProbeResult[0]);
+
+            // assert
+            Assert.NotNull(result);
+            Assert.Equal(200, (int)result.HttpStatus);
+            Assert.True(result.Success);    
+        }
     }
 }

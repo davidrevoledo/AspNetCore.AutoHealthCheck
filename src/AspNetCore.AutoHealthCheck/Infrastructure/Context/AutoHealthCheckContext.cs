@@ -23,44 +23,48 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    public class AutoHealthCheckConfigurations : IAutoHealthCheckConfigurations
+    /// <inheritdoc />  
+    internal class AutoHealthCheckContext : IAutoHealthCheckContext
     {
-        internal AutoHealthCheckConfigurations()
+        internal AutoHealthCheckContext()
         {
-            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int)s.StatusCode);
-            DefaultUnHealthyResponseCode = HttpStatusCode.InternalServerError;
-            DefaultHealthyResponseCode = HttpStatusCode.OK;
+        }
+
+        internal AutoHealthCheckContext(IAutoHealthCheckConfigurations configurations)
+        {
+            Configurations = configurations;
         }
 
         /// <inheritdoc />
-        public bool RunCustomProbesAsync { get; set; } = true;
+        public virtual IAutoHealthCheckConfigurations Configurations { get; } = new AutoHealthCheckConfigurations();
 
         /// <inheritdoc />
-        public List<Regex> ExcludeRouteRegexs { get; set; } = new List<Regex>();
+        public List<Type> Probes { get; } = new List<Type>();
 
-        /// <inheritdoc />
-        public Func<HttpResponseMessage, bool> PassCheckRule { get; set; }
+        internal IAutoHealthCheckContext AddProbe<TProbe>()
+            where TProbe : class, IProbe
+        {
+            // validate type is not an interface
+            if (typeof(TProbe).IsInterface)
+                throw new InvalidOperationException("Probe cannot be an interface.");
 
-        /// <inheritdoc />
-        public HttpStatusCode DefaultUnHealthyResponseCode { get; set; }
+            // validate type is not abstract
+            if (typeof(TProbe).IsAbstract)
+                throw new InvalidOperationException("Probe cannot be abstract.");
 
-        /// <inheritdoc />
-        public HttpStatusCode DefaultHealthyResponseCode { get; set; }
+            if (Probes.All(p => p != typeof(TProbe)))
+            {
+                Probes.Add(typeof(TProbe));
+            }
 
-        /// <inheritdoc />
-        public AutomaticRunConfigurations AutomaticRunConfigurations { get; set; } = new AutomaticRunConfigurations();
-
-        /// <inheritdoc />
-        public List<IHealthCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealthCheckResultPlugin>();
-
-        /// <inheritdoc />
-        public List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; } = new List<IHttpEndpointPlugin>();
+            return this;
+        }
     }
 }
