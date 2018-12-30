@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace WebApplication
+namespace AspNetCoreUsingDiagnostic
 {
     public class Program
     {

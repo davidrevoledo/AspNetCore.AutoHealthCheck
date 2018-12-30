@@ -13,13 +13,13 @@ namespace WebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new[] {"value1", "value2"};
         }
 
         [HttpGet("querystring")]
         public ActionResult<IEnumerable<string>> GetWithQueryStrings([FromQuery] int? a)
         {
-            return new string[] { "value1", "value2" };
+            return new[] {"value1", "value2"};
         }
 
         [HttpGet("{id}")]
@@ -29,12 +29,12 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody, Required] string value)
+        public void Post([FromBody] [Required] string value)
         {
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody, Required] string value)
+        public void Put(int id, [FromBody] [Required] string value)
         {
         }
 
@@ -45,12 +45,12 @@ namespace WebApplication.Controllers
         }
 
         [HttpPut("int/{id}")]
-        public void Put(int id, [FromBody, Required] int value)
+        public void Put(int id, [FromBody] [Required] int value)
         {
         }
 
         [HttpPut("datetime/{id}")]
-        public void Put(int id, [FromBody, Required] DateTime value)
+        public void Put(int id, [FromBody] [Required] DateTime value)
         {
         }
 
