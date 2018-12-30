@@ -309,7 +309,7 @@ You can easily implemeny your own security with whole request like this.
  ``` C#
     app.UseAutoHealthCheck(c =>
     {
-        c.Security = request => request.Query.ContainsKey("key") && request.Query["key"] == "1234";
+        c.SecurityHandler = request => request.Query.ContainsKey("key") && request.Query["key"] == "1234";
     });
 ```
 
