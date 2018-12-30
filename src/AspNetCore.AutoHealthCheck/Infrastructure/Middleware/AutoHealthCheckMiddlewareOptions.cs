@@ -20,16 +20,24 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
+using Microsoft.AspNetCore.Http;
+
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
     ///     Options for auto health check middleware
     /// </summary>
-    public sealed class AutoHealtCheckMiddlewareOptions
+    public sealed class AutoHealthCheckMiddlewareOptions
     {
         /// <summary>
         ///     Gets or sets a route prefix for accessing the auto health check endpoint
         /// </summary>
         public string RoutePrefix { get; set; } = "api/autoHealthCheck";
+
+        /// <summary>
+        ///     Security for the health check request.
+        /// </summary>
+        public Func<HttpRequest, bool> Security { get; set; }
     }
 }

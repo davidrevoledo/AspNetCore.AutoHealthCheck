@@ -29,9 +29,9 @@ namespace Microsoft.AspNetCore.Builder
     {
         public static IApplicationBuilder UseAutoHealthCheck(
             this IApplicationBuilder app,
-            Action<AutoHealtCheckMiddlewareOptions> setupAction = null)
+            Action<AutoHealthCheckMiddlewareOptions> setupAction = null)
         {
-            var options = new AutoHealtCheckMiddlewareOptions();
+            var options = new AutoHealthCheckMiddlewareOptions();
             setupAction?.Invoke(options);
 
             app.UseMiddleware<AutoHealthCheckMiddleware>(options);

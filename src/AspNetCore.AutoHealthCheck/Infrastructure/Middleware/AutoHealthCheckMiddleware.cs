@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -31,14 +32,14 @@ namespace AspNetCore.AutoHealthCheck
 {
     internal class AutoHealthCheckMiddleware
     {
-        private readonly AutoHealtCheckMiddlewareOptions _appOptions;
+        private readonly AutoHealthCheckMiddlewareOptions _appOptions;
         private readonly IHealthChecker _healthChecker;
         private readonly RequestDelegate _next;
 
         public AutoHealthCheckMiddleware(
             RequestDelegate next,
             IHealthChecker healthChecker,
-            AutoHealtCheckMiddlewareOptions appOptions)
+            AutoHealthCheckMiddlewareOptions appOptions)
         {
             _next = next;
             _healthChecker = healthChecker;
@@ -49,6 +50,17 @@ namespace AspNetCore.AutoHealthCheck
         {
             var httpMethod = httpContext.Request.Method;
             var path = httpContext.Request.Path.Value;
+
+            // check request security
+            if (_appOptions.Security != null)
+            {
+                var validRequest = _appOptions.Security.Invoke(httpContext.Request);
+                if (!validRequest)
+                {
+                    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    return;
+                }
+            }
 
             if (httpMethod == "GET" && Regex.IsMatch(path, $"^/{_appOptions.RoutePrefix}/?$"))
             {

@@ -58,7 +58,7 @@ namespace AspNetCore.AutoHealthCheck
         public AutomaticRunConfigurations AutomaticRunConfigurations { get; set; } = new AutomaticRunConfigurations();
 
         /// <inheritdoc />
-        public List<IHealtCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealtCheckResultPlugin>();
+        public List<IHealthCheckResultPlugin> ResultPlugins { get; set; } = new List<IHealthCheckResultPlugin>();
 
         /// <inheritdoc />
         public List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; } = new List<IHttpEndpointPlugin>();

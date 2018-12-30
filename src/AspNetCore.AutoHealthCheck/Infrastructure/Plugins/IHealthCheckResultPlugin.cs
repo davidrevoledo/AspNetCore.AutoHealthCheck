@@ -28,7 +28,7 @@ namespace AspNetCore.AutoHealthCheck
     /// <summary>
     ///     Health Check Result Plugin
     /// </summary>
-    public interface IHealtCheckResultPlugin : IPlugin
+    public interface IHealthCheckResultPlugin : IPlugin
     {
         /// <summary>
         ///     Do something after a result
