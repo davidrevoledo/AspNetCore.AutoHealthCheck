@@ -41,9 +41,9 @@ namespace AspNetCore.AutoHealthCheck
         private readonly IEndpointBuilder _endpointBuilder;
         private readonly IEndpointCaller _endpointCaller;
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
+        private readonly IProbesProcessor _probesProcessor;
         private readonly AsyncLazy<IEnumerable<IRouteInformation>> _routesFactory;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
-        private readonly IProbesProcessor _probesProcessor;
 
         private int _disposeSignaled;
 

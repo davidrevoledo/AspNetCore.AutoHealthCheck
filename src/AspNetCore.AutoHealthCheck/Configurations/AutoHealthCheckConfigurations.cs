@@ -34,7 +34,7 @@ namespace AspNetCore.AutoHealthCheck
     {
         internal AutoHealthCheckConfigurations()
         {
-            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int)s.StatusCode);
+            PassCheckRule = s => !Enumerable.Range(500, 599).Contains((int) s.StatusCode);
             DefaultUnHealthyResponseCode = HttpStatusCode.InternalServerError;
             DefaultHealthyResponseCode = HttpStatusCode.OK;
         }

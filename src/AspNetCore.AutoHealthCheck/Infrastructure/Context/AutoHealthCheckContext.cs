@@ -30,7 +30,7 @@ using System.Runtime.CompilerServices;
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />  
+    /// <inheritdoc />
     internal class AutoHealthCheckContext : IAutoHealthCheckContext
     {
         internal AutoHealthCheckContext()
@@ -59,10 +59,7 @@ namespace AspNetCore.AutoHealthCheck
             if (typeof(TProbe).IsAbstract)
                 throw new InvalidOperationException("Probe cannot be abstract.");
 
-            if (Probes.All(p => p != typeof(TProbe)))
-            {
-                Probes.Add(typeof(TProbe));
-            }
+            if (Probes.All(p => p != typeof(TProbe))) Probes.Add(typeof(TProbe));
 
             return this;
         }

@@ -30,8 +30,8 @@ namespace AspNetCore.AutoHealthCheck
     /// <inheritdoc />
     public class ProbesProcessor : IProbesProcessor
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
+        private readonly IServiceProvider _serviceProvider;
 
         public ProbesProcessor(
             IServiceProvider serviceProvider,
@@ -90,10 +90,7 @@ namespace AspNetCore.AutoHealthCheck
             }
             finally
             {
-                if (result != null)
-                {
-                    result.Name = probe.Name;
-                }
+                if (result != null) result.Name = probe.Name;
             }
 
             return result;

@@ -73,8 +73,8 @@ namespace AspNetCore.AutoHealthCheck
         AutomaticRunConfigurations AutomaticRunConfigurations { get; }
 
         /// <summary>
-        ///    Indicate if probes should run async or not
-        ///    Default true.
+        ///     Indicate if probes should run async or not
+        ///     Default true.
         /// </summary>
         bool RunCustomProbesAsync { get; }
     }

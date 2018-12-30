@@ -57,7 +57,7 @@ namespace AspNetCore.AutoHealthCheck
                 var validRequest = _appOptions.SecurityHandler.Invoke(httpContext.Request);
                 if (!validRequest)
                 {
-                    httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    httpContext.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                     return;
                 }
             }
@@ -69,7 +69,7 @@ namespace AspNetCore.AutoHealthCheck
                 if (healthCheckResult == null)
                     throw new ArgumentNullException(nameof(healthCheckResult));
 
-                httpContext.Response.StatusCode = (int)healthCheckResult.HttpStatus;
+                httpContext.Response.StatusCode = (int) healthCheckResult.HttpStatus;
                 httpContext.Response.ContentType = "application/json";
                 var jsonString = JsonConvert.SerializeObject(healthCheckResult);
                 await httpContext.Response.WriteAsync(jsonString, Encoding.UTF8).ConfigureAwait(false);

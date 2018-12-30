@@ -75,7 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddCustomProbe<TProbe>(this IServiceCollection services)
             where TProbe : class, IProbe
-        {   
+        {
             if (_contextAccessor == null)
                 throw new InvalidOperationException("Please first call AddAutoHealthCheck method.");
 
@@ -83,7 +83,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient(typeof(TProbe));
 
             // add the probe to context
-            var context = (AutoHealthCheckContext)_contextAccessor.Context;
+            var context = (AutoHealthCheckContext) _contextAccessor.Context;
             context.AddProbe<TProbe>();
 
             return services;
