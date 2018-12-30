@@ -10,6 +10,8 @@ AspNetCore.AutoHealtCheck
 ![NuGet](https://img.shields.io/nuget/dt/AspNetCore.AutoHealthCheck.svg)
 ![NuGet](https://img.shields.io/nuget/v/AspNetCore.AutoHealthCheck.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
+
 
 |Build|Status|CodeFactor|
 |------|-------------|-------------|
