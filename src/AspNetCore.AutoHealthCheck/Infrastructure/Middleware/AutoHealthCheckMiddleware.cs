@@ -32,14 +32,14 @@ namespace AspNetCore.AutoHealthCheck
 {
     internal class AutoHealthCheckMiddleware
     {
-        private readonly AutoHealthCheckMiddlewareOptions _appOptions;
+        private readonly AutoHealthAppBuilderOptions _appOptions;
         private readonly IHealthChecker _healthChecker;
         private readonly RequestDelegate _next;
 
         public AutoHealthCheckMiddleware(
             RequestDelegate next,
             IHealthChecker healthChecker,
-            AutoHealthCheckMiddlewareOptions appOptions)
+            AutoHealthAppBuilderOptions appOptions)
         {
             _next = next;
             _healthChecker = healthChecker;

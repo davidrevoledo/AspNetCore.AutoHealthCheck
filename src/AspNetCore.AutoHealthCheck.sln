@@ -30,7 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreUsingDiagnostic",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Diagnostics", "AspNetCore.AutoHealthCheck.Diagnostics\AspNetCore.AutoHealthCheck.Diagnostics.csproj", "{A5D81A52-319E-489D-929E-5F285495938C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AutoHealthCheck.Abstractions", "AspNetCore.AutoHealthCheck.Abstractions\AspNetCore.AutoHealthCheck.Abstractions.csproj", "{7A4F34EB-A8AF-4A26-844F-DA2C52121622}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Abstractions", "AspNetCore.AutoHealthCheck.Abstractions\AspNetCore.AutoHealthCheck.Abstractions.csproj", "{7A4F34EB-A8AF-4A26-844F-DA2C52121622}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AutoHealthCheck.Diagnostics.Tests", "AspNetCore.AutoHealthCheck.Diagnostics.Tests\AspNetCore.AutoHealthCheck.Diagnostics.Tests.csproj", "{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +64,10 @@ Global
 		{7A4F34EB-A8AF-4A26-844F-DA2C52121622}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A4F34EB-A8AF-4A26-844F-DA2C52121622}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A4F34EB-A8AF-4A26-844F-DA2C52121622}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +79,7 @@ Global
 		{9E500F6B-4F0A-440E-8392-BB316C8D4048} = {78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}
 		{A5D81A52-319E-489D-929E-5F285495938C} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
 		{7A4F34EB-A8AF-4A26-844F-DA2C52121622} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9} = {270C7C3F-98AE-43D8-BB6B-18FAE0420F89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64B4BA9D-729D-4F8A-BBCF-F3E3FDA7E599}

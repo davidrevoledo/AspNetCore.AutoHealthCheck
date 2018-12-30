@@ -21,23 +21,32 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Builder;
+using Moq;
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Diagnostics.Tests
 {
-    /// <summary>
-    ///     Options for auto health check middleware
-    /// </summary>
-    public sealed class AutoHealthCheckMiddlewareOptions
+    public class DiagnosticApplicationBuilderExtensionsTests
     {
-        /// <summary>
-        ///     Gets or sets a route prefix for accessing the auto health check endpoint
-        /// </summary>
-        public string RoutePrefix { get; set; } = "api/autoHealthCheck";
+        [Fact]
+        public void EnableDiagnosticsHealthChecksIntegration_should_fail_if_context_accessor_is_null()
+        {
+            // arrange
+            var applicationBuilder = new Mock<IApplicationBuilder>();
+            var serviceProvider = new Mock<IServiceProvider>();
 
-        /// <summary>
-        ///     SecurityHandler for the health check request.
-        /// </summary>
-        public Func<HttpRequest, bool> SecurityHandler { get; set; }
+            applicationBuilder.Setup(c => c.ApplicationServices)
+                .Returns(serviceProvider.Object);
+
+            serviceProvider.Setup(c => c.GetService(It.IsAny<Type>()))
+                .Returns(null);
+
+            // act
+            // assert
+            Assert.Throws<InvalidOperationException>(() =>
+                    applicationBuilder.Object.EnableDiagnosticsHealthChecksIntegration(Mode.FromDiagnosticHcToAutoHc)
+            );
+        }
     }
 }

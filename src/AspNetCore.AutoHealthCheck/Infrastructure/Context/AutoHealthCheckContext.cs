@@ -48,6 +48,9 @@ namespace AspNetCore.AutoHealthCheck
         /// <inheritdoc />
         public List<Type> Probes { get; } = new List<Type>();
 
+        /// <inheritdoc />
+        public AutoHealthAppBuilderOptions AppBuilderOptions { get; internal set; }
+
         internal IAutoHealthCheckContext AddProbe<TProbe>()
             where TProbe : class, IProbe
         {

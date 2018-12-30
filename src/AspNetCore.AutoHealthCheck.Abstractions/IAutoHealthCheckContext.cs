@@ -39,5 +39,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     Get Custom probes work types.
         /// </summary>
         List<Type> Probes { get; }
+
+        /// <summary>
+        ///     App builder options.
+        /// </summary>
+        AutoHealthAppBuilderOptions AppBuilderOptions { get; }
     }
 }

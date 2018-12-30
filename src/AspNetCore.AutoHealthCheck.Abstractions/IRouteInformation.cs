@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck")]
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace AspNetCore.AutoHealthCheck
 {

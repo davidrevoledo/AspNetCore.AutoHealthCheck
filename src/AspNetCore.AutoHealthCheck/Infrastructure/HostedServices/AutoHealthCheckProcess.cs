@@ -28,6 +28,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace AspNetCore.AutoHealthCheck
 {
+    /// <summary>
+    ///     Hosted service to auto call internally auto health check endpoint.
+    /// </summary>
     internal class AutoHealthCheckProcess : IHostedService, IDisposable
     {
         private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
@@ -50,10 +53,10 @@ namespace AspNetCore.AutoHealthCheck
             var context = _autoHealthCheckContextAccessor.Context;
             while (true)
             {
-                var client = _clientFactory.CreateClient();
-
-                var endpointUrl = $"{context.Configurations.AutomaticRunConfigurations.BaseUrl}/api/autoHealthCheck";
+                var endpointUrl = $"{context.Configurations.BaseUrl}/{context.AppBuilderOptions.RoutePrefix}";
                 var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
+
+                var client = _clientFactory.CreateClient();
                 await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
                 await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000,
                         cancellationToken)

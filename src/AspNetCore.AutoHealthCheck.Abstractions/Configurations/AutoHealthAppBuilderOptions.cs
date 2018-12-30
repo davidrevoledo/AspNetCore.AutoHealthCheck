@@ -21,21 +21,23 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
-namespace AspNetCore.AutoHealthCheck.Diagnostics
+namespace AspNetCore.AutoHealthCheck
 {
-    public static class DiagnosticApplicationBuilderExtensions
+    /// <summary>
+    ///     Options for auto health check middleware
+    /// </summary>
+    public sealed class AutoHealthAppBuilderOptions
     {
-        public static IApplicationBuilder AddDiagnosticsHealthChecksIntegration(this IApplicationBuilder app)
-        {
-            var autoHealthCheckContextAccessor =
-                app.ApplicationServices.GetService(typeof(IAutoHealthCheckContextAccessor));
+        /// <summary>
+        ///     Gets or sets a route prefix for accessing the auto health check endpoint
+        /// </summary>
+        public string RoutePrefix { get; set; } = "api/autoHealthCheck";
 
-            if (autoHealthCheckContextAccessor == null)
-                throw new InvalidOperationException("Please first call UseAutoHealthCheck.");
-
-            return app;
-        }
+        /// <summary>
+        ///     SecurityHandler for the health check request.
+        /// </summary>
+        public Func<HttpRequest, bool> SecurityHandler { get; set; }
     }
 }

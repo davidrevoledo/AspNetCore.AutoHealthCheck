@@ -20,30 +20,23 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using AspNetCore.AutoHealthCheck;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Diagnostics
 {
-    /// <summary>
-    ///     Configurations to run automatically
-    /// </summary>
-    public class AutomaticRunConfigurations
+    public static class DiagnosticIntegrationExtensions
     {
         /// <summary>
-        ///     Indicates if the health check will run automatically or not.
+        ///     With this mode the principal endpoint will be Diagnostic health check one and this will
+        ///     call to auto health check endpoint within automatic IHealthCheck implementation.
         /// </summary>
-        public bool AutomaticRunEnabled { get; set; }
-
-        /// <summary>
-        ///     Indicates every how much the test need to be called automatically in Seconds.
-        ///     Default 60 seconds
-        /// </summary>
-        public int SecondsInterval { get; set; } = 60;
-
-        /// <summary>
-        ///     Define how the internal runtime to auto execute the check will be called.
-        /// </summary>
-        public HealthCheckRuntimeMode RuntimeMode { get; set; } = HealthCheckRuntimeMode.Interval;
+        /// <param name="healthChecksBuilder"></param>
+        /// <returns></returns>
+        public static IHealthChecksBuilder AddAspNetCoreAutoHealthCheck(
+            this IHealthChecksBuilder healthChecksBuilder)
+        {
+            healthChecksBuilder.AddCheck<AspNetCoreDiagnosticHealthCheck>("asp_net_core_auto_health_check");
+            return healthChecksBuilder;
+        }
     }
 }
