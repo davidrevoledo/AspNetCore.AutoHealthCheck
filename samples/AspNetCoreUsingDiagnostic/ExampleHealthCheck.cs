@@ -12,7 +12,7 @@ namespace AspNetCoreUsingDiagnostic
         {
             // Execute health check logic here. This example sets a dummy
             // variable to true.
-            var healthCheckResultHealthy = false;
+            var healthCheckResultHealthy = true;
 
             if (healthCheckResultHealthy)
                 return Task.FromResult(

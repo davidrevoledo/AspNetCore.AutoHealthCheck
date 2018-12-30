@@ -20,13 +20,21 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-namespace AspNetCore.AutoHealthCheck.Configurations
+namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Define how the internal runtime to auto execute the check will be called
+    ///     Endpoint to represent a webservices to be called
     /// </summary>
-    public enum HealthCheckRuntimeMode
+    public interface IEndpoint
     {
-        Interval
+        /// <summary>
+        ///     Base Host
+        /// </summary>
+        string Host { get; }
+
+        /// <summary>
+        ///     Route Information
+        /// </summary>
+        IRouteInformation RouteInformation { get; }
     }
 }

@@ -1,25 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
-        <PackageId>AspNetCore.AutoHealthCheck.Diagnostics</PackageId>
+        <PackageId>AspNetCore.AutoHealthCheck.Abstractions</PackageId>
         <PackageVersion>1.2.0</PackageVersion>
         <Authors>David Revoledo (Deivit)</Authors>
         <Owners>David Revoledo</Owners>
         <PackageProjectUrl>https://github.com/davidrevoledo/AspNetCore.AutoHealthCheck</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Description>Auto Health Check integration for Microsoft.AspNetCore.Diagnostics.HealthChecks.</Description>
+        <Description>Auto Health Check abstractions.</Description>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageReleaseNotes>Initial commit.</PackageReleaseNotes>
         <Copyright>Copyright 2018 (c) AspNetCore.AutoHealthCheck is licensed under the MIT License.</Copyright>
         <PackageTags>AspNetCore AspNet Testing Api Rest HealthCheck</PackageTags>
         <Version>1.2.0</Version>
-        <AssemblyName>AspNetCore.AutoHealthCheck.Diagnostics</AssemblyName>
+        <AssemblyName>AspNetCore.AutoHealthCheck.Abstractions</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" allowedVersion="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" allowedVersion="2.2.0" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\AspNetCore.AutoHealthCheck.Abstractions\AspNetCore.AutoHealthCheck.Abstractions.csproj" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="2.1.0" allowedVersion="2.1.0" />
     </ItemGroup>
 </Project>

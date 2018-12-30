@@ -20,45 +20,21 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Route information for a single endpoint.
+    ///     Endpoint translator to get a HttpRequest message to call the endpoint.
     /// </summary>
-    public interface IRouteInformation
+    public interface IEndpointMessageTranslator
     {
         /// <summary>
-        ///     Http method needed to be consumed.
+        ///     Convert an endpoint to represent a HttpRequest message to call it.
         /// </summary>
-        string HttpMethod { get; }
-
-        /// <summary>
-        ///     Route needed to be consumed.
-        /// </summary>
-        string Path { get; }
-
-        /// <summary>
-        ///     Route template definition.
-        /// </summary>
-        string RouteTemplate { get; }
-
-        /// <summary>
-        ///     Route params key and type for url replacing.
-        /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
-
-        /// <summary>
-        ///     Body params key and type
-        ///     Just 1 for now will be supported.
-        /// </summary>
-        Dictionary<string, Type> BodyParams { get; }
-
-        /// <summary>
-        ///     Query params key and type.
-        /// </summary>
-        Dictionary<string, Type> QueryParams { get; }
+        /// <param name="endpoint">endpoint information</param>
+        /// <returns>Http request to call the endpoint</returns>
+        Task<HttpRequestMessage> Transform(IEndpoint endpoint);
     }
 }

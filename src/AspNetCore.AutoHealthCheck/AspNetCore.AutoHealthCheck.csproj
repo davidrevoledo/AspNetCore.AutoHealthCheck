@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <PropertyGroup>
         <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
         <PackageId>AspNetCore.AutoHealthCheck</PackageId>
@@ -23,4 +22,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.1" allowedVersion="2.1.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\AspNetCore.AutoHealthCheck.Abstractions\AspNetCore.AutoHealthCheck.Abstractions.csproj" />
+    </ItemGroup>
 </Project>

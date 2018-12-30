@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using AspNetCore.AutoHealthCheck.Diagnostics;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,13 +23,22 @@ namespace AspNetCoreUsingDiagnostic
                 .AddCheck<ExampleHealthCheck>("example_health_check");
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAutoHealthCheck(c =>
+            {
+                c.BaseUrl = new Uri("http://localhost:49987");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
             app.UseHealthChecks("/health");
             app.UseMvc();
+            app.UseAutoHealthCheck(c =>
+            {
+                c.RoutePrefix = "insights/health";
+            });
+
+            app.AddDiagnosticsHealthChecksIntegration();
         }
     }
 }

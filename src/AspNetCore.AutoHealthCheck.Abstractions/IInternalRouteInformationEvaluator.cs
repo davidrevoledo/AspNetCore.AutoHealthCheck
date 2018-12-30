@@ -20,21 +20,18 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Threading.Tasks;
+
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <summary>
-    ///     Endpoint to represent a webservices to be called
-    /// </summary>
-    internal interface IEndpoint
+    public interface IInternalRouteInformationEvaluator
     {
         /// <summary>
-        ///     Base Host
+        ///     Internally evaluate a route to determine if needs to be included
+        ///     to check.
         /// </summary>
-        string Host { get; }
-
-        /// <summary>
-        ///     Route Information
-        /// </summary>
-        IRouteInformation RouteInformation { get; }
+        /// <param name="routeInformation">route information</param>
+        /// <returns>if the route candidate needs to be included</returns>
+        Task<bool> Evaluate(IRouteInformation routeInformation);
     }
 }

@@ -21,34 +21,21 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using AspNetCore.AutoHealthCheck.Configurations;
+using Microsoft.AspNetCore.Builder;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Diagnostics
 {
-    /// <summary>
-    ///     Configurations to run automatically
-    /// </summary>
-    public class AutomaticRunConfigurations
+    public static class DiagnosticApplicationBuilderExtensions
     {
-        /// <summary>
-        ///     Indicates if the health check will run automatically or not.
-        /// </summary>
-        public bool AutomaticRunEnabled { get; set; }
+        public static IApplicationBuilder AddDiagnosticsHealthChecksIntegration(this IApplicationBuilder app)
+        {
+            var autoHealthCheckContextAccessor =
+                app.ApplicationServices.GetService(typeof(IAutoHealthCheckContextAccessor));
 
-        /// <summary>
-        ///     Indicates every how much the test need to be called automatically in Seconds.
-        ///     Default 60 seconds
-        /// </summary>
-        public int SecondsInterval { get; set; } = 60;
+            if (autoHealthCheckContextAccessor == null)
+                throw new InvalidOperationException("Please first call UseAutoHealthCheck.");
 
-        /// <summary>
-        ///     Define how the internal runtime to auto execute the check will be called
-        /// </summary>
-        public HealthCheckRuntimeMode RuntimeMode { get; set; } = HealthCheckRuntimeMode.Interval;
-
-        /// <summary>
-        ///     This indicates where the automatic
-        /// </summary>
-        public Uri BaseUrl { get; set; }
+            return app;
+        }
     }
 }

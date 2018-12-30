@@ -77,5 +77,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     Default true.
         /// </summary>
         bool RunCustomProbesAsync { get; }
+
+        /// <summary>
+        ///     This indicates where the service is running.
+        /// </summary>
+        Uri BaseUrl { get; set; }
     }
 }

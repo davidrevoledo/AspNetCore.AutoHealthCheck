@@ -62,5 +62,11 @@ namespace AspNetCore.AutoHealthCheck
 
         /// <inheritdoc />
         public List<IHttpEndpointPlugin> HttpEndpointPlugins { get; set; } = new List<IHttpEndpointPlugin>();
+
+        /// <summary>
+        ///     This indicates where the service is running.
+        /// </summary>
+        /// <inheritdoc />
+        public Uri BaseUrl { get; set; }
     }
 }

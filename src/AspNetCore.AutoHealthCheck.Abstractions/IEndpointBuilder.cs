@@ -20,21 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint translator to get a HttpRequest message to call the endpoint.
+    ///     Endpoint builder.
     /// </summary>
-    internal interface IEndpointMessageTranslator
+    public interface IEndpointBuilder
     {
         /// <summary>
-        ///     Convert an endpoint to represent a HttpRequest message to call it.
+        ///     Create endpoint definition from route.
         /// </summary>
-        /// <param name="endpoint">endpoint information</param>
-        /// <returns>Http request to call the endpoint</returns>
-        Task<HttpRequestMessage> Transform(IEndpoint endpoint);
+        /// <param name="routeInformation">route information</param>
+        /// <returns>endpoint definition</returns>
+        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
     }
 }

@@ -20,20 +20,36 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using System;
+using AspNetCore.AutoHealthCheck;
 
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
-    ///     Endpoint builder.
+    ///     Configurations to run automatically
     /// </summary>
-    internal interface IEndpointBuilder
+    public class AutomaticRunConfigurations
     {
         /// <summary>
-        ///     Create endpoint definition from route.
+        ///     Indicates if the health check will run automatically or not.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>endpoint definition</returns>
-        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
+        public bool AutomaticRunEnabled { get; set; }
+
+        /// <summary>
+        ///     Indicates every how much the test need to be called automatically in Seconds.
+        ///     Default 60 seconds
+        /// </summary>
+        public int SecondsInterval { get; set; } = 60;
+
+        /// <summary>
+        ///     Define how the internal runtime to auto execute the check will be called.
+        /// </summary>
+        public HealthCheckRuntimeMode RuntimeMode { get; set; } = HealthCheckRuntimeMode.Interval;
+
+        /// <summary>
+        ///     This indicates where the automatic.
+        ///     In 2.0 this will be replaced by AutoHealthCheckConfigurations.BaseUrl.
+        /// </summary>
+        public Uri BaseUrl { get; set; }
     }
 }
