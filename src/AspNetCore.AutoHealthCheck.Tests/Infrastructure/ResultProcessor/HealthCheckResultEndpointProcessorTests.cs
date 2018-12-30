@@ -30,31 +30,8 @@ using Xunit;
 
 namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.ResultProcessor
 {
-    public class HealthCheckResultProcessorTests
+    public class HealthCheckResultEndpointProcessorTests
     {
-        [Fact]
-        public async Task HealthCheckResultProcessor_should_return_ok_with_empty_results()
-        {
-            // arrange
-            var watch = new Stopwatch();
-            watch.Start();
-            var context = new Mock<IAutoHealthCheckContext>();
-            context.Setup(c => c.Configurations)
-                .Returns(new AutoHealthCheckConfigurations());
-
-            // act
-            var result = await HealthCheckResultProcessor.ProcessResult(
-                context.Object,
-                watch,
-                new HttpResponseMessage[0],
-                new ProbeResult[0]);
-
-            // assert
-            Assert.NotNull(result);
-            Assert.Equal(200, (int)result.HttpStatus);
-            Assert.True(result.Success);
-        }
-
         [Fact]
         public async Task HealthCheckResultProcessor_should_return_ok_with_default_rule()
         {

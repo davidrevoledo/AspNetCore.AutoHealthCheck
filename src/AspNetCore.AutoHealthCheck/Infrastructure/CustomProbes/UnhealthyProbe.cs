@@ -1,4 +1,6 @@
-﻿namespace AspNetCore.AutoHealthCheck
+﻿using System.Collections.Generic;
+
+namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
     ///     Result to show unhealthy probes.
@@ -14,5 +16,10 @@
         ///     Probe result.
         /// </summary>
         public string ErrorMessage { get; set; }
+
+        /// <summary>
+        ///     Custom information.
+        /// </summary>
+        public Dictionary<string, string> CustomData { get; set; }
     }
 }

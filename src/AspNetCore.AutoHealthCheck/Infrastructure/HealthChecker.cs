@@ -43,7 +43,7 @@ namespace AspNetCore.AutoHealthCheck
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
         private readonly AsyncLazy<IEnumerable<IRouteInformation>> _routesFactory;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IProbesProcessor _probesProcessor;
 
         private int _disposeSignaled;
 
@@ -53,13 +53,13 @@ namespace AspNetCore.AutoHealthCheck
             IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
             IEndpointMessageTranslator endpointMessageTranslator,
             IEndpointCaller endpointCaller,
-            IServiceProvider serviceProvider)
+            IProbesProcessor probesProcessor)
         {
             _endpointBuilder = endpointBuilder;
             _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
             _endpointMessageTranslator = endpointMessageTranslator;
             _endpointCaller = endpointCaller;
-            _serviceProvider = serviceProvider;
+            _probesProcessor = probesProcessor;
 
             // route async
             _routesFactory = new AsyncLazy<IEnumerable<IRouteInformation>>(() => aspNetRouteDiscover.GetAllEndpoints());
@@ -110,7 +110,8 @@ namespace AspNetCore.AutoHealthCheck
                 // at this point task is finished
                 var currentContext = _autoHealthCheckContextAccessor.Context;
 
-                var probesResults = await ExecuteCustomProbes(currentContext).ConfigureAwait(false);
+                var probesResults = await
+                    _probesProcessor.ExecuteCustomProbes().ConfigureAwait(false);
 
                 // check test timing
                 watcher.Stop();
@@ -125,51 +126,6 @@ namespace AspNetCore.AutoHealthCheck
             {
                 _semaphore.Release();
             }
-        }
-
-        private async Task<IEnumerable<ProbeResult>> ExecuteCustomProbes(IAutoHealthCheckContext currentContext)
-        {
-            var executionResult = new List<ProbeResult>();
-
-            if (!currentContext.Probes.Any())
-                return executionResult;
-
-            // if they should not run async or there is just 1 probe then iterate over them.
-            if (!currentContext.Configurations.RunCustomProbesAsync || currentContext.Probes.Count == 1)
-            {
-                foreach (var probeType in currentContext.Probes)
-                {
-                    if (!(_serviceProvider.GetService(probeType) is IProbe probe))
-                        continue;
-
-                    var result = await probe.Check().ConfigureAwait(false);
-                    // set probe name
-                    result.Name = probe.Name;
-                    executionResult.Add(result);
-                }
-            }
-            else
-            {
-                // run them all at same time
-                var probeExecution = currentContext.Probes.Select(p =>
-                {
-                    var probe = _serviceProvider.GetService(p) as IProbe;
-                    return (task: probe.Check(), probeName: probe.Name);
-                })
-                .ToList();
-
-                await Task.WhenAll(probeExecution.Select(t => t.task))
-                    .ConfigureAwait(false);
-
-                foreach (var (task, probeName) in probeExecution)
-                {
-                    var result = task.Result;
-                    result.Name = probeName;
-                    executionResult.Add(result);
-                }
-            }
-
-            return executionResult;
         }
     }
 }

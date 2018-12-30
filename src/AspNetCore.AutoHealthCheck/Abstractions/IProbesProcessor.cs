@@ -20,26 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    internal class Endpoint : IEndpoint
+    /// <summary>
+    ///     Probe processor engine.
+    /// </summary>
+    public interface IProbesProcessor
     {
         /// <summary>
-        ///     Constructor for an endpoint.
+        ///     Execute custom probes.
         /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <param name="host">host</param>
-        public Endpoint(IRouteInformation routeInformation, string host)
-        {
-            Host = host;
-            RouteInformation = routeInformation;
-        }
-
-        /// <inheritdoc />
-        public string Host { get; }
-
-        /// <inheritdoc />
-        public IRouteInformation RouteInformation { get; }
+        /// <returns>probe check information.</returns>
+        Task<IEnumerable<ProbeResult>> ExecuteCustomProbes();
     }
 }

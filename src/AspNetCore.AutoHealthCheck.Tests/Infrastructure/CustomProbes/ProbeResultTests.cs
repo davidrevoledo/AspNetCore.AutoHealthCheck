@@ -20,26 +20,36 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-namespace AspNetCore.AutoHealthCheck
+using Xunit;
+
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.CustomProbes
 {
-    /// <inheritdoc />
-    internal class Endpoint : IEndpoint
+    public class ProbeResultTests
     {
-        /// <summary>
-        ///     Constructor for an endpoint.
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <param name="host">host</param>
-        public Endpoint(IRouteInformation routeInformation, string host)
+        [Fact]
+        public void ProbeResult_error_should_fail()
         {
-            Host = host;
-            RouteInformation = routeInformation;
+            // arrange
+            // act
+            var result = ProbeResult.Error("error");
+
+            // assert
+            Assert.False(result.Succeed);
+            Assert.NotNull(result.ErrorMessage);
+            Assert.NotEmpty(result.ErrorMessage);
+            Assert.Equal("error", result.ErrorMessage);
         }
 
-        /// <inheritdoc />
-        public string Host { get; }
+        [Fact]
+        public void ProbeResult_ok_should_be_successfully()
+        {
+            // arrange
+            // act
+            var result = ProbeResult.Ok();
 
-        /// <inheritdoc />
-        public IRouteInformation RouteInformation { get; }
+            // assert
+            Assert.True(result.Succeed);
+            Assert.Null(result.ErrorMessage);
+        }
     }
 }
