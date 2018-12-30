@@ -6,7 +6,6 @@ AspNetCore.AutoHealtCheck
 ====================
 Check automatically your asp.net core applications with a lot of extensibility !
 
-[![CodeFactor](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck/badge)](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck)
 ![NuGet](https://img.shields.io/nuget/dt/AspNetCore.AutoHealthCheck.svg)
 ![NuGet](https://img.shields.io/nuget/v/AspNetCore.AutoHealthCheck.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
