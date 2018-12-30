@@ -20,35 +20,48 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
+using AspNetCoreUsingDiagnostic;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.AutoHealthCheck.Diagnostics
+namespace AspNetCoreUsingAutoHealthCheck
 {
-    public static class DiagnosticIntegrationExtensions
+    public class Startup
     {
-        /// <summary>
-        ///     With this mode the principal endpoint will be Diagnostic health check one and this will
-        ///     call to auto health check endpoint within automatic IHealthCheck implementation.
-        /// </summary>
-        /// <param name="healthChecksBuilder"></param>
-        /// <returns></returns>
-        public static IHealthChecksBuilder AddAspNetCoreAutoHealthCheck(
-            this IHealthChecksBuilder healthChecksBuilder)
+        public Startup(IConfiguration configuration)
         {
-            healthChecksBuilder.AddCheck<AspNetCoreDiagnosticHealthCheck>("asp_net_core_auto_health_check");
-            return healthChecksBuilder;
+            Configuration = configuration;
         }
 
-        /// <summary>
-        ///     With this mode the principal endpoint will be Diagnostic health check one and this will
-        ///     call to auto health check endpoint within automatic IHealthCheck implementation.
-        /// </summary>
-        /// <param name="healthChecksBuilder"></param>
-        /// <returns></returns>
-        public static IAutoHealthCheckBuilder AddAspNetCoreDiagnosticHealtCheck(
-            this IAutoHealthCheckBuilder healthChecksBuilder)
+        public IConfiguration Configuration { get; }
+
+        public void ConfigureServices(IServiceCollection services)
         {
-            return healthChecksBuilder;
+            services.AddHealthChecks()
+                .AddCheck<ExampleHealthCheck>("example_health_check");
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddAutoHealthCheck(c =>
+            {
+                c.BaseUrl = new Uri("http://localhost:50382");
+            });
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+
+            app.UseHealthChecks("/health");
+            app.UseMvc();
+            app.UseAutoHealthCheck(c =>
+            {
+                c.RoutePrefix = "insights/health";
+            });
         }
     }
 }
