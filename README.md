@@ -120,7 +120,7 @@ To activate background monitor just configure the options in startup.
     services.AddAutoHealthCheck(c =>
     {
         c.AutomaticRunConfigurations.AutomaticRunEnabled = true;
-        c.AutomaticRunConfigurations.BaseUrl = new Uri("http://localhost:50387");
+        c.BaseUrl = new Uri("http://localhost:50387");
         c.AutomaticRunConfigurations.SecondsInterval = 1;
     });
 ```
