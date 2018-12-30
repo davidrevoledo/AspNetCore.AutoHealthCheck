@@ -36,6 +36,7 @@ AspNetCore.AutoHealtCheck
 -  Automatic run on background using HostedServices
 -  Full Async support.
 -  Custom Probes.
+-  Full Security control for health check endpoints.
 
 ====================
 
