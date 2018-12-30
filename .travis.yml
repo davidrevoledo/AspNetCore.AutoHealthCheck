@@ -1,7 +1,7 @@
 language: csharp
 solution: AspNetCore.AutoHealthCheck.sln
 install:
-  - nuget restore AspNetCore.AutoHealthCheck.sln
+  - nuget restore .src/AspNetCore.AutoHealthCheck.sln
   - nuget install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
 script:    
  - dotnet restore
