@@ -106,7 +106,6 @@ namespace AspNetCore.AutoHealthCheck
                         results.Add(result);
                     }
 
-
                 // at this point task is finished
                 var currentContext = _autoHealthCheckContextAccessor.Context;
 
