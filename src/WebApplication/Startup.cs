@@ -42,6 +42,7 @@ namespace WebApplication
             app.UseAutoHealthCheck(c =>
             {
                 c.RoutePrefix = "insights/healthcheck";
+                c.Security = request => request.Query.ContainsKey("key") && request.Query["key"] == "1234";
             });
         }
     }
