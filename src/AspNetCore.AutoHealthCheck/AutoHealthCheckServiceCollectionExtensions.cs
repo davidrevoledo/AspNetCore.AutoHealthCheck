@@ -50,6 +50,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IRouteEvaluator, DefaultRouteEvaluator>();
             services.AddSingleton<IEndpointMessageTranslator, EndpointMessageTranslator>();
             services.AddSingleton<IEndpointCaller, EndpointCaller>();
+            services.AddSingleton<IProbesProcessor, ProbesProcessor>();
             services.AddHttpClient();
 
             // resolve options

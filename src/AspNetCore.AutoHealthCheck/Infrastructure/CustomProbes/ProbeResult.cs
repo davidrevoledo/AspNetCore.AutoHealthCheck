@@ -20,6 +20,8 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Collections.Generic;
+
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>
@@ -40,6 +42,11 @@ namespace AspNetCore.AutoHealthCheck
         ///     Indicate the message if the probe was not successfully.
         /// </summary>
         public string ErrorMessage { get; protected set; }
+
+        /// <summary>
+        ///     Custom information.
+        /// </summary>
+        public Dictionary<string, string> CustomData { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         ///     Probe name.
@@ -67,7 +74,8 @@ namespace AspNetCore.AutoHealthCheck
         {
             return new ProbeResult
             {
-                ErrorMessage = errorMessage
+                ErrorMessage = errorMessage,
+                Succeed = false
             };
         }
     }

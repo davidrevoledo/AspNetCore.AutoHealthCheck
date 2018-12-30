@@ -95,7 +95,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Context
 
             public Task<ProbeResult> Check()
             {
-                return Task.FromResult(new ProbeResult());
+                return Task.FromResult(ProbeResult.Ok());
             }
         }
 

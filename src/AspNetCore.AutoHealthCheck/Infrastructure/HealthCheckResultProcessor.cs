@@ -42,7 +42,7 @@ namespace AspNetCore.AutoHealthCheck
             };
 
             // check if there is something to evaluate result.
-            if (endpointResults.Length != 0 || endpointResults.Length != 0)
+            if (endpointResults.Length != 0 || probeResults.Length != 0)
             {
                 foreach (var result in endpointResults)
                 {
@@ -52,7 +52,7 @@ namespace AspNetCore.AutoHealthCheck
                     healthyResponse.Success = false;
                     healthyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
                     {
-                        HttpStatusCode = (int) result.StatusCode,
+                        HttpStatusCode = (int)result.StatusCode,
                         Route = result.RequestMessage?.RequestUri.ToString(),
                         HttpVerb = result.RequestMessage?.Method.Method
                     });
@@ -67,7 +67,8 @@ namespace AspNetCore.AutoHealthCheck
                     healthyResponse.UnhealthyProbes.Add(new UnhealthyProbe
                     {
                         Name = probe.Name,
-                        ErrorMessage = probe.ErrorMessage
+                        ErrorMessage = probe.ErrorMessage,
+                        CustomData = probe.CustomData
                     });
                 }
             }

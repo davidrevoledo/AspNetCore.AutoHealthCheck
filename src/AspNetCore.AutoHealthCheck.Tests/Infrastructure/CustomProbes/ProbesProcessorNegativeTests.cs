@@ -21,52 +21,52 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure
+namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.CustomProbes
 {
-    public class HealthCheckerTests
+    public class ProbesProcessorNegativeTests
     {
-        [Fact]
-        public async Task HealthChecker_should_return_ok_if_there_is_nothing_to_check()
+        public async Task ProbesProcessor_should_not_fail_with_unhandled_probe()
         {
             // arrange
-            var discover = new Mock<IRouteDiscover>();
             var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
-            var endpointBuilder = new Mock<IEndpointBuilder>();
-            var endpointTranslator = new Mock<IEndpointMessageTranslator>();
-            var endpointCaller = new Mock<IEndpointCaller>();
-            var probesProcessor = new Mock<IProbesProcessor>();
+            var serviceProvider = new Mock<IServiceProvider>();
+
+            // service provider will not resolve the type
+            serviceProvider.Setup(c => c.GetService(It.Is<Type>(x => x == typeof(UnImplementedProbe))))
+                .Returns(new UnImplementedProbe());
+
+            var context = new AutoHealthCheckContext();
+            context.AddProbe<UnImplementedProbe>(); // first well delay
 
             contextAccessor.Setup(c => c.Context)
-                .Returns(new AutoHealthCheckContext());
+                .Returns(context);
 
-            var checker = new HealthChecker(
-                discover.Object,
-                endpointBuilder.Object,
-                contextAccessor.Object,
-                endpointTranslator.Object,
-                endpointCaller.Object,
-                probesProcessor.Object);
-
-            // no routes no probes
-            discover.Setup(c => c.GetAllEndpoints())
-                .Returns(() =>
-                {
-                    IEnumerable<IRouteInformation> enumerable = new List<IRouteInformation>();
-                    return Task.FromResult(enumerable);
-                });
+            var processor = new ProbesProcessor(serviceProvider.Object, contextAccessor.Object);
 
             // act
-            var result = await checker.Check();
+            var result = await processor.ExecuteCustomProbes();
 
             // assert
             Assert.NotNull(result);
-            Assert.Equal(200, (int)result.HttpStatus);
-            Assert.True(result.Success);
+            Assert.Single(result);
+
+            Assert.False(result.First().Succeed);
+            Assert.Equal("foo", result.First().ErrorMessage);
+        }
+
+        private class UnImplementedProbe : IProbe
+        {
+            public string Name => typeof(UnImplementedProbe).Name;
+
+            public Task<ProbeResult> Check()
+            {
+                throw new NotImplementedException("foo");
+            }
         }
     }
 }
