@@ -40,7 +40,7 @@ AspNetCore.AutoHealtCheck
 -  Full Async support.
 -  Custom Probes.
 -  Full Security control for health check endpoints.
--  Integrations with :bomb: [Microsoft.AspNetCore.Diagnostics.HealthChecks.] (https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.HealthChecks) 
+-  Integrations with :bomb:[Microsoft.AspNetCore.Diagnostics.HealthChecks(https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.HealthChecks) 
 
 ====================
 
