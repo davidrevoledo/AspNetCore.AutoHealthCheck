@@ -15,6 +15,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{270C7C3F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Tests", "AspNetCore.AutoHealthCheck.Tests\AspNetCore.AutoHealthCheck.Tests.csproj", "{32641493-0310-4380-B7CF-47F55D74F0A9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutionItems", "solutionItems", "{26940919-9D7C-4F82-93DE-626A9A774D2F}"
+	ProjectSection(SolutionItems) = preProject
+		..\.travis.yml = ..\.travis.yml
+		..\appveyor-dev.yml = ..\appveyor-dev.yml
+		..\appveyor-master.yml = ..\appveyor-master.yml
+		..\AspNetCore.AutoHealthCheck.png = ..\AspNetCore.AutoHealthCheck.png
+		..\COPYING.txt = ..\COPYING.txt
+		..\LICENSE.txt = ..\LICENSE.txt
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
