@@ -27,7 +27,8 @@ AspNetCore.AutoHealtCheck
 5. [Customising](#customising)
 5. [Extensibility](#extensibility)
 6. [Security](#security)
-7. [License](#license)
+7. [Integrations](#integrations)
+8. [License](#license)
 
 ## <a name="features"> Features </a>
 
@@ -39,6 +40,7 @@ AspNetCore.AutoHealtCheck
 -  Full Async support.
 -  Custom Probes.
 -  Full Security control for health check endpoints.
+-  Integrations with  [**Microsoft.AspNetCore.Diagnostics.HealthChecks.**](https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.HealthChecks)
 
 ====================
 
@@ -166,6 +168,8 @@ default : Will fail if the endpoint return an status code between 500 - 599.
 ie : ```c# c.PassCheckRule = response => !response.Headers.Contains("x-header"); ```
 
 - `ExcludeRouteRegexs` : Allow to define a collection of refex to exclude endpoints to be called for the check.
+
+- `DisableEndpointDiscovery` : If set to false, then automatic endpoint disovery and call will be disabled.
 
 ### <a name="customising_hideendpoints"> Hide endpoints </a>
 
@@ -319,6 +323,63 @@ Indicating when a request is valid, if is not then the healthcheck will return 4
 
 
 ====================
+
+## <a name="integrations"> Integrations </a>
+
+### <a name="#"> Microsoft.AspNetCore.Diagnostics.HealthChecks </a>
+
+This library is compatible with  [**Microsoft.AspNetCore.Diagnostics.HealthChecks.**](https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.HealthChecks) [** See usage here.**](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-2.2)
+
+As this health check exponse an endpoint as well this library does, then there is 2 approaches to integrate them.
+
+1 - Use this endpoint as the primary and internally this will call other health check endpoint with a custom Probe Job.
+
+In ConfigureServices do the following : 
+
+ ``` C#
+   services.AddAutoHealthCheck(c =>
+    {
+        c.BaseUrl = new Uri("http://localhost:50382");
+    })
+    .AddAspNetCoreDiagnosticHealthCheck("health"); 
+```
+The path is required as Microsoft.AspNetCore.Diagnostics.HealthChecks is not saving it so it cannot be retrieved. [**reference here.**](https://github.com/aspnet/Diagnostics/blob/082d505977d72c75b68935c93c21feded6928e5f/src/Microsoft.AspNetCore.Diagnostics.HealthChecks/Builder/HealthCheckApplicationBuilderExtensions.cs#L232)
+
+With this approch you will receive the result as a normal probe Will faild for Degraded and Unhealthy.
+ie : 
+
+ ``` JSON
+{  
+   "Success":false,
+   "HttpStatus":500,
+   "UnhealthyProbes":[  
+      {  
+         "Name":"Microsoft.AspNetCore.Diagnostics.HealthChecks.Probe",
+         "ErrorMessage":"Microsoft.AspNetCore.Diagnostics.HealthChecks.Probe failed.",
+         "CustomData":{ }
+      }
+   ]
+}
+
+```
+
+2 - Use Diagnostic endpoint as primary and internally this endpoint will be called as a custom health check.
+
+In ConfigureServices do the following :
+
+ ``` C#
+  services.AddHealthChecks()
+                .AddCheck<ExampleHealthCheck>("example_health_check")
+                .AddAspNetCoreAutoHealthCheck();
+```
+After Register Health Checks enable Auto Health Check integration, that way you can call the normal endpoint (Microsoft.AspNetCore.Diagnostics.HealthChecks) one, a custom check will call AutoHealthCheck endpoint and return 
+        - Healthy  : If the result is success.
+        - UnHealthy : If the result is not success.
+
+** In both cases you can use custom probes, health check. ** :blush:
+
+====================
+
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 
