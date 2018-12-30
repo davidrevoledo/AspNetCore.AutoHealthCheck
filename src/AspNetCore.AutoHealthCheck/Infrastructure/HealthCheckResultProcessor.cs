@@ -21,7 +21,6 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -38,7 +37,7 @@ namespace AspNetCore.AutoHealthCheck
             var healthyResponse = new HealthyResponse
             {
                 ElapsedSecondsTest = watcher.ElapsedMilliseconds / 1000,
-                Success = true  // default
+                Success = true // default
             };
 
             // check if there is something to evaluate result.
@@ -52,7 +51,7 @@ namespace AspNetCore.AutoHealthCheck
                     healthyResponse.Success = false;
                     healthyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
                     {
-                        HttpStatusCode = (int)result.StatusCode,
+                        HttpStatusCode = (int) result.StatusCode,
                         Route = result.RequestMessage?.RequestUri.ToString(),
                         HttpVerb = result.RequestMessage?.Method.Method
                     });

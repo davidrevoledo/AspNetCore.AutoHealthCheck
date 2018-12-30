@@ -20,53 +20,55 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Diagnostics
 {
     /// <summary>
-    ///     Hosted service to auto call internally auto health check endpoint.
+    ///     AspNet Core diagnostic health check probe to call internal endpoint.
     /// </summary>
-    internal class AutoHealthCheckProcess : IHostedService, IDisposable
+    internal class AspNetCoreDiagnosticHealthCheckProbe : IProbe
     {
         private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
         private readonly IHttpClientFactory _clientFactory;
 
-        public AutoHealthCheckProcess(
-            IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor,
-            IHttpClientFactory clientFactory)
+        public AspNetCoreDiagnosticHealthCheckProbe(
+            IHttpClientFactory clientFactory,
+            IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor)
         {
-            _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
             _clientFactory = clientFactory;
+            _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
         }
 
-        public void Dispose()
-        {
-        }
+        /// <summary>
+        ///     Path where diagnostic health check endpoint endpoint should be called.
+        /// </summary>
+        internal static string Path { get; set; }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public string Name => "Microsoft.AspNetCore.Diagnostics.HealthChecks.Probe";
+
+        public async Task<ProbeResult> Check()
         {
             var context = _autoHealthCheckContextAccessor.Context;
-            while (true)
+            var baseUtl = context.Configurations.BaseUrl;
+            var endpointUrl = $"{baseUtl}{Path}";
+
+            var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
+            var client = _clientFactory.CreateClient();
+
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            switch (body.ToUpper())
             {
-                var endpointUrl = $"{context.Configurations.BaseUrl}/{context.AppBuilderOptions.RoutePrefix}";
-                var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
+                case "HEALTHY":
+                    return ProbeResult.Ok();
 
-                var client = _clientFactory.CreateClient();
-                await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                await Task.Delay(context.Configurations.AutomaticRunConfigurations.SecondsInterval * 1000,
-                        cancellationToken)
-                    .ConfigureAwait(false);
+                default:
+                    return ProbeResult.Error($"{Name} failed.");
             }
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
         }
     }
 }

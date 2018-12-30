@@ -20,17 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    /// <summary>
+    ///     Probe processor engine.
+    /// </summary>
+    public interface IProbesProcessor
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
-        {
-            return Task.FromResult(true);
-        }
+        /// <summary>
+        ///     Execute custom probes.
+        /// </summary>
+        /// <returns>probe check information.</returns>
+        Task<IEnumerable<ProbeResult>> ExecuteCustomProbes();
     }
 }

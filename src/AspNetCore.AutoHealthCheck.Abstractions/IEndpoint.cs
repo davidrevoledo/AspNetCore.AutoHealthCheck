@@ -20,17 +20,21 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    /// <summary>
+    ///     Endpoint to represent a webservices to be called
+    /// </summary>
+    public interface IEndpoint
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
-        {
-            return Task.FromResult(true);
-        }
+        /// <summary>
+        ///     Base Host
+        /// </summary>
+        string Host { get; }
+
+        /// <summary>
+        ///     Route Information
+        /// </summary>
+        IRouteInformation RouteInformation { get; }
     }
 }

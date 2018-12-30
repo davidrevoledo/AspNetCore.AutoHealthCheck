@@ -22,15 +22,18 @@
 
 using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    /// <summary>
+    ///     Endpoint builder.
+    /// </summary>
+    public interface IEndpointBuilder
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
-        {
-            return Task.FromResult(true);
-        }
+        /// <summary>
+        ///     Create endpoint definition from route.
+        /// </summary>
+        /// <param name="routeInformation">route information</param>
+        /// <returns>endpoint definition</returns>
+        Task<IEndpoint> CreateFromRoute(IRouteInformation routeInformation);
     }
 }

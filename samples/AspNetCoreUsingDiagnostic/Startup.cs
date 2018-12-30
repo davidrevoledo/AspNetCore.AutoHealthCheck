@@ -21,29 +21,45 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using AspNetCore.AutoHealthCheck;
+using AspNetCore.AutoHealthCheck.Diagnostics;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.AspNetCore.Builder
+namespace AspNetCoreUsingDiagnostic
 {
-    public static class IApplicationBuilderExtensions
+    public class Startup
     {
-        public static IApplicationBuilder UseAutoHealthCheck(
-            this IApplicationBuilder app,
-            Action<AutoHealthAppBuilderOptions> setupAction = null)
+        public Startup(IConfiguration configuration)
         {
-            var contextAccessorType = typeof(IAutoHealthCheckContextAccessor);
+            Configuration = configuration;
+        }
 
-            if (!(app.ApplicationServices.GetService(contextAccessorType) is IAutoHealthCheckContextAccessor contextAccessor))
-                throw new InvalidOperationException("Please first call UseAutoHealthCheck.");
+        public IConfiguration Configuration { get; }
 
-            var options = new AutoHealthAppBuilderOptions();
-            setupAction?.Invoke(options);
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddHealthChecks()
+                .AddCheck<ExampleHealthCheck>("example_health_check")
+                .AddAspNetCoreAutoHealthCheck();
 
-            var context = contextAccessor.Context as AutoHealthCheckContext;
-            context.AppBuilderOptions = options;
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddAutoHealthCheck(c =>
+            {
+                c.BaseUrl = new Uri("http://localhost:49987");
+            });
+        }
 
-            app.UseMiddleware<AutoHealthCheckMiddleware>(options);
-            return app;
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            app.UseHealthChecks("/health");
+            app.UseMvc();
+            app.UseAutoHealthCheck(c =>
+            {
+                c.RoutePrefix = "insights/health";
+            });
         }
     }
 }

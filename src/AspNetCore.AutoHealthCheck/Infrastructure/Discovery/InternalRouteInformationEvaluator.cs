@@ -46,9 +46,9 @@ namespace AspNetCore.AutoHealthCheck
 
             // check if the route template is included in one of the regex to exclude routes
             // if so them ignore it
-            return context.Configurations.ExcludeRouteRegexs.Any(e => e.IsMatch(routeInformation.RouteTemplate)) ?
-                Task.FromResult(false) :
-                _routeEvaluator.Evaluate(routeInformation);
+            return context.Configurations.ExcludeRouteRegexs.Any(e => e.IsMatch(routeInformation.RouteTemplate))
+                ? Task.FromResult(false)
+                : _routeEvaluator.Evaluate(routeInformation);
         }
     }
 }

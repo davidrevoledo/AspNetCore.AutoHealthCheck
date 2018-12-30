@@ -20,17 +20,16 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using System;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace WebApplication.Controllers
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    public class ComplexGetParam
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
-        {
-            return Task.FromResult(true);
-        }
+        public DateTime DateTime { get; set; }
+
+        public string Value { get; set; }
+
+        public int Number { get; set; }
     }
 }

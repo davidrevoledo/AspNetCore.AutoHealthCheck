@@ -20,17 +20,37 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Moq;
+using Newtonsoft.Json;
+using Xunit;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck.Diagnostics.Tests
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    public class AspNetCoreDiagnosticHealthCheckTests
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
+        [Fact]
+        public async Task AspNetCoreDiagnosticHealthCheck_should_do_nothing_if_context_is_null()
         {
-            return Task.FromResult(true);
+            // arrange
+            var clientFactory = new Mock<IHttpClientFactory>();
+            var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
+            var healthCheck = new AspNetCoreDiagnosticHealthCheck(clientFactory.Object, contextAccessor.Object);
+
+            contextAccessor.Setup(c => c.Context)
+                .Returns(default(IAutoHealthCheckContext));
+
+            // act
+            var result = await healthCheck.CheckHealthAsync(new HealthCheckContext(), CancellationToken.None);
+
+            // assert
+            Assert.Equal(HealthStatus.Healthy, result.Status);
         }
     }
 }

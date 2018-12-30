@@ -36,7 +36,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middleware
         {
             // arrange
             var engine = new Mock<IHealthChecker>();
-            var defaultOptions = new AutoHealthCheckMiddlewareOptions();
+            var defaultOptions = new AutoHealthAppBuilderOptions();
 
             var middleware = new AutoHealthCheckMiddleware(
                 async innerHttpContext => { },
@@ -58,7 +58,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middleware
         {
             // arrange
             var engine = new Mock<IHealthChecker>();
-            var defaultOptions = new AutoHealthCheckMiddlewareOptions();
+            var defaultOptions = new AutoHealthAppBuilderOptions();
 
             var middleware = new AutoHealthCheckMiddleware(
                 async innerHttpContext => { },
@@ -90,7 +90,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middleware
         {
             // arrange
             var engine = new Mock<IHealthChecker>();
-            var defaultOptions = new AutoHealthCheckMiddlewareOptions();
+            var defaultOptions = new AutoHealthAppBuilderOptions();
 
             var middleware = new AutoHealthCheckMiddleware(
                 async innerHttpContext => { },
@@ -125,7 +125,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middleware
         {
             // arrange
             var engine = new Mock<IHealthChecker>();
-            var defaultOptions = new AutoHealthCheckMiddlewareOptions();
+            var defaultOptions = new AutoHealthAppBuilderOptions();
 
             var middleware = new AutoHealthCheckMiddleware(
                 async innerHttpContext => { },
@@ -163,7 +163,7 @@ namespace AspNetCore.AutoHealthCheck.Tests.Infrastructure.Middleware
         {
             // arrange
             var engine = new Mock<IHealthChecker>();
-            var defaultOptions = new AutoHealthCheckMiddlewareOptions();
+            var defaultOptions = new AutoHealthAppBuilderOptions();
 
             var middleware = new AutoHealthCheckMiddleware(
                 async innerHttpContext => { },
