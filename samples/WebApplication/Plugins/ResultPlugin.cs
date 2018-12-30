@@ -20,17 +20,31 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Diagnostics;
 using System.Threading.Tasks;
+using AspNetCore.AutoHealthCheck;
+using Newtonsoft.Json;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace WebApplication.Plugins
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    public class ResultPlugin : IHealthCheckResultPlugin
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
+        public string Name => "TestResultPlugin";
+
+        public Task ActionAfterFail(HealthyResponse result)
         {
-            return Task.FromResult(true);
+            Debug.WriteLine(JsonConvert.SerializeObject(result));
+            return Task.CompletedTask;
+        }
+
+        public Task ActionAfterResult(HealthyResponse result)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task ActionAfterSuccess(HealthyResponse result)
+        {
+            return Task.CompletedTask;
         }
     }
 }

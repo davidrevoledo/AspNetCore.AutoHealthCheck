@@ -22,50 +22,48 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck")]
 [assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
-[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Diagnostics.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    internal class AutoHealthCheckContext : IAutoHealthCheckContext
+    /// <summary>
+    ///     Route information for a single endpoint.
+    /// </summary>
+    public interface IRouteInformation
     {
-        internal AutoHealthCheckContext()
-        {
-        }
+        /// <summary>
+        ///     Http method needed to be consumed.
+        /// </summary>
+        string HttpMethod { get; }
 
-        internal AutoHealthCheckContext(IAutoHealthCheckConfigurations configurations)
-        {
-            Configurations = configurations;
-        }
+        /// <summary>
+        ///     Route needed to be consumed.
+        /// </summary>
+        string Path { get; }
 
-        /// <inheritdoc />
-        public virtual IAutoHealthCheckConfigurations Configurations { get; } = new AutoHealthCheckConfigurations();
+        /// <summary>
+        ///     Route template definition.
+        /// </summary>
+        string RouteTemplate { get; }
 
-        /// <inheritdoc />
-        public List<Type> Probes { get; } = new List<Type>();
+        /// <summary>
+        ///     Route params key and type for url replacing.
+        /// </summary>
+        Dictionary<string, Type> RouteParams { get; }
 
-        /// <inheritdoc />
-        public AutoHealthAppBuilderOptions AppBuilderOptions { get; internal set; }
+        /// <summary>
+        ///     Body params key and type
+        ///     Just 1 for now will be supported.
+        /// </summary>
+        Dictionary<string, Type> BodyParams { get; }
 
-        internal IAutoHealthCheckContext AddProbe<TProbe>()
-            where TProbe : class, IProbe
-        {
-            // validate type is not an interface
-            if (typeof(TProbe).IsInterface)
-                throw new InvalidOperationException("Probe cannot be an interface.");
-
-            // validate type is not abstract
-            if (typeof(TProbe).IsAbstract)
-                throw new InvalidOperationException("Probe cannot be abstract.");
-
-            if (Probes.All(p => p != typeof(TProbe))) Probes.Add(typeof(TProbe));
-
-            return this;
-        }
+        /// <summary>
+        ///     Query params key and type.
+        /// </summary>
+        Dictionary<string, Type> QueryParams { get; }
     }
 }

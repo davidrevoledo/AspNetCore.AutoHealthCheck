@@ -20,17 +20,28 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCoreUsingDiagnostic
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    public class ExampleHealthCheck : IHealthCheck
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
+        public Task<HealthCheckResult> CheckHealthAsync(
+            HealthCheckContext context,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Task.FromResult(true);
+            // Execute health check logic here. This example sets a dummy
+            // variable to true.
+            var healthCheckResultHealthy = true;
+
+            if (healthCheckResultHealthy)
+                return Task.FromResult(
+                    HealthCheckResult.Healthy("The check indicates a healthy result."));
+
+            return Task.FromResult(
+                HealthCheckResult.Degraded("The check indicates an unhealthy result."));
         }
     }
 }

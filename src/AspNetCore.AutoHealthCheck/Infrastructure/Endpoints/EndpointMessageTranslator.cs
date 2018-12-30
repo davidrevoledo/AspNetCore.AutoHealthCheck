@@ -96,7 +96,7 @@ namespace AspNetCore.AutoHealthCheck
             // heal in case endpoint not start with /
             var endpointResource = endpoint.RouteInformation.Path;
             if (!endpointResource.StartsWith("/"))
-                endpointResource = $"/" + endpointResource;
+                endpointResource = "/" + endpointResource;
 
             var routePath = $"{endpoint.Host}{endpointResource}";
             routePath = TransformRouteParams(endpoint, routePath);

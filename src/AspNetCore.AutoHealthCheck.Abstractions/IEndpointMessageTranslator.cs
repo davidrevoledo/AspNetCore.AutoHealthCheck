@@ -20,17 +20,21 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    /// <summary>
+    ///     Endpoint translator to get a HttpRequest message to call the endpoint.
+    /// </summary>
+    public interface IEndpointMessageTranslator
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
-        {
-            return Task.FromResult(true);
-        }
+        /// <summary>
+        ///     Convert an endpoint to represent a HttpRequest message to call it.
+        /// </summary>
+        /// <param name="endpoint">endpoint information</param>
+        /// <returns>Http request to call the endpoint</returns>
+        Task<HttpRequestMessage> Transform(IEndpoint endpoint);
     }
 }

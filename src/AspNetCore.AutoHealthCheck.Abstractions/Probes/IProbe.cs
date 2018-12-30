@@ -22,15 +22,22 @@
 
 using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    /// <summary>
+    ///     Probe interface to run custom code.
+    /// </summary>
+    public interface IProbe
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
-        {
-            return Task.FromResult(true);
-        }
+        /// <summary>
+        ///     Probe name.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        ///     Check if everything works well.
+        /// </summary>
+        /// <returns>If the probe was successfully.</returns>
+        Task<ProbeResult> Check();
     }
 }

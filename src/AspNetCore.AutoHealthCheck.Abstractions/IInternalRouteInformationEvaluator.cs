@@ -22,15 +22,16 @@
 
 using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    public interface IInternalRouteInformationEvaluator
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
-        {
-            return Task.FromResult(true);
-        }
+        /// <summary>
+        ///     Internally evaluate a route to determine if needs to be included
+        ///     to check.
+        /// </summary>
+        /// <param name="routeInformation">route information</param>
+        /// <returns>if the route candidate needs to be included</returns>
+        Task<bool> Evaluate(IRouteInformation routeInformation);
     }
 }

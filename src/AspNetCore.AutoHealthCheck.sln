@@ -5,9 +5,7 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck", "AspNetCore.AutoHealthCheck\AspNetCore.AutoHealthCheck.csproj", "{B2553537-A52E-49A9-A36F-C42F5D441EEA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "WebApplication\WebApplication.csproj", "{B90A7A1C-6652-49B7-A75A-673003E054ED}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFA2E39C-2C56-42DE-8833-C36C392A07A7}"
 EndProject
@@ -15,16 +13,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{270C7C3F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Tests", "AspNetCore.AutoHealthCheck.Tests\AspNetCore.AutoHealthCheck.Tests.csproj", "{32641493-0310-4380-B7CF-47F55D74F0A9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutionItems", "solutionItems", "{26940919-9D7C-4F82-93DE-626A9A774D2F}"
-	ProjectSection(SolutionItems) = preProject
-		..\.travis.yml = ..\.travis.yml
-		..\appveyor-dev.yml = ..\appveyor-dev.yml
-		..\appveyor-master.yml = ..\appveyor-master.yml
-		..\AspNetCore.AutoHealthCheck.png = ..\AspNetCore.AutoHealthCheck.png
-		..\COPYING.txt = ..\COPYING.txt
-		..\LICENSE.txt = ..\LICENSE.txt
-		..\README.md = ..\README.md
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "..\samples\WebApplication\WebApplication.csproj", "{419C8FDE-17BA-42DF-AD2A-DF19323E706D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreUsingDiagnostic", "..\samples\AspNetCoreUsingDiagnostic\AspNetCoreUsingDiagnostic.csproj", "{9E500F6B-4F0A-440E-8392-BB316C8D4048}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Diagnostics", "AspNetCore.AutoHealthCheck.Diagnostics\AspNetCore.AutoHealthCheck.Diagnostics.csproj", "{A5D81A52-319E-489D-929E-5F285495938C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Abstractions", "AspNetCore.AutoHealthCheck.Abstractions\AspNetCore.AutoHealthCheck.Abstractions.csproj", "{7A4F34EB-A8AF-4A26-844F-DA2C52121622}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Diagnostics.Tests", "AspNetCore.AutoHealthCheck.Diagnostics.Tests\AspNetCore.AutoHealthCheck.Diagnostics.Tests.csproj", "{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreUsingAutoHealthCheck", "..\samples\AspNetCoreUsingAutoHealthCheck\AspNetCoreUsingAutoHealthCheck.csproj", "{79CCC024-FF8D-4F15-BB25-7963A306D560}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,22 +35,47 @@ Global
 		{B2553537-A52E-49A9-A36F-C42F5D441EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2553537-A52E-49A9-A36F-C42F5D441EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2553537-A52E-49A9-A36F-C42F5D441EEA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B90A7A1C-6652-49B7-A75A-673003E054ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{32641493-0310-4380-B7CF-47F55D74F0A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{32641493-0310-4380-B7CF-47F55D74F0A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32641493-0310-4380-B7CF-47F55D74F0A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32641493-0310-4380-B7CF-47F55D74F0A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{419C8FDE-17BA-42DF-AD2A-DF19323E706D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{419C8FDE-17BA-42DF-AD2A-DF19323E706D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{419C8FDE-17BA-42DF-AD2A-DF19323E706D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{419C8FDE-17BA-42DF-AD2A-DF19323E706D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E500F6B-4F0A-440E-8392-BB316C8D4048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E500F6B-4F0A-440E-8392-BB316C8D4048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E500F6B-4F0A-440E-8392-BB316C8D4048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E500F6B-4F0A-440E-8392-BB316C8D4048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5D81A52-319E-489D-929E-5F285495938C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5D81A52-319E-489D-929E-5F285495938C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5D81A52-319E-489D-929E-5F285495938C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5D81A52-319E-489D-929E-5F285495938C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A4F34EB-A8AF-4A26-844F-DA2C52121622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A4F34EB-A8AF-4A26-844F-DA2C52121622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A4F34EB-A8AF-4A26-844F-DA2C52121622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A4F34EB-A8AF-4A26-844F-DA2C52121622}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79CCC024-FF8D-4F15-BB25-7963A306D560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79CCC024-FF8D-4F15-BB25-7963A306D560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79CCC024-FF8D-4F15-BB25-7963A306D560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79CCC024-FF8D-4F15-BB25-7963A306D560}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B2553537-A52E-49A9-A36F-C42F5D441EEA} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
-		{B90A7A1C-6652-49B7-A75A-673003E054ED} = {78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}
 		{32641493-0310-4380-B7CF-47F55D74F0A9} = {270C7C3F-98AE-43D8-BB6B-18FAE0420F89}
+		{419C8FDE-17BA-42DF-AD2A-DF19323E706D} = {78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}
+		{9E500F6B-4F0A-440E-8392-BB316C8D4048} = {78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}
+		{A5D81A52-319E-489D-929E-5F285495938C} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
+		{7A4F34EB-A8AF-4A26-844F-DA2C52121622} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
+		{A15EA5B1-8E56-437A-8FC8-93ECBB9E78F9} = {270C7C3F-98AE-43D8-BB6B-18FAE0420F89}
+		{79CCC024-FF8D-4F15-BB25-7963A306D560} = {78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64B4BA9D-729D-4F8A-BBCF-F3E3FDA7E599}

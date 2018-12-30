@@ -20,17 +20,18 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AspNetCore.AutoHealthCheck.Extensibility
+namespace AspNetCoreUsingDiagnostic.Controllers
 {
-    /// <inheritdoc />
-    public class DefaultRouteEvaluator : IRouteEvaluator
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ValuesController : ControllerBase
     {
-        /// <inheritdoc />
-        public Task<bool> Evaluate(IRouteInformation routeInformation)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
-            return Task.FromResult(true);
+            return new StatusCodeResult(200);
         }
     }
 }

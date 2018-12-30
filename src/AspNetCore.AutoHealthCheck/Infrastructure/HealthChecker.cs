@@ -41,9 +41,9 @@ namespace AspNetCore.AutoHealthCheck
         private readonly IEndpointBuilder _endpointBuilder;
         private readonly IEndpointCaller _endpointCaller;
         private readonly IEndpointMessageTranslator _endpointMessageTranslator;
+        private readonly IProbesProcessor _probesProcessor;
         private readonly AsyncLazy<IEnumerable<IRouteInformation>> _routesFactory;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
-        private readonly IProbesProcessor _probesProcessor;
 
         private int _disposeSignaled;
 
@@ -91,23 +91,26 @@ namespace AspNetCore.AutoHealthCheck
                 var watcher = Stopwatch.StartNew();
                 var results = new List<HttpResponseMessage>();
 
-                var routesDefinition = await _routesFactory;
-                var routeInformation = routesDefinition as IRouteInformation[] ?? routesDefinition.ToArray();
-
-                if (routeInformation.Any())
-                    foreach (var route in routeInformation.AsParallel()
-                        .WithMergeOptions(ParallelMergeOptions.FullyBuffered))
-                    {
-                        var endpoint = await _endpointBuilder.CreateFromRoute(route).ConfigureAwait(false);
-                        var message = await _endpointMessageTranslator.Transform(endpoint).ConfigureAwait(false);
-
-                        // call endpoint
-                        var result = await _endpointCaller.Send(message).ConfigureAwait(false);
-                        results.Add(result);
-                    }
-
-                // at this point task is finished
                 var currentContext = _autoHealthCheckContextAccessor.Context;
+
+                // if endpoint discovery was not disabled
+                if (!currentContext.Configurations.DisableEndpointDiscovery)
+                {
+                    var routesDefinition = await _routesFactory;
+                    var routeInformation = routesDefinition as IRouteInformation[] ?? routesDefinition.ToArray();
+
+                    if (routeInformation.Any())
+                        foreach (var route in routeInformation.AsParallel()
+                            .WithMergeOptions(ParallelMergeOptions.FullyBuffered))
+                        {
+                            var endpoint = await _endpointBuilder.CreateFromRoute(route).ConfigureAwait(false);
+                            var message = await _endpointMessageTranslator.Transform(endpoint).ConfigureAwait(false);
+
+                            // call endpoint
+                            var result = await _endpointCaller.Send(message).ConfigureAwait(false);
+                            results.Add(result);
+                        }
+                }
 
                 var probesResults = await
                     _probesProcessor.ExecuteCustomProbes().ConfigureAwait(false);
