@@ -20,31 +20,16 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Diagnostics;
-using System.Threading.Tasks;
-using AspNetCore.AutoHealthCheck;
-using Newtonsoft.Json;
+using System;
 
-namespace WebApplication.Plugins
+namespace SimpleWebApp.Controllers
 {
-    public class ResultPlugin : IHealthCheckResultPlugin
+    public class ComplexGetParam
     {
-        public string Name => "TestResultPlugin";
+        public DateTime DateTime { get; set; }
 
-        public Task ActionAfterFail(HealthyResponse result)
-        {
-            Debug.WriteLine(JsonConvert.SerializeObject(result));
-            return Task.CompletedTask;
-        }
+        public string Value { get; set; }
 
-        public Task ActionAfterResult(HealthyResponse result)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task ActionAfterSuccess(HealthyResponse result)
-        {
-            return Task.CompletedTask;
-        }
+        public int Number { get; set; }
     }
 }

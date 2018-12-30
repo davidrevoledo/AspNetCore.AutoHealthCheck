@@ -20,22 +20,31 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using AspNetCore.AutoHealthCheck;
+using Newtonsoft.Json;
 
-namespace WebApplication
+namespace SimpleWebApp.Plugins
 {
-    public class Program
+    public class ResultPlugin : IHealthCheckResultPlugin
     {
-        public static void Main(string[] args)
+        public string Name => "TestResultPlugin";
+
+        public Task ActionAfterFail(HealthyResponse result)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            Debug.WriteLine(JsonConvert.SerializeObject(result));
+            return Task.CompletedTask;
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        public Task ActionAfterResult(HealthyResponse result)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            return Task.CompletedTask;
+        }
+
+        public Task ActionAfterSuccess(HealthyResponse result)
+        {
+            return Task.CompletedTask;
         }
     }
 }

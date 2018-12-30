@@ -26,10 +26,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WebApplication.Plugins;
-using WebApplication.Probes;
+using SimpleWebApp.Plugins;
+using SimpleWebApp.Probes;
 
-namespace WebApplication
+namespace SimpleWebApp
 {
     public class Startup
     {
@@ -48,7 +48,7 @@ namespace WebApplication
             services.AddAutoHealthCheck(c =>
                 {
                     c.AutomaticRunConfigurations.AutomaticRunEnabled = false;
-                    c.BaseUrl = new Uri("http://localhost:50387");
+                    c.BaseUrl = new Uri("http://localhost:51580");
                     c.AutomaticRunConfigurations.SecondsInterval = 1;
                     c.ResultPlugins.Add(new ResultPlugin());
                 })

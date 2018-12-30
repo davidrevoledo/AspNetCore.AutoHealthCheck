@@ -23,7 +23,7 @@
 using System.Threading.Tasks;
 using AspNetCore.AutoHealthCheck;
 
-namespace WebApplication.Probes
+namespace SimpleWebApp.Probes
 {
     public class CustomProbe : IProbe
     {

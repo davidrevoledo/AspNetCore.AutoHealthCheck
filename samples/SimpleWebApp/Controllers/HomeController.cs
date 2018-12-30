@@ -22,7 +22,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApplication.Controllers
+namespace SimpleWebApp.Controllers
 {
     public class HomeController : Controller
     {

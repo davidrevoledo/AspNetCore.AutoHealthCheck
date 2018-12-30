@@ -20,16 +20,22 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 
-namespace WebApplication.Controllers
+namespace SimpleWebApp
 {
-    public class ComplexGetParam
+    public class Program
     {
-        public DateTime DateTime { get; set; }
+        public static void Main(string[] args)
+        {
+            CreateWebHostBuilder(args).Build().Run();
+        }
 
-        public string Value { get; set; }
-
-        public int Number { get; set; }
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>();
+        }
     }
 }
