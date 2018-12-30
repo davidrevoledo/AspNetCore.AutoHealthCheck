@@ -11,7 +11,7 @@ AspNetCore.AutoHealtCheck
 ![NuGet](https://img.shields.io/nuget/v/AspNetCore.AutoHealthCheck.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
-
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 |Build|Status|CodeFactor|
 |------|-------------|-------------|
@@ -319,6 +319,8 @@ Indicating when a request is valid, if is not then the healthcheck will return 4
 
 
 ====================
+
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 
 ## <a name="license"> License </a>
 
