@@ -25,7 +25,8 @@ AspNetCore.AutoHealtCheck
 4. [Usage](#usage)
 5. [Customising](#customising)
 5. [Extensibility](#extensibility)
-6. [License](#license)
+6. [Security](#security)
+7. [License](#license)
 
 ## <a name="features"> Features </a>
 
@@ -215,7 +216,7 @@ Then just add the plugin to the configurations in any time of the application li
 
 ie:  
 ``` C#
-    public class ResultPlugin : IHealtCheckResultPlugin
+    public class ResultPlugin : IHealthCheckResultPlugin
     {
         private readonly ILogger _logger;
 
@@ -296,6 +297,25 @@ Not to allow probes to be called just register in Startup method **After** Calli
               .AddCustomProbe<CustomProbe>();
 ```
  
+====================
+
+## <a name="security"> Security </a>
+
+Security is an important concern in health checks, imagaine that you are checking external resources like databases or azure storages accoutns.
+Malicious request can invalid your resources or even wors increse your billing if we are talking about pay-per-use resources. So it's important ensure in those cases that the request to hit resources is from a trusted source.
+
+You can easily implemeny your own security with whole request like this.
+
+ ``` C#
+    app.UseAutoHealthCheck(c =>
+    {
+        c.Security = request => request.Query.ContainsKey("key") && request.Query["key"] == "1234";
+    });
+```
+
+Indicating when a request is valid, if is not then the healthcheck will return 401 without execute any endpoint or probe.
+
+
 ====================
 
 ## <a name="license"> License </a>
