@@ -20,20 +20,37 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Moq;
+using Newtonsoft.Json;
+using Xunit;
 
-namespace AspNetCoreUsingDiagnostic
+namespace AspNetCore.AutoHealthCheck.Diagnostics.Tests
 {
-    public class ExampleHealthCheck : IHealthCheck
+    public class AspNetCoreDiagnosticHealthCheckTests
     {
-        public Task<HealthCheckResult> CheckHealthAsync(
-            HealthCheckContext context,
-            CancellationToken cancellationToken = default(CancellationToken))
+        [Fact]
+        public async Task AspNetCoreDiagnosticHealthCheck_should_do_nothing_if_context_is_null()
         {
-            return Task.FromResult(
-                HealthCheckResult.Degraded("The check indicates an unhealthy result."));
+            // arrange
+            var clientFactory = new Mock<IHttpClientFactory>();
+            var contextAccessor = new Mock<IAutoHealthCheckContextAccessor>();
+            var healthCheck = new AspNetCoreDiagnosticHealthCheck(clientFactory.Object, contextAccessor.Object);
+
+            contextAccessor.Setup(c => c.Context)
+                .Returns(default(IAutoHealthCheckContext));
+
+            // act
+            var result = await healthCheck.CheckHealthAsync(new HealthCheckContext(), CancellationToken.None);
+
+            // assert
+            Assert.Equal(HealthStatus.Healthy, result.Status);
         }
     }
 }

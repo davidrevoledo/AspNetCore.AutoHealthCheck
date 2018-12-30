@@ -21,22 +21,19 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Newtonsoft.Json;
 
 namespace AspNetCore.AutoHealthCheck.Diagnostics
 {
     /// <summary>
-    ///     This implementation allows call AutoHealthCheck endpoint with a Diagnostic health check probe.
+    ///     AspNet Core diagnostic health check probe to call internal endpoint.
     /// </summary>
-    internal class AspNetCoreDiagnosticHealthCheck : IHealthCheck
+    internal class AspNetCoreDiagnosticHealthCheckProbe : IProbe
     {
         private readonly IAutoHealthCheckContextAccessor _autoHealthCheckContextAccessor;
         private readonly IHttpClientFactory _clientFactory;
 
-        public AspNetCoreDiagnosticHealthCheck(
+        public AspNetCoreDiagnosticHealthCheckProbe(
             IHttpClientFactory clientFactory,
             IAutoHealthCheckContextAccessor autoHealthCheckContextAccessor)
         {
@@ -44,31 +41,34 @@ namespace AspNetCore.AutoHealthCheck.Diagnostics
             _autoHealthCheckContextAccessor = autoHealthCheckContextAccessor;
         }
 
+        /// <summary>
+        ///     Path where diagnostic health check endpoint endpoint should be called.
+        /// </summary>
+        internal static string Path { get; set; }
+
         /// <inheritdoc />
-        public async Task<HealthCheckResult> CheckHealthAsync(
-            HealthCheckContext context,
-            CancellationToken cancellationToken = new CancellationToken())
+        public string Name => "Microsoft.AspNetCore.Diagnostics.HealthChecks.Probe";
+
+        public async Task<ProbeResult> Check()
         {
-            var autoHealthCheckContext = _autoHealthCheckContextAccessor.Context;
-
-            // if auto health check is not enabled yet avoid failing
-            if (autoHealthCheckContext == null)
-                return HealthCheckResult.Healthy();
-
-            var baseUrl = autoHealthCheckContext.Configurations.BaseUrl;
-            var prefix = autoHealthCheckContext.AppBuilderOptions.RoutePrefix;
-            var endpointUrl = $"{baseUrl}{prefix}";
+            var context = _autoHealthCheckContextAccessor.Context;
+            var baseUtl = context.Configurations.BaseUrl;
+            var endpointUrl = $"{baseUtl}{Path}";
 
             var request = new HttpRequestMessage(HttpMethod.Get, endpointUrl);
-
             var client = _clientFactory.CreateClient();
-            var result = await client.SendAsync(request, cancellationToken).ConfigureAwait(false);
-            var body = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var healthCheckResult = JsonConvert.DeserializeObject<HealthyResponse>(body);
 
-            return healthCheckResult.Success
-                ? HealthCheckResult.Healthy()
-                : HealthCheckResult.Unhealthy($"AspNetCore.AutoHealthCheck was not successfully. logs : {body}");
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            switch (body.ToUpper())
+            {
+                case "HEALTHY":
+                    return ProbeResult.Ok();
+
+                default:
+                    return ProbeResult.Error($"{Name} failed.");
+            }
         }
     }
 }

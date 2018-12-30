@@ -82,5 +82,10 @@ namespace AspNetCore.AutoHealthCheck
         ///     This indicates where the service is running.
         /// </summary>
         Uri BaseUrl { get; set; }
+
+        /// <summary>
+        ///     Set to true to avoid automatic endpoint discover/call.
+        /// </summary>
+        bool DisableEndpointDiscovery { get; }
     }
 }

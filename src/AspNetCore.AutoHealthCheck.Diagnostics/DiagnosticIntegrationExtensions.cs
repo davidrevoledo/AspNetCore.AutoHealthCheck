@@ -20,7 +20,11 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.DependencyInjection;
+
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Diagnostics.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace AspNetCore.AutoHealthCheck.Diagnostics
 {
@@ -44,10 +48,15 @@ namespace AspNetCore.AutoHealthCheck.Diagnostics
         ///     call to auto health check endpoint within automatic IHealthCheck implementation.
         /// </summary>
         /// <param name="healthChecksBuilder"></param>
+        /// <param name="path">path where diagnostic endpoint should be called.</param>
         /// <returns></returns>
-        public static IAutoHealthCheckBuilder AddAspNetCoreDiagnosticHealtCheck(
-            this IAutoHealthCheckBuilder healthChecksBuilder)
+        public static IAutoHealthCheckBuilder AddAspNetCoreDiagnosticHealthCheck(
+            this IAutoHealthCheckBuilder healthChecksBuilder,
+            string path)
         {
+            // set path
+            AspNetCoreDiagnosticHealthCheckProbe.Path = path;
+            healthChecksBuilder.AddCustomProbe<AspNetCoreDiagnosticHealthCheckProbe>();
             return healthChecksBuilder;
         }
     }

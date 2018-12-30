@@ -21,6 +21,7 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using AspNetCore.AutoHealthCheck.Diagnostics;
 using AspNetCoreUsingDiagnostic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,7 +50,8 @@ namespace AspNetCoreUsingAutoHealthCheck
             services.AddAutoHealthCheck(c =>
             {
                 c.BaseUrl = new Uri("http://localhost:50382");
-            });
+            })
+            .AddAspNetCoreDiagnosticHealthCheck("health");
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

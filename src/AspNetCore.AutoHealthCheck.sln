@@ -5,24 +5,13 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck", "AspNetCore.AutoHealthCheck\AspNetCore.AutoHealthCheck.csproj", "{B2553537-A52E-49A9-A36F-C42F5D441EEA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{78D3E477-EE1C-4D6D-ADE9-366A4D7C6560}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DFA2E39C-2C56-42DE-8833-C36C392A07A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{270C7C3F-98AE-43D8-BB6B-18FAE0420F89}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.Tests", "AspNetCore.AutoHealthCheck.Tests\AspNetCore.AutoHealthCheck.Tests.csproj", "{32641493-0310-4380-B7CF-47F55D74F0A9}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutionItems", "solutionItems", "{26940919-9D7C-4F82-93DE-626A9A774D2F}"
-	ProjectSection(SolutionItems) = preProject
-		..\.travis.yml = ..\.travis.yml
-		..\appveyor-dev.yml = ..\appveyor-dev.yml
-		..\appveyor-master.yml = ..\appveyor-master.yml
-		..\AspNetCore.AutoHealthCheck.png = ..\AspNetCore.AutoHealthCheck.png
-		..\COPYING.txt = ..\COPYING.txt
-		..\LICENSE.txt = ..\LICENSE.txt
-		..\README.md = ..\README.md
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication", "..\samples\WebApplication\WebApplication.csproj", "{419C8FDE-17BA-42DF-AD2A-DF19323E706D}"
 EndProject
