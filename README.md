@@ -52,7 +52,6 @@ Grab the latest AspNetCore.AutoHealthCheck NuGet package and install in the desi
 PM > Install-Package AspNetCore.AutoHealthCheck 
 NET CLI - dotnet add package AspNetCore.AutoHealthCheck 
 paket add AspNetCore.AutoHealthCheck 
-
 ```
 ====================
 
@@ -346,6 +345,13 @@ As this health check exponse an endpoint as well this library does, then there i
 
 In ConfigureServices do the following : 
 
+https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Diagnostics/
+```sh
+PM > Install-Package AspNetCore.AutoHealthCheck.Diagnostics
+NET CLI - dotnet add AspNetCore.AutoHealthCheck.Diagnostics
+paket add AspNetCore.AutoHealthCheck.Diagnostics
+```
+
  ``` C#
   public void ConfigureServices(IServiceCollection services)
   {
@@ -396,9 +402,17 @@ After Register Health Checks enable Auto Health Check integration, that way you 
 
 All BeatPulse Plugins are available to be used. https://github.com/Xabaril/BeatPulse
 
+
 ### <a name="applicationinsights"> Application Insights </a>
 
 Application insights can be easily integrated with health check to track health check results.
+
+https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.ApplicationInsights/
+```sh
+PM > Install-Package AspNetCore.AutoHealthCheck.ApplicationInsights
+NET CLI - dotnet add AspNetCore.AutoHealthCheck.ApplicationInsights
+paket add AspNetCore.AutoHealthCheck.ApplicationInsights
+```
 
  ``` C#
  public void ConfigureServices(IServiceCollection services)
