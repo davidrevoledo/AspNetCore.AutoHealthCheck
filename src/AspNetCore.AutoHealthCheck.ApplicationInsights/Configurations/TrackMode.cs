@@ -20,18 +20,26 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-using AspNetCore.AutoHealthCheck;
-
-namespace SimpleWebApp.Probes
+namespace AspNetCore.AutoHealthCheck.ApplicationInsights
 {
-    public class CustomProbe : IProbe
+    /// <summary>
+    ///     This indicate the behavior for the application insights plugin.
+    /// </summary>
+    public enum TrackMode
     {
-        public string Name => typeof(CustomProbe).Name;
+        /// <summary>
+        ///     Will track results with TrackAvailability method indicating if was successfully or not.
+        /// </summary>
+        Availability,
 
-        public Task<ProbeResult> Check()
-        {
-            return Task.FromResult(ProbeResult.Ok());
-        }
+        /// <summary>
+        ///     Will track with TrackEvent adding some custom properties.
+        /// </summary>
+        Event,
+
+        /// <summary>
+        ///     Will track failures only when the result is not success.
+        /// </summary>
+        Exception
     }
 }

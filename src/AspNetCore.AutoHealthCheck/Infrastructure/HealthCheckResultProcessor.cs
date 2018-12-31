@@ -72,12 +72,12 @@ namespace AspNetCore.AutoHealthCheck
                 }
             }
 
-            await ProcessResultPlugins(context, healthyResponse).ConfigureAwait(false);
-
             // get status code
             healthyResponse.HttpStatus = healthyResponse.Success
                 ? context.Configurations.DefaultHealthyResponseCode
                 : context.Configurations.DefaultUnHealthyResponseCode;
+
+            await ProcessResultPlugins(context, healthyResponse).ConfigureAwait(false);
 
             return healthyResponse;
         }

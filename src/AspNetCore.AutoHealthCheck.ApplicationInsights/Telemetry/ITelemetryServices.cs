@@ -21,17 +21,33 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System.Threading.Tasks;
-using AspNetCore.AutoHealthCheck;
 
-namespace SimpleWebApp.Probes
+namespace AspNetCore.AutoHealthCheck.ApplicationInsights
 {
-    public class CustomProbe : IProbe
+    /// <summary>
+    ///     Services to call Application Insights dotnet sdk.
+    /// </summary>
+    public interface ITelemetryServices
     {
-        public string Name => typeof(CustomProbe).Name;
+        /// <summary>
+        ///     Track application insight availability.
+        /// </summary>
+        /// <param name="result">Health check result.</param>
+        /// <returns></returns>
+        Task TrackAvailability(HealthyResponse result);
 
-        public Task<ProbeResult> Check()
-        {
-            return Task.FromResult(ProbeResult.Ok());
-        }
+        /// <summary>
+        ///     Track event in application insight.
+        /// </summary>
+        /// <param name="result">Health check result.</param>
+        /// <returns></returns>
+        Task TrackEvent(HealthyResponse result);
+
+        /// <summary>
+        ///     Track application insight exception.
+        /// </summary>
+        /// <param name="result">Health check result.</param>
+        /// <returns></returns>
+        Task TrackException(HealthyResponse result);
     }
 }

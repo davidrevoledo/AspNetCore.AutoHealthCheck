@@ -20,18 +20,18 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System.Threading.Tasks;
-using AspNetCore.AutoHealthCheck;
+using System;
 
-namespace SimpleWebApp.Probes
+namespace AspNetCore.AutoHealthCheck
 {
-    public class CustomProbe : IProbe
+    /// <summary>
+    ///     Exception to indicate the health check failed.
+    /// </summary>
+    public class AspNetCoreAutoHealthCheckFailException : Exception
     {
-        public string Name => typeof(CustomProbe).Name;
-
-        public Task<ProbeResult> Check()
+        public AspNetCoreAutoHealthCheckFailException() : base("The health check test has failed.")
         {
-            return Task.FromResult(ProbeResult.Ok());
+            
         }
     }
 }

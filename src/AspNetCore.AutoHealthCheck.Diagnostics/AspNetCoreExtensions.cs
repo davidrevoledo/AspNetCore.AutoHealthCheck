@@ -28,7 +28,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.AutoHealthCheck.Diagnostics
 {
-    public static class DiagnosticIntegrationExtensions
+    public static class AspNetCoreExtensions
     {
         /// <summary>
         ///     With this mode the principal endpoint will be Diagnostic health check one and this will

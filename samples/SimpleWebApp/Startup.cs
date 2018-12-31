@@ -21,6 +21,8 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using AspNetCore.AutoHealthCheck;
+using AspNetCore.AutoHealthCheck.ApplicationInsights;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -52,7 +54,8 @@ namespace SimpleWebApp
                     c.AutomaticRunConfigurations.SecondsInterval = 1;
                     c.ResultPlugins.Add(new ResultPlugin());
                 })
-                .AddCustomProbe<CustomProbe>();
+                .AddCustomProbe<CustomProbe>()
+                .AddAIResultPlugin();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -63,6 +66,11 @@ namespace SimpleWebApp
             {
                 c.RoutePrefix = "insights/healthcheck";
                 c.SecurityHandler = request => request.Query.ContainsKey("key") && request.Query["key"] == "1234";
+            });
+            app.UseAIResultPlugin(s =>
+            {
+                s.InstrumentationKey = "514f30f8-c5a4-4519-bac5-0d82147a4433";
+                s.Mode = TrackMode.Event;
             });
         }
     }
