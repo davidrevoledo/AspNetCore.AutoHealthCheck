@@ -29,10 +29,18 @@ namespace Microsoft.AspNetCore.Builder
     {
         public static IApplicationBuilder UseAutoHealthCheck(
             this IApplicationBuilder app,
-            Action<AutoHealthCheckMiddlewareOptions> setupAction = null)
+            Action<AutoHealthAppBuilderOptions> setupAction = null)
         {
-            var options = new AutoHealthCheckMiddlewareOptions();
+            var contextAccessorType = typeof(IAutoHealthCheckContextAccessor);
+
+            if (!(app.ApplicationServices.GetService(contextAccessorType) is IAutoHealthCheckContextAccessor contextAccessor))
+                throw new InvalidOperationException("Please first call UseAutoHealthCheck.");
+
+            var options = new AutoHealthAppBuilderOptions();
             setupAction?.Invoke(options);
+
+            var context = contextAccessor.Context as AutoHealthCheckContext;
+            context.AppBuilderOptions = options;
 
             app.UseMiddleware<AutoHealthCheckMiddleware>(options);
             return app;

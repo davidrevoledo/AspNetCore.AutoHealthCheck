@@ -26,11 +26,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Diagnostics.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace AspNetCore.AutoHealthCheck
 {
-    /// <inheritdoc />  
+    /// <inheritdoc />
     internal class AutoHealthCheckContext : IAutoHealthCheckContext
     {
         internal AutoHealthCheckContext()
@@ -48,6 +49,9 @@ namespace AspNetCore.AutoHealthCheck
         /// <inheritdoc />
         public List<Type> Probes { get; } = new List<Type>();
 
+        /// <inheritdoc />
+        public AutoHealthAppBuilderOptions AppBuilderOptions { get; internal set; }
+
         internal IAutoHealthCheckContext AddProbe<TProbe>()
             where TProbe : class, IProbe
         {
@@ -59,10 +63,7 @@ namespace AspNetCore.AutoHealthCheck
             if (typeof(TProbe).IsAbstract)
                 throw new InvalidOperationException("Probe cannot be abstract.");
 
-            if (Probes.All(p => p != typeof(TProbe)))
-            {
-                Probes.Add(typeof(TProbe));
-            }
+            if (Probes.All(p => p != typeof(TProbe))) Probes.Add(typeof(TProbe));
 
             return this;
         }

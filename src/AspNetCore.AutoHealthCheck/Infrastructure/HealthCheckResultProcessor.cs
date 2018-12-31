@@ -20,8 +20,8 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -38,7 +38,7 @@ namespace AspNetCore.AutoHealthCheck
             var healthyResponse = new HealthyResponse
             {
                 ElapsedSecondsTest = watcher.ElapsedMilliseconds / 1000,
-                Success = true  // default
+                Success = true // default
             };
 
             // check if there is something to evaluate result.
@@ -52,7 +52,7 @@ namespace AspNetCore.AutoHealthCheck
                     healthyResponse.Success = false;
                     healthyResponse.UnhealthyEndpoints.Add(new UnhealthyEndpoint
                     {
-                        HttpStatusCode = (int)result.StatusCode,
+                        HttpStatusCode = (int) result.StatusCode,
                         Route = result.RequestMessage?.RequestUri.ToString(),
                         HttpVerb = result.RequestMessage?.Method.Method
                     });
@@ -73,12 +73,12 @@ namespace AspNetCore.AutoHealthCheck
                 }
             }
 
-            await ProcessResultPlugins(context, healthyResponse).ConfigureAwait(false);
-
             // get status code
             healthyResponse.HttpStatus = healthyResponse.Success
                 ? context.Configurations.DefaultHealthyResponseCode
                 : context.Configurations.DefaultUnHealthyResponseCode;
+
+            await ProcessResultPlugins(context, healthyResponse).ConfigureAwait(false);
 
             return healthyResponse;
         }
@@ -89,17 +89,25 @@ namespace AspNetCore.AutoHealthCheck
         {
             foreach (var resultPlugin in context.Configurations.ResultPlugins)
             {
-                await resultPlugin.ActionAfterResult(healthyResponse).ConfigureAwait(false);
-
-                switch (healthyResponse.Success)
+                try
                 {
-                    case true:
-                        await resultPlugin.ActionAfterSuccess(healthyResponse).ConfigureAwait(false);
-                        break;
+                    await resultPlugin.ActionAfterResult(healthyResponse).ConfigureAwait(false);
 
-                    case false:
-                        await resultPlugin.ActionAfterFail(healthyResponse).ConfigureAwait(false);
-                        break;
+                    switch (healthyResponse.Success)
+                    {
+                        case true:
+                            await resultPlugin.ActionAfterSuccess(healthyResponse).ConfigureAwait(false);
+                            break;
+
+                        case false:
+                            await resultPlugin.ActionAfterFail(healthyResponse).ConfigureAwait(false);
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                    // prevent failing when plugin is called.
+                    // todo : add log
                 }
             }
         }

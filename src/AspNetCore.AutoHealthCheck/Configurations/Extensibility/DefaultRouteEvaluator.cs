@@ -24,17 +24,10 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.AutoHealthCheck.Extensibility
 {
-    /// <summary>
-    ///     Default route evaluator to be over written to have more control
-    ///     if a route needs to be ignored by custom code
-    /// </summary>
+    /// <inheritdoc />
     public class DefaultRouteEvaluator : IRouteEvaluator
     {
-        /// <summary>
-        ///     Evalute route information and return if it needs to be ingored
-        /// </summary>
-        /// <param name="routeInformation">route information</param>
-        /// <returns>if route needs to be ignored</returns>
+        /// <inheritdoc />
         public Task<bool> Evaluate(IRouteInformation routeInformation)
         {
             return Task.FromResult(true);
