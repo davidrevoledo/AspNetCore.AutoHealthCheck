@@ -31,7 +31,6 @@ namespace AspNetCore.AutoHealthCheck
     {
         public AspNetCoreAutoHealthCheckFailException() : base("The health check test has failed.")
         {
-            
         }
     }
 }
