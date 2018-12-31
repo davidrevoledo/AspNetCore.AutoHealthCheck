@@ -41,6 +41,7 @@ AspNetCore.AutoHealtCheck
 -  Custom Probes.
 -  Full Security control for health check endpoints.
 -  Integrations with :bomb:[Microsoft.AspNetCore.Diagnostics.HealthChecks](https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.HealthChecks) 
+-  Integration with Application Insights.
 
 ====================
 
@@ -299,8 +300,11 @@ If the probe was successfully just call `ProbeResult.Ok())` or `ProbeResult.Erro
 Not to allow probes to be called just register in Startup method **After** Calling `AddAutoHealthCheck`
 
  ``` C#
+   public void ConfigureServices(IServiceCollection services)
+   {
       services.AddAutoHealthCheck()
               .AddCustomProbe<CustomProbe>();
+   }
 ```
  
 ====================
@@ -313,10 +317,13 @@ Malicious request can invalid your resources or even wors increse your billing i
 You can easily implemeny your own security with whole request like this.
 
  ``` C#
-    app.UseAutoHealthCheck(c =>
-    {
-        c.SecurityHandler = request => request.Query.ContainsKey("key") && request.Query["key"] == "1234";
-    });
+   public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+   {
+      app.UseAutoHealthCheck(c =>
+      {
+          c.SecurityHandler = request => request.Query.ContainsKey("key") && request.Query["key"] == "1234";
+      });
+    }
 ```
 
 Indicating when a request is valid, if is not then the healthcheck will return 401 without execute any endpoint or probe.
@@ -326,7 +333,10 @@ Indicating when a request is valid, if is not then the healthcheck will return 4
 
 ## <a name="integrations"> Integrations </a>
 
-### <a name="#"> Microsoft.AspNetCore.Diagnostics.HealthChecks </a>
+1. [Microsoft.AspNetCore.Diagnostics.HealthChecks](#diagnostics)
+2. [Application Insights](#applicationinsights)
+
+### <a name="diagnostics"> Microsoft.AspNetCore.Diagnostics.HealthChecks </a>
 
 This library is compatible with  [**Microsoft.AspNetCore.Diagnostics.HealthChecks.**](https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.HealthChecks) [** See usage here.**](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-2.2)
 
@@ -337,11 +347,14 @@ As this health check exponse an endpoint as well this library does, then there i
 In ConfigureServices do the following : 
 
  ``` C#
-   services.AddAutoHealthCheck(c =>
-    {
-        c.BaseUrl = new Uri("http://localhost:50382");
-    })
-    .AddAspNetCoreDiagnosticHealthCheck("health"); 
+  public void ConfigureServices(IServiceCollection services)
+  {
+     services.AddAutoHealthCheck(c =>
+      {
+          c.BaseUrl = new Uri("http://localhost:50382");
+      })
+      .AddAspNetCoreDiagnosticHealthCheck("health"); 
+  }
 ```
 The path is required as Microsoft.AspNetCore.Diagnostics.HealthChecks is not saving it so it cannot be retrieved. [**reference here.**](https://github.com/aspnet/Diagnostics/blob/082d505977d72c75b68935c93c21feded6928e5f/src/Microsoft.AspNetCore.Diagnostics.HealthChecks/Builder/HealthCheckApplicationBuilderExtensions.cs#L232)
 
@@ -368,15 +381,48 @@ ie :
 In ConfigureServices do the following :
 
  ``` C#
-  services.AddHealthChecks()
+ public void ConfigureServices(IServiceCollection services)
+ {
+    services.AddHealthChecks()
                 .AddCheck<ExampleHealthCheck>("example_health_check")
                 .AddAspNetCoreAutoHealthCheck();
+ }
 ```
 After Register Health Checks enable Auto Health Check integration, that way you can call the normal endpoint (Microsoft.AspNetCore.Diagnostics.HealthChecks) one, a custom check will call AutoHealthCheck endpoint and return 
         - Healthy  : If the result is success.
         - UnHealthy : If the result is not success.
 
 ** In both cases you can use custom probes, health check. ** :blush:
+All BeatPulse Plugins are available to be used. https://github.com/Xabaril/BeatPulse
+
+### <a name="applicationinsights"> Application Insights </a>
+
+Application insights can be easily integrated with health check to track health check results.
+
+ ``` C#
+ public void ConfigureServices(IServiceCollection services)
+ {
+    services.AddHealthChecks()
+            .AddAIResultPlugin();
+ }
+ 
+  public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+  {
+      app.UseAutoHealthCheck(c =>
+      {
+          c.RoutePrefix = "insights/healthcheck";
+      });
+      app.UseAIResultPlugin(s =>
+      {
+          s.InstrumentationKey = "YourKeyHere";
+          s.Mode = TrackMode.Event;
+      });
+  }
+```
+You can trace 3 different modes
+  - Application insights events
+  - Application insights availability
+  - Application insights exceptions (only for failed check tests)
 
 ====================
 
