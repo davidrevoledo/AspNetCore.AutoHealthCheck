@@ -392,7 +392,8 @@ After Register Health Checks enable Auto Health Check integration, that way you 
         - Healthy  : If the result is success.
         - UnHealthy : If the result is not success.
 
-** In both cases you can use custom probes, health check. ** :blush:
+** In both cases you can use custom probes, health check. :blush:
+
 All BeatPulse Plugins are available to be used. https://github.com/Xabaril/BeatPulse
 
 ### <a name="applicationinsights"> Application Insights </a>
