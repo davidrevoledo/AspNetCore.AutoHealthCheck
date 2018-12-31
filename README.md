@@ -34,6 +34,7 @@ AspNetCore.AutoHealtCheck
 5. [Extensibility](#extensibility)
 6. [Security](#security)
 7. [Integrations](#integrations)
+8. [What's next?](#next)
 8. [License](#license)
 
 ## <a name="features"> Features </a>
@@ -444,6 +445,19 @@ You can trace 3 different modes
   - Application insights events
   - Application insights availability
   - Application insights exceptions (only for failed check tests)
+
+
+====================
+
+## <a name="next"> What's next ? </a>
+
+We want to add much more functionallity and integrations to this framework. If you have any suggestion feel free to open an issue or a PR.
+Contributions are welcome.
+
+What's next v 1.4 ? 
+- Custom Request body for endpoints
+- UI for Health Check visualization. 
+- Result Stores.
 
 ====================
 
