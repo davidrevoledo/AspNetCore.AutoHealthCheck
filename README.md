@@ -18,6 +18,12 @@ AspNetCore.AutoHealtCheck
 |master|[![Build status](https://ci.appveyor.com/api/projects/status/3s1txd8lrbvn82v2/branch/master?svg=true)](https://ci.appveyor.com/project/davidrevoledo/aspnetcore-autohealthcheck/branch/master)|[![CodeFactor](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck/badge)](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck)
 |dev|[![Build status](https://ci.appveyor.com/api/projects/status/ak0heuv6ckkaoft3?svg=true)](https://ci.appveyor.com/project/davidrevoledo/aspnetcore-autohealthcheck-4hy94)|[![CodeFactor](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck/badge/dev)](https://www.codefactor.io/repository/github/davidrevoledo/aspnetcore.autohealthcheck/overview/dev)
 
+|Package|Status|
+|------|-------------|
+|AspNetCore.AutoHealthCheck.Abstractions|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Abstractions?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Abstractions/)|
+|AspNetCore.AutoHealthCheck|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/)|
+|AspNetCore.AutoHealthCheck.Diagnostics|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Diagnostics?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Diagnostics/)|
+|AspNetCore.AutoHealthCheck.ApplicationInsights|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.ApplicationInsights?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.ApplicationInsights/)|
 
 # Contents
 
