@@ -69,7 +69,7 @@ namespace SimpleWebApp
             });
             app.UseAIResultPlugin(s =>
             {
-                s.InstrumentationKey = "514f30f8-c5a4-4519-bac5-0d82147a4433";
+                s.InstrumentationKey = "Your Key Here";
                 s.Mode = TrackMode.Event;
             });
         }

@@ -20,6 +20,7 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -88,17 +89,25 @@ namespace AspNetCore.AutoHealthCheck
         {
             foreach (var resultPlugin in context.Configurations.ResultPlugins)
             {
-                await resultPlugin.ActionAfterResult(healthyResponse).ConfigureAwait(false);
-
-                switch (healthyResponse.Success)
+                try
                 {
-                    case true:
-                        await resultPlugin.ActionAfterSuccess(healthyResponse).ConfigureAwait(false);
-                        break;
+                    await resultPlugin.ActionAfterResult(healthyResponse).ConfigureAwait(false);
 
-                    case false:
-                        await resultPlugin.ActionAfterFail(healthyResponse).ConfigureAwait(false);
-                        break;
+                    switch (healthyResponse.Success)
+                    {
+                        case true:
+                            await resultPlugin.ActionAfterSuccess(healthyResponse).ConfigureAwait(false);
+                            break;
+
+                        case false:
+                            await resultPlugin.ActionAfterFail(healthyResponse).ConfigureAwait(false);
+                            break;
+                    }
+                }
+                catch (Exception)
+                {
+                    // prevent failing when plugin is called.
+                    // todo : add log
                 }
             }
         }
