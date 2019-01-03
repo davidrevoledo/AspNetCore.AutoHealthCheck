@@ -20,45 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     /// <summary>
-    ///     Route information for a single endpoint.
+    ///     Storage Services to save in Azure Storage
     /// </summary>
-    public interface IRouteInformation
+    public interface IStorageService
     {
         /// <summary>
-        ///     Http method needed to be consumed.
+        ///     Persist json result in Azure Storage account in a blob container.
         /// </summary>
-        string HttpMethod { get; }
-
-        /// <summary>
-        ///     Route needed to be consumed.
-        /// </summary>
-        string Path { get; }
-
-        /// <summary>
-        ///     Route template definition.
-        /// </summary>
-        string RouteTemplate { get; }
-
-        /// <summary>
-        ///     Route params key and type for url replacing.
-        /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
-
-        /// <summary>
-        ///     Body params key and type
-        ///     Just 1 for now will be supported.
-        /// </summary>
-        Dictionary<string, Type> BodyParams { get; }
-
-        /// <summary>
-        ///     Query params key and type.
-        /// </summary>
-        Dictionary<string, Type> QueryParams { get; }
+        /// <param name="result">health check result</param>
+        /// <returns></returns>
+        Task PersistBlobResult(HealthyResponse result);
     }
 }

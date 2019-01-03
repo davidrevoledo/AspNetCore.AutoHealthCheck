@@ -21,44 +21,37 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using System.Collections.Generic;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     /// <summary>
-    ///     Route information for a single endpoint.
+    ///     Plugin Configurations For Azure Storage integration.
     /// </summary>
-    public interface IRouteInformation
+    public class HealthCheckAzureStorageConfigurations
     {
-        /// <summary>
-        ///     Http method needed to be consumed.
-        /// </summary>
-        string HttpMethod { get; }
+        private static readonly Lazy<HealthCheckAzureStorageConfigurations> Singleton
+            = new Lazy<HealthCheckAzureStorageConfigurations>(() => new HealthCheckAzureStorageConfigurations());
+
+        private HealthCheckAzureStorageConfigurations()
+        {
+        }
+
+        public static HealthCheckAzureStorageConfigurations Instance => Singleton.Value;
 
         /// <summary>
-        ///     Route needed to be consumed.
+        ///     Connection string for azure storage account connectivity.
         /// </summary>
-        string Path { get; }
+        public string AzureStorageConnectionString { get; set; }
 
         /// <summary>
-        ///     Route template definition.
+        ///     Indicate the container name where json result files will be saved with Blob Persist Mode.
         /// </summary>
-        string RouteTemplate { get; }
+        public string ContainerName { get; set; } = "AspNetCoreHealthCheck";
 
         /// <summary>
-        ///     Route params key and type for url replacing.
+        ///     Indicate if only failed results needs to be saved
+        ///     Default true.
         /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
-
-        /// <summary>
-        ///     Body params key and type
-        ///     Just 1 for now will be supported.
-        /// </summary>
-        Dictionary<string, Type> BodyParams { get; }
-
-        /// <summary>
-        ///     Query params key and type.
-        /// </summary>
-        Dictionary<string, Type> QueryParams { get; }
+        public bool OnlyTrackFailedResults { get; set; } = true;
     }
 }

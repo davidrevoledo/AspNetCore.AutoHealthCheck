@@ -21,44 +21,32 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
-    /// <summary>
-    ///     Route information for a single endpoint.
-    /// </summary>
-    public interface IRouteInformation
+    /// <inheritdoc />
+    internal class StorageService : IStorageService
     {
-        /// <summary>
-        ///     Http method needed to be consumed.
-        /// </summary>
-        string HttpMethod { get; }
+        /// <inheritdoc />
+        public async Task PersistBlobResult(
+            HealthyResponse result)
+        {
+            var configurations = HealthCheckAzureStorageConfigurations.Instance;
 
-        /// <summary>
-        ///     Route needed to be consumed.
-        /// </summary>
-        string Path { get; }
+            var storageAccount = CloudStorageAccount.Parse(configurations.AzureStorageConnectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(configurations.ContainerName.ToLower());
 
-        /// <summary>
-        ///     Route template definition.
-        /// </summary>
-        string RouteTemplate { get; }
+            await container.CreateIfNotExistsAsync().ConfigureAwait(false);
 
-        /// <summary>
-        ///     Route params key and type for url replacing.
-        /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
-
-        /// <summary>
-        ///     Body params key and type
-        ///     Just 1 for now will be supported.
-        /// </summary>
-        Dictionary<string, Type> BodyParams { get; }
-
-        /// <summary>
-        ///     Query params key and type.
-        /// </summary>
-        Dictionary<string, Type> QueryParams { get; }
+            var jsonContent = JsonConvert.SerializeObject(result);
+            var subContainer = DateTime.UtcNow.ToString("MMddyyyy");
+            var blockBlob = container.GetBlockBlobReference($"{subContainer}/{result.HealthCheckId}.json");
+            await blockBlob.UploadTextAsync(jsonContent).ConfigureAwait(false);
+        }
     }
 }

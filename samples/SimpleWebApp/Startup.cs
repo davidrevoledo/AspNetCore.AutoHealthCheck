@@ -21,8 +21,8 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using AspNetCore.AutoHealthCheck;
 using AspNetCore.AutoHealthCheck.ApplicationInsights;
+using AspNetCore.AutoHealthCheck.AzureStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +55,8 @@ namespace SimpleWebApp
                     c.ResultPlugins.Add(new ResultPlugin());
                 })
                 .AddCustomProbe<CustomProbe>()
-                .AddAIResultPlugin();
+                .AddAIResultPlugin()
+                .AddAzureStorageIntegration();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -71,6 +72,13 @@ namespace SimpleWebApp
             {
                 s.InstrumentationKey = "Your Key Here";
                 s.Mode = TrackMode.Event;
+            });
+
+            var storageCs =
+                @"DefaultEndpointsProtocol=https;AccountName=testaspnetcorehealt;AccountKey=hHscD888d19ETGKjBXYTgEW3t1JYTb7FlP2q9OuHrpYPBgqYhryemDioRvWsUbzQCRPmHFwit0fOVcotVV1XyQ==;EndpointSuffix=core.windows.net";
+            app.UseStorageHealthCheckIntegration(storageCs, c =>
+            {
+                c.OnlyTrackFailedResults = false;
             });
         }
     }

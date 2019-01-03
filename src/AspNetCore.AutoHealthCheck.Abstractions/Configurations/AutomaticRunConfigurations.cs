@@ -20,9 +20,6 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using AspNetCore.AutoHealthCheck;
-
 namespace AspNetCore.AutoHealthCheck
 {
     /// <summary>

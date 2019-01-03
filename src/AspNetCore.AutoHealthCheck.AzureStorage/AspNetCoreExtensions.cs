@@ -24,36 +24,25 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.AutoHealthCheck.ApplicationInsights
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     public static class AspNetCoreExtensions
     {
-        /// <summary>
-        ///     Add Application insights integration for results.
-        /// </summary>
-        /// <param name="healthChecksBuilder">aspnet auto health check builder.</param>
-        /// <returns></returns>
-        public static IAutoHealthCheckBuilder AddAIResultPlugin(
-            this IAutoHealthCheckBuilder healthChecksBuilder)
+        public static IAutoHealthCheckBuilder AddAzureStorageIntegration(this IAutoHealthCheckBuilder healthChecksBuilder)
         {
-            healthChecksBuilder.AddSingleton<ApplicationInsightsResultPlugin>();
-            healthChecksBuilder.AddSingleton<ITelemetryServices, TelemetryServices>();
+            healthChecksBuilder.AddSingleton<AzureStorageResultPlugin>();
+            healthChecksBuilder.AddSingleton<IStorageService, StorageService>();
             return healthChecksBuilder;
         }
 
-        /// <summary>
-        ///     Use Application insights integration for results.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="setupAction">allow user to change configuration for the plugin.</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseAIResultPlugin(
+        public static IApplicationBuilder UseStorageHealthCheckIntegration(
             this IApplicationBuilder app,
-            Action<ApplicationInsightsPluginConfigurations> setupAction = null)
+            string connectionString,
+            Action<HealthCheckAzureStorageConfigurations> setupAction = null)
         {
             // get plugin and context
-            var plugin = (ApplicationInsightsResultPlugin)app.ApplicationServices.GetService(
-                typeof(ApplicationInsightsResultPlugin));
+            var plugin = (AzureStorageResultPlugin)app.ApplicationServices.GetService(
+                typeof(AzureStorageResultPlugin));
 
             var contextAccessor = (IAutoHealthCheckContextAccessor)app.ApplicationServices.GetService(
                 typeof(IAutoHealthCheckContextAccessor));
@@ -62,7 +51,9 @@ namespace AspNetCore.AutoHealthCheck.ApplicationInsights
             context.Configurations.ResultPlugins.Add(plugin);
 
             // set configurations
-            setupAction?.Invoke(ApplicationInsightsPluginConfigurations.Instance);
+            var configurations = HealthCheckAzureStorageConfigurations.Instance;
+            configurations.AzureStorageConnectionString = connectionString;
+            setupAction?.Invoke(configurations);
 
             return app;
         }
