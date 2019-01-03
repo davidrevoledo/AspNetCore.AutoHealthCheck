@@ -24,6 +24,7 @@ AspNetCore.AutoHealtCheck
 |AspNetCore.AutoHealthCheck|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/)|
 |AspNetCore.AutoHealthCheck.Diagnostics|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Diagnostics?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Diagnostics/)|
 |AspNetCore.AutoHealthCheck.ApplicationInsights|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.ApplicationInsights?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.ApplicationInsights/)|
+|AspNetCore.AutoHealthCheck.AzureStorage|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.AzureStorage?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.AzureStorage/)|
 
 # Contents
 
@@ -47,8 +48,11 @@ AspNetCore.AutoHealtCheck
 -  Full Async support.
 -  Custom Probes.
 -  Full Security control for health check endpoints.
--  Integration with :bomb:[Microsoft.AspNetCore.Diagnostics.HealthChecks](https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.HealthChecks) 
--  Integration with Application Insights.
+-  Checks indetification by id.
+-  Integrations
+     - Microsoft.AspNetCore.Diagnostics.HealthChecks.
+     - Application Insights.
+     - Azure Storage Account.
 
 ====================
 
@@ -106,6 +110,8 @@ with the following information:
 {  
    "Success":false,
    "HttpStatus":500,
+   "TimeStamp" : "2019-01-03T03:44:00.1240682Z",
+   "HealthCheckId" : "7265ce70-09ed-46db-96db-0be7d0611fdc",
    "ElapsedSecondsTest":3,
    "UnhealthyEndpoints":[  
       {  
@@ -341,6 +347,7 @@ Indicating when a request is valid, if is not then the healthcheck will return 4
 
 1. [Microsoft.AspNetCore.Diagnostics.HealthChecks](#diagnostics)
 2. [Application Insights](#applicationinsights)
+3. [Azure Storage Account](#azurestorage)
 
 ### <a name="diagnostics"> Microsoft.AspNetCore.Diagnostics.HealthChecks </a>
 
@@ -430,10 +437,6 @@ paket add AspNetCore.AutoHealthCheck.ApplicationInsights
  
   public void Configure(IApplicationBuilder app, IHostingEnvironment env)
   {
-      app.UseAutoHealthCheck(c =>
-      {
-          c.RoutePrefix = "insights/healthcheck";
-      });
       app.UseAIResultPlugin(s =>
       {
           s.InstrumentationKey = "YourKeyHere";
@@ -446,6 +449,37 @@ You can trace 3 different modes
   - Application insights availability
   - Application insights exceptions (only for failed check tests)
 
+### <a name="azurestorage"> Azure Storage Account </a>
+
+You can easily save your results in an azure storage account (blob).
+Just install the package 
+
+```sh
+PM > Install-Package AspNetCore.AutoHealthCheck.AzureStorage
+NET CLI - dotnet add AspNetCore.AutoHealthCheck.AzureStorage
+paket add AspNetCore.AutoHealthCheck.AzureStorage
+```
+and do the following:
+
+ ``` C#
+ public void ConfigureServices(IServiceCollection services)
+ {
+    services.AddHealthChecks()
+            .AddAzureStorageIntegration();
+ }
+ 
+  public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+  {
+      app.UseStorageHealthCheckIntegration("YourAzureStorageConnectionStringHere", c =>
+      {
+          c.OnlyTrackFailedResults = false;
+          c.ContainerName = "foo";
+      });
+  }
+```
+
+You can track all the results or only those who have failed (deafault) and configure the container name (default aspnetcorehealthcheck).
+A json file will be saved in a daily container with the health check result, you can track by the health check id.
 
 ====================
 
