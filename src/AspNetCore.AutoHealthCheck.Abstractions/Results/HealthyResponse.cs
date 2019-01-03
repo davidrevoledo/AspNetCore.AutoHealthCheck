@@ -39,7 +39,7 @@ namespace AspNetCore.AutoHealthCheck
         /// <summary>
         ///     Indicate the identifier for the health check.
         /// </summary>
-        public Guid HealthCheckId { get; set; } = Guid.NewGuid();
+        public string HealthCheckId { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         ///     Indicate if the check was successfully.
