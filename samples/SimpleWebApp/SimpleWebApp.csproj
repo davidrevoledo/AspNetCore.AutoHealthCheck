@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\AspNetCore.AutoHealthCheck.Abstractions\AspNetCore.AutoHealthCheck.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\AspNetCore.AutoHealthCheck.ApplicationInsights\AspNetCore.AutoHealthCheck.ApplicationInsights.csproj" />
+    <ProjectReference Include="..\..\src\AspNetCore.AutoHealthCheck.AzureStorage\AspNetCore.AutoHealthCheck.AzureStorage.csproj" />
     <ProjectReference Include="..\..\src\AspNetCore.AutoHealthCheck\AspNetCore.AutoHealthCheck.csproj" />
   </ItemGroup>
 

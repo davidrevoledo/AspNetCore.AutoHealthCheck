@@ -20,15 +20,42 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     public static class AspNetCoreExtensions
     {
-        public static IAutoHealthCheckBuilder AddAspNetCoreDiagnosticHealthCheck(
-            this IAutoHealthCheckBuilder healthChecksBuilder,
-            string path)
+        public static IAutoHealthCheckBuilder AddAzureStorageIntegration(this IAutoHealthCheckBuilder healthChecksBuilder)
         {
+            healthChecksBuilder.AddSingleton<AzureStorageResultPlugin>();
+            healthChecksBuilder.AddSingleton<IStorageService, StorageService>();
             return healthChecksBuilder;
+        }
+
+        public static IApplicationBuilder UseStorageHealthCheckIntegration(
+            this IApplicationBuilder app,
+            string connectionString,
+            Action<HealthCheckAzureStorageConfigurations> setupAction = null)
+        {
+            // get plugin and context
+            var plugin = (AzureStorageResultPlugin)app.ApplicationServices.GetService(
+                typeof(AzureStorageResultPlugin));
+
+            var contextAccessor = (IAutoHealthCheckContextAccessor)app.ApplicationServices.GetService(
+                typeof(IAutoHealthCheckContextAccessor));
+
+            var context = contextAccessor.Context;
+            context.Configurations.ResultPlugins.Add(plugin);
+
+            // set configurations
+            var configurations = HealthCheckAzureStorageConfigurations.Instance;
+            configurations.AzureStorageConnectionString = connectionString;
+            setupAction?.Invoke(configurations);
+
+            return app;
         }
     }
 }

@@ -20,42 +20,22 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-
-namespace AspNetCore.AutoHealthCheck.ApplicationInsights
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     /// <summary>
-    ///     Plugin Configurations for Application insights integration.
+    ///     This indicate how result are saved if in a table or a blob.
     /// </summary>
-    public class ApplicationInsightsPluginConfigurations
+    public enum ResultPersistenceMode
     {
-        private static readonly Lazy<ApplicationInsightsPluginConfigurations> Singleton
-            = new Lazy<ApplicationInsightsPluginConfigurations>(() => new ApplicationInsightsPluginConfigurations());
-
-        private ApplicationInsightsPluginConfigurations()
-        {
-        }
-
-        public static ApplicationInsightsPluginConfigurations Instance => Singleton.Value;
+        /// <summary>
+        ///     Save results jsons in a table where the result key will be the key-partition key.
+        /// </summary>
+        Table,
 
         /// <summary>
-        ///     Track Mode.
+        ///     Save result jsons in a Blob container, this can be configured to save 1 result per fire or
+        ///     a Append blob instead.
         /// </summary>
-        public TrackMode Mode { get; set; }
-
-        /// <summary>
-        ///     Application insights instrumentation key.
-        /// </summary>
-        public string InstrumentationKey { get; set; }
-
-        /// <summary>
-        ///     In case the mode is Availability this indicate the AI name.
-        /// </summary>
-        public string AvailabilityName { get; set; } = "AspNetCoreAutoHealthCheck";
-
-        /// <summary>
-        ///     In case the mode is Event this indicate the AI event name.
-        /// </summary>
-        public string EventName { get; set; } = "AspNetCoreAutoHealthCheck";
+        Blob
     }
 }

@@ -22,40 +22,41 @@
 
 using System;
 
-namespace AspNetCore.AutoHealthCheck.ApplicationInsights
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     /// <summary>
-    ///     Plugin Configurations for Application insights integration.
+    ///     Plugin Configurations For Azure Storage integration.
     /// </summary>
-    public class ApplicationInsightsPluginConfigurations
+    public class HealthCheckAzureStorageConfigurations
     {
-        private static readonly Lazy<ApplicationInsightsPluginConfigurations> Singleton
-            = new Lazy<ApplicationInsightsPluginConfigurations>(() => new ApplicationInsightsPluginConfigurations());
+        private static readonly Lazy<HealthCheckAzureStorageConfigurations> Singleton
+            = new Lazy<HealthCheckAzureStorageConfigurations>(() => new HealthCheckAzureStorageConfigurations());
 
-        private ApplicationInsightsPluginConfigurations()
+        private HealthCheckAzureStorageConfigurations()
         {
         }
 
-        public static ApplicationInsightsPluginConfigurations Instance => Singleton.Value;
+        public static HealthCheckAzureStorageConfigurations Instance => Singleton.Value;
 
         /// <summary>
-        ///     Track Mode.
+        ///     Mode how results are saved in an azure storage account.
         /// </summary>
-        public TrackMode Mode { get; set; }
+        public ResultPersistenceMode ResultPersistenceMode { get; set; } = ResultPersistenceMode.Blob;
 
         /// <summary>
-        ///     Application insights instrumentation key.
+        ///     Connection string for azure storage account connectivity.
         /// </summary>
-        public string InstrumentationKey { get; set; }
+        public string AzureStorageConnectionString { get; set; }
 
         /// <summary>
-        ///     In case the mode is Availability this indicate the AI name.
+        ///     Indicate the container name where json result files will be saved with Blob Persist Mode.
         /// </summary>
-        public string AvailabilityName { get; set; } = "AspNetCoreAutoHealthCheck";
+        public string ContainerName { get; set; } = "AspNetCoreHealthCheck";
 
         /// <summary>
-        ///     In case the mode is Event this indicate the AI event name.
+        ///     Indicate if only failed results needs to be saved
+        ///     Default true.
         /// </summary>
-        public string EventName { get; set; } = "AspNetCoreAutoHealthCheck";
+        public bool OnlyTrackFailedResults { get; set; } = true;
     }
 }

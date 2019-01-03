@@ -20,42 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
+using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck.ApplicationInsights
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     /// <summary>
-    ///     Plugin Configurations for Application insights integration.
+    ///     Storage Services to save in Azure Storage
     /// </summary>
-    public class ApplicationInsightsPluginConfigurations
+    public interface IStorageService
     {
-        private static readonly Lazy<ApplicationInsightsPluginConfigurations> Singleton
-            = new Lazy<ApplicationInsightsPluginConfigurations>(() => new ApplicationInsightsPluginConfigurations());
-
-        private ApplicationInsightsPluginConfigurations()
-        {
-        }
-
-        public static ApplicationInsightsPluginConfigurations Instance => Singleton.Value;
-
         /// <summary>
-        ///     Track Mode.
+        ///     Persist json result in Azure Storage account in a blob container.
         /// </summary>
-        public TrackMode Mode { get; set; }
-
-        /// <summary>
-        ///     Application insights instrumentation key.
-        /// </summary>
-        public string InstrumentationKey { get; set; }
-
-        /// <summary>
-        ///     In case the mode is Availability this indicate the AI name.
-        /// </summary>
-        public string AvailabilityName { get; set; } = "AspNetCoreAutoHealthCheck";
-
-        /// <summary>
-        ///     In case the mode is Event this indicate the AI event name.
-        /// </summary>
-        public string EventName { get; set; } = "AspNetCoreAutoHealthCheck";
+        /// <param name="result">health check result</param>
+        /// <returns></returns>
+        Task PersistBlobResult(HealthyResponse result);
     }
 }
