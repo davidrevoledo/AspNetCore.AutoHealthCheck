@@ -52,12 +52,7 @@ namespace AspNetCore.AutoHealthCheck.AzureStorage
                 throw new InvalidOperationException(
                     "Please configure the azure storage connection string Property Name : AzureStorageConnectionString");
 
-            switch (configurations.ResultPersistenceMode)
-            {
-                case ResultPersistenceMode.Blob:
-                    await _storageService.PersistBlobResult(result).ConfigureAwait(false);
-                    break;
-            }
+            await _storageService.PersistBlobResult(result).ConfigureAwait(false);
         }
 
         /// <inheritdoc />

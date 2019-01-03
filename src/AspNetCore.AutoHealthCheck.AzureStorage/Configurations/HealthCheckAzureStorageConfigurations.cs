@@ -39,11 +39,6 @@ namespace AspNetCore.AutoHealthCheck.AzureStorage
         public static HealthCheckAzureStorageConfigurations Instance => Singleton.Value;
 
         /// <summary>
-        ///     Mode how results are saved in an azure storage account.
-        /// </summary>
-        public ResultPersistenceMode ResultPersistenceMode { get; set; } = ResultPersistenceMode.Blob;
-
-        /// <summary>
         ///     Connection string for azure storage account connectivity.
         /// </summary>
         public string AzureStorageConnectionString { get; set; }
