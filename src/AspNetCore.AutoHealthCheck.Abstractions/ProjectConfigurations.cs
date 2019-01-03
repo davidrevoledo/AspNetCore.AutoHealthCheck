@@ -20,45 +20,8 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
-namespace AspNetCore.AutoHealthCheck
-{
-    /// <summary>
-    ///     Route information for a single endpoint.
-    /// </summary>
-    public interface IRouteInformation
-    {
-        /// <summary>
-        ///     Http method needed to be consumed.
-        /// </summary>
-        string HttpMethod { get; }
-
-        /// <summary>
-        ///     Route needed to be consumed.
-        /// </summary>
-        string Path { get; }
-
-        /// <summary>
-        ///     Route template definition.
-        /// </summary>
-        string RouteTemplate { get; }
-
-        /// <summary>
-        ///     Route params key and type for url replacing.
-        /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
-
-        /// <summary>
-        ///     Body params key and type
-        ///     Just 1 for now will be supported.
-        /// </summary>
-        Dictionary<string, Type> BodyParams { get; }
-
-        /// <summary>
-        ///     Query params key and type.
-        /// </summary>
-        Dictionary<string, Type> QueryParams { get; }
-    }
-}
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck")]
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

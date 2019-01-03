@@ -21,12 +21,8 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-
-[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.ApplicationInsights.Tests")]
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace AspNetCore.AutoHealthCheck.ApplicationInsights
 {

@@ -25,7 +25,7 @@ using System;
 namespace AspNetCore.AutoHealthCheck.ApplicationInsights
 {
     /// <summary>
-    ///     Plugin Configurations.
+    ///     Plugin ProjectConfigurations.
     /// </summary>
     public class ApplicationInsightsPluginConfigurations
     {

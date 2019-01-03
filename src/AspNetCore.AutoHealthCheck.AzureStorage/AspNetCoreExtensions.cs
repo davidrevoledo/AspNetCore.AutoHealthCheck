@@ -20,45 +20,15 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
-using System.Collections.Generic;
-
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
-    /// <summary>
-    ///     Route information for a single endpoint.
-    /// </summary>
-    public interface IRouteInformation
+    public static class AspNetCoreExtensions
     {
-        /// <summary>
-        ///     Http method needed to be consumed.
-        /// </summary>
-        string HttpMethod { get; }
-
-        /// <summary>
-        ///     Route needed to be consumed.
-        /// </summary>
-        string Path { get; }
-
-        /// <summary>
-        ///     Route template definition.
-        /// </summary>
-        string RouteTemplate { get; }
-
-        /// <summary>
-        ///     Route params key and type for url replacing.
-        /// </summary>
-        Dictionary<string, Type> RouteParams { get; }
-
-        /// <summary>
-        ///     Body params key and type
-        ///     Just 1 for now will be supported.
-        /// </summary>
-        Dictionary<string, Type> BodyParams { get; }
-
-        /// <summary>
-        ///     Query params key and type.
-        /// </summary>
-        Dictionary<string, Type> QueryParams { get; }
+        public static IAutoHealthCheckBuilder AddAspNetCoreDiagnosticHealthCheck(
+            this IAutoHealthCheckBuilder healthChecksBuilder,
+            string path)
+        {
+            return healthChecksBuilder;
+        }
     }
 }
