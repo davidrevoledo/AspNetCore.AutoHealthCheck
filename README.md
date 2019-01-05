@@ -2,7 +2,7 @@
   <img src="AspNetCore.AutoHealthCheck.png" alt="AspNetCore.AutoHealthCheck" width="100"/>
 </p>
 
-AspNetCore.AutoHealtCheck
+AspNetCore.AutoHealthCheck
 ====================
 - Check automatically \r asp.net core applications with a lot of extensibility !
 - Check how defensive your asp.net core application is.
