@@ -23,6 +23,7 @@
 using System;
 using AspNetCore.AutoHealthCheck.ApplicationInsights;
 using AspNetCore.AutoHealthCheck.AzureStorage;
+using AspNetCore.AutoHealthCheck.Raygun;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +57,7 @@ namespace SimpleWebApp
                 })
                 .AddCustomProbe<CustomProbe>()
                 .AddAIResultPlugin()
-                .AddAzureStorageIntegration();
+                .AddRaygunIntegration();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -74,12 +75,7 @@ namespace SimpleWebApp
                 s.Mode = TrackMode.Event;
             });
 
-            var storageCs =
-                @"DefaultEndpointsProtocol=https;AccountName=testaspnetcorehealt;AccountKey=hHscD888d19ETGKjBXYTgEW3t1JYTb7FlP2q9OuHrpYPBgqYhryemDioRvWsUbzQCRPmHFwit0fOVcotVV1XyQ==;EndpointSuffix=core.windows.net";
-            app.UseStorageHealthCheckIntegration(storageCs, c =>
-            {
-                c.OnlyTrackFailedResults = false;
-            });
+            app.UseRaygunIntegration("RaygunKey");
         }
     }
 }

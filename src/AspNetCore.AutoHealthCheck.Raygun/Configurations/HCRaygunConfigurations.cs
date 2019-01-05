@@ -21,25 +21,38 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using System.Collections.Generic;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.Raygun.Configurations
 {
     /// <summary>
-    ///     Exception to indicate the health check failed.
+    ///     Plugin Configurations For Raygun integration.
     /// </summary>
-    public class AspNetCoreAutoHealthCheckFailException : Exception
+    public class HCRaygunConfigurations
     {
-        public AspNetCoreAutoHealthCheckFailException() : base("The health check test has failed.")
+        private static readonly Lazy<HCRaygunConfigurations> Singleton
+            = new Lazy<HCRaygunConfigurations>(() => new HCRaygunConfigurations());
+
+        private HCRaygunConfigurations()
         {
         }
 
-        public AspNetCoreAutoHealthCheckFailException(string message) : base(message)
-        {
-        }
+        public static HCRaygunConfigurations Instance => Singleton.Value;
 
         /// <summary>
-        ///     Failed result
+        ///     Is this set to true then failed checks will not being sent in debug mode
+        ///     Default false.
         /// </summary>
-        public HealthyResponse Result { get; set; }
+        public bool AvoidSendInDebug { get; internal set; } = false;
+
+        /// <summary>
+        ///     Api key used to send to connect with raygun.
+        /// </summary>
+        public string ApiKey { get; internal set; }
+
+        /// <summary>
+        ///     Custom tags to send within the log.
+        /// </summary>
+        public IEnumerable<string> Tags { get; set; } = new List<string>();
     }
 }
