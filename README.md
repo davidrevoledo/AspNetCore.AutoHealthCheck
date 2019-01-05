@@ -25,6 +25,7 @@ AspNetCore.AutoHealtCheck
 |AspNetCore.AutoHealthCheck.Diagnostics|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Diagnostics?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Diagnostics/)|
 |AspNetCore.AutoHealthCheck.ApplicationInsights|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.ApplicationInsights?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.ApplicationInsights/)|
 |AspNetCore.AutoHealthCheck.AzureStorage|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.AzureStorage?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.AzureStorage/)|
+|AspNetCore.AutoHealthCheck.Raygun|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Raygun?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Raygun/)|
 
 # Contents
 
@@ -53,6 +54,7 @@ AspNetCore.AutoHealtCheck
      - Microsoft.AspNetCore.Diagnostics.HealthChecks.
      - Application Insights.
      - Azure Storage Account.
+     - Raygun.
 
 ====================
 
@@ -348,6 +350,7 @@ Indicating when a request is valid, if is not then the healthcheck will return 4
 1. [Microsoft.AspNetCore.Diagnostics.HealthChecks](#diagnostics)
 2. [Application Insights](#applicationinsights)
 3. [Azure Storage Account](#azurestorage)
+4. [Raygun](#raygun)
 
 ### <a name="diagnostics"> Microsoft.AspNetCore.Diagnostics.HealthChecks </a>
 
@@ -480,6 +483,42 @@ and do the following:
 
 You can track all the results or only those who have failed (deafault) and configure the container name (default aspnetcorehealthcheck).
 A json file will be saved in a daily container with the health check result, you can track by the health check id.
+
+### <a name="raygun"> Raygun </a>
+
+You can easily save your results in an azure storage account (blob).
+Just install the package 
+
+```sh
+PM > Install-Package AspNetCore.AutoHealthCheck.Raygun
+NET CLI - dotnet add AspNetCore.AutoHealthCheck.Raygun
+paket add AspNetCore.AutoHealthCheck.Raygun
+```
+and do the following:
+
+ ``` C#
+ public void ConfigureServices(IServiceCollection services)
+ {
+    services.AddHealthChecks()
+            .AddRaygunIntegration();
+ }
+ 
+  public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+  {
+      app.UseRaygunIntegration("YourRaygunKey", c =>
+      {
+          c.AvoidSendInDebug = true;
+          c.Tags = new List<string>
+          {
+             "AnyTag"
+          }
+      });
+  }
+  
+```
+Just the api key to connect to raygun, additionally you can turn off sending logs when your are in DEBUG mode, and multiple custom tags can be added to provide more insights.
+
+After that any failed check result will be posted to raygun with the result information within.
 
 ====================
 
