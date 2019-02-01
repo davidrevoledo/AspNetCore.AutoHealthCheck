@@ -27,7 +27,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.ApplicationInsights", "AspNetCore.AutoHealthCheck.ApplicationInsights\AspNetCore.AutoHealthCheck.ApplicationInsights.csproj", "{415BB7C4-3944-4773-9052-B8CF751CC8E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AutoHealthCheck.ApplicationInsights.Tests", "..\tests\AspNetCore.AutoHealthCheck.ApplicationInsights.Tests\AspNetCore.AutoHealthCheck.ApplicationInsights.Tests.csproj", "{8EF2F8F5-CCB0-48B8-B5A2-943DB1CF9CDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.ApplicationInsights.Tests", "..\tests\AspNetCore.AutoHealthCheck.ApplicationInsights.Tests\AspNetCore.AutoHealthCheck.ApplicationInsights.Tests.csproj", "{8EF2F8F5-CCB0-48B8-B5A2-943DB1CF9CDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.AzureStorage", "AspNetCore.AutoHealthCheck.AzureStorage\AspNetCore.AutoHealthCheck.AzureStorage.csproj", "{C91ADF54-07D7-4E9C-BE36-17FCD1165251}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.AutoHealthCheck.AzureStorage.Tests", "..\tests\AspNetCore.AutoHealthCheck.AzureStorage.Tests\AspNetCore.AutoHealthCheck.AzureStorage.Tests.csproj", "{0D53BC65-F3C8-4E10-8399-CE03D65D4582}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore.AutoHealthCheck.Raygun", "AspNetCore.AutoHealthCheck.Raygun\AspNetCore.AutoHealthCheck.Raygun.csproj", "{0289F3C6-00F0-470F-AB8E-D58F55BC06C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +81,18 @@ Global
 		{8EF2F8F5-CCB0-48B8-B5A2-943DB1CF9CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EF2F8F5-CCB0-48B8-B5A2-943DB1CF9CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EF2F8F5-CCB0-48B8-B5A2-943DB1CF9CDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C91ADF54-07D7-4E9C-BE36-17FCD1165251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C91ADF54-07D7-4E9C-BE36-17FCD1165251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C91ADF54-07D7-4E9C-BE36-17FCD1165251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C91ADF54-07D7-4E9C-BE36-17FCD1165251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D53BC65-F3C8-4E10-8399-CE03D65D4582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D53BC65-F3C8-4E10-8399-CE03D65D4582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D53BC65-F3C8-4E10-8399-CE03D65D4582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D53BC65-F3C8-4E10-8399-CE03D65D4582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0289F3C6-00F0-470F-AB8E-D58F55BC06C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0289F3C6-00F0-470F-AB8E-D58F55BC06C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0289F3C6-00F0-470F-AB8E-D58F55BC06C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0289F3C6-00F0-470F-AB8E-D58F55BC06C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +108,9 @@ Global
 		{1A8DB673-6DF8-410D-81C7-CF837BB595AC} = {270C7C3F-98AE-43D8-BB6B-18FAE0420F89}
 		{415BB7C4-3944-4773-9052-B8CF751CC8E8} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
 		{8EF2F8F5-CCB0-48B8-B5A2-943DB1CF9CDB} = {270C7C3F-98AE-43D8-BB6B-18FAE0420F89}
+		{C91ADF54-07D7-4E9C-BE36-17FCD1165251} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
+		{0D53BC65-F3C8-4E10-8399-CE03D65D4582} = {270C7C3F-98AE-43D8-BB6B-18FAE0420F89}
+		{0289F3C6-00F0-470F-AB8E-D58F55BC06C8} = {DFA2E39C-2C56-42DE-8833-C36C392A07A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64B4BA9D-729D-4F8A-BBCF-F3E3FDA7E599}

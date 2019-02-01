@@ -21,8 +21,9 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
-using AspNetCore.AutoHealthCheck;
 using AspNetCore.AutoHealthCheck.ApplicationInsights;
+using AspNetCore.AutoHealthCheck.AzureStorage;
+using AspNetCore.AutoHealthCheck.Raygun;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,8 @@ namespace SimpleWebApp
                     c.ResultPlugins.Add(new ResultPlugin());
                 })
                 .AddCustomProbe<CustomProbe>()
-                .AddAIResultPlugin();
+                .AddAIResultPlugin()
+                .AddRaygunIntegration();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -72,6 +74,8 @@ namespace SimpleWebApp
                 s.InstrumentationKey = "Your Key Here";
                 s.Mode = TrackMode.Event;
             });
+
+            app.UseRaygunIntegration("RaygunKey");
         }
     }
 }

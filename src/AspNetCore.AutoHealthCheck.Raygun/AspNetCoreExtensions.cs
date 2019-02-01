@@ -21,48 +21,40 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using AspNetCore.AutoHealthCheck.Raygun.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.AutoHealthCheck.ApplicationInsights
+namespace AspNetCore.AutoHealthCheck.Raygun
 {
     public static class AspNetCoreExtensions
     {
-        /// <summary>
-        ///     Add Application insights integration for results.
-        /// </summary>
-        /// <param name="healthChecksBuilder">aspnet auto health check builder.</param>
-        /// <returns></returns>
-        public static IAutoHealthCheckBuilder AddAIResultPlugin(
+        public static IAutoHealthCheckBuilder AddRaygunIntegration(
             this IAutoHealthCheckBuilder healthChecksBuilder)
         {
-            healthChecksBuilder.AddSingleton<ApplicationInsightsResultPlugin>();
-            healthChecksBuilder.AddSingleton<ITelemetryServices, TelemetryServices>();
+            healthChecksBuilder.AddSingleton<RaygunResultPlugin>();
             return healthChecksBuilder;
         }
 
-        /// <summary>
-        ///     Use Application insights integration for results.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="setupAction">allow user to change configuration for the plugin.</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseAIResultPlugin(
+        public static IApplicationBuilder UseRaygunIntegration(
             this IApplicationBuilder app,
-            Action<ApplicationInsightsPluginConfigurations> setupAction = null)
+            string apiKey,
+            Action<HCRaygunConfigurations> setupAction = null)
         {
             // get plugin and context
-            var plugin = (ApplicationInsightsResultPlugin)app.ApplicationServices.GetService(
-                typeof(ApplicationInsightsResultPlugin));
+            var plugin = (RaygunResultPlugin) app.ApplicationServices.GetService(
+                typeof(RaygunResultPlugin));
 
-            var contextAccessor = (IAutoHealthCheckContextAccessor)app.ApplicationServices.GetService(
+            var contextAccessor = (IAutoHealthCheckContextAccessor) app.ApplicationServices.GetService(
                 typeof(IAutoHealthCheckContextAccessor));
 
             var context = contextAccessor.Context;
             context.Configurations.ResultPlugins.Add(plugin);
 
             // set configurations
-            setupAction?.Invoke(ApplicationInsightsPluginConfigurations.Instance);
+            var configurations = HCRaygunConfigurations.Instance;
+            configurations.ApiKey = apiKey;
+            setupAction?.Invoke(configurations);
 
             return app;
         }

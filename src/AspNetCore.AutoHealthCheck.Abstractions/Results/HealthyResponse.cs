@@ -20,6 +20,7 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 
@@ -30,6 +31,16 @@ namespace AspNetCore.AutoHealthCheck
     /// </summary>
     public class HealthyResponse
     {
+        /// <summary>
+        ///     Date when health check run in UTC.
+        /// </summary>
+        public DateTime TimeStamp { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        ///     Indicate the identifier for the health check.
+        /// </summary>
+        public string HealthCheckId { get; set; } = Guid.NewGuid().ToString();
+
         /// <summary>
         ///     Indicate if the check was successfully.
         /// </summary>

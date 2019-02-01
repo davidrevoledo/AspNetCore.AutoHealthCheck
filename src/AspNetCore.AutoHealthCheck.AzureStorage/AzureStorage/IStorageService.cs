@@ -20,26 +20,20 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
+using System.Threading.Tasks;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     /// <summary>
-    ///     Exception to indicate the health check failed.
+    ///     Storage Services to save in Azure Storage
     /// </summary>
-    public class AspNetCoreAutoHealthCheckFailException : Exception
+    public interface IStorageService
     {
-        public AspNetCoreAutoHealthCheckFailException() : base("The health check test has failed.")
-        {
-        }
-
-        public AspNetCoreAutoHealthCheckFailException(string message) : base(message)
-        {
-        }
-
         /// <summary>
-        ///     Failed result
+        ///     Persist json result in Azure Storage account in a blob container.
         /// </summary>
-        public HealthyResponse Result { get; set; }
+        /// <param name="result">health check result</param>
+        /// <returns></returns>
+        Task PersistBlobResult(HealthyResponse result);
     }
 }

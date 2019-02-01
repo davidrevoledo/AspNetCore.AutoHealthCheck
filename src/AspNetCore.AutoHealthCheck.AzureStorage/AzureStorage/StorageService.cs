@@ -21,25 +21,32 @@
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
 using System;
+using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
-    /// <summary>
-    ///     Exception to indicate the health check failed.
-    /// </summary>
-    public class AspNetCoreAutoHealthCheckFailException : Exception
+    /// <inheritdoc />
+    internal class StorageService : IStorageService
     {
-        public AspNetCoreAutoHealthCheckFailException() : base("The health check test has failed.")
+        /// <inheritdoc />
+        public async Task PersistBlobResult(
+            HealthyResponse result)
         {
-        }
+            var configurations = HealthCheckAzureStorageConfigurations.Instance;
 
-        public AspNetCoreAutoHealthCheckFailException(string message) : base(message)
-        {
-        }
+            var storageAccount = CloudStorageAccount.Parse(configurations.AzureStorageConnectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference(configurations.ContainerName.ToLower());
 
-        /// <summary>
-        ///     Failed result
-        /// </summary>
-        public HealthyResponse Result { get; set; }
+            await container.CreateIfNotExistsAsync().ConfigureAwait(false);
+
+            var jsonContent = JsonConvert.SerializeObject(result);
+            var subContainer = DateTime.UtcNow.ToString("MMddyyyy");
+            var blockBlob = container.GetBlockBlobReference($"{subContainer}/{result.HealthCheckId}.json");
+            await blockBlob.UploadTextAsync(jsonContent).ConfigureAwait(false);
+        }
     }
 }

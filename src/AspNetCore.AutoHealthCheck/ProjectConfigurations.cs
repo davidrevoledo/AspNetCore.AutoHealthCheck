@@ -20,26 +20,8 @@
 //SOFTWARE.
 // Project Lead - David Revoledo davidrevoledo@d-genix.com
 
-using System;
+using System.Runtime.CompilerServices;
 
-namespace AspNetCore.AutoHealthCheck
-{
-    /// <summary>
-    ///     Exception to indicate the health check failed.
-    /// </summary>
-    public class AspNetCoreAutoHealthCheckFailException : Exception
-    {
-        public AspNetCoreAutoHealthCheckFailException() : base("The health check test has failed.")
-        {
-        }
-
-        public AspNetCoreAutoHealthCheckFailException(string message) : base(message)
-        {
-        }
-
-        /// <summary>
-        ///     Failed result
-        /// </summary>
-        public HealthyResponse Result { get; set; }
-    }
-}
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Tests")]
+[assembly: InternalsVisibleTo("AspNetCore.AutoHealthCheck.Diagnostics.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

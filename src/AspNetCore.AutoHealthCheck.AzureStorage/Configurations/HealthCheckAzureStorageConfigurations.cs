@@ -22,24 +22,36 @@
 
 using System;
 
-namespace AspNetCore.AutoHealthCheck
+namespace AspNetCore.AutoHealthCheck.AzureStorage
 {
     /// <summary>
-    ///     Exception to indicate the health check failed.
+    ///     Plugin Configurations For Azure Storage integration.
     /// </summary>
-    public class AspNetCoreAutoHealthCheckFailException : Exception
+    public class HealthCheckAzureStorageConfigurations
     {
-        public AspNetCoreAutoHealthCheckFailException() : base("The health check test has failed.")
+        private static readonly Lazy<HealthCheckAzureStorageConfigurations> Singleton
+            = new Lazy<HealthCheckAzureStorageConfigurations>(() => new HealthCheckAzureStorageConfigurations());
+
+        private HealthCheckAzureStorageConfigurations()
         {
         }
 
-        public AspNetCoreAutoHealthCheckFailException(string message) : base(message)
-        {
-        }
+        public static HealthCheckAzureStorageConfigurations Instance => Singleton.Value;
 
         /// <summary>
-        ///     Failed result
+        ///     Connection string for azure storage account connectivity.
         /// </summary>
-        public HealthyResponse Result { get; set; }
+        public string AzureStorageConnectionString { get; set; }
+
+        /// <summary>
+        ///     Indicate the container name where json result files will be saved with Blob Persist Mode.
+        /// </summary>
+        public string ContainerName { get; set; } = "AspNetCoreHealthCheck";
+
+        /// <summary>
+        ///     Indicate if only failed results needs to be saved
+        ///     Default true.
+        /// </summary>
+        public bool OnlyTrackFailedResults { get; set; } = true;
     }
 }
