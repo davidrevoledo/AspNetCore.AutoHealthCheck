@@ -20,8 +20,8 @@ AspNetCore.AutoHealthCheck
 
 |Package|Status|
 |------|-------------|
-|AspNetCore.AutoHealthCheck.Abstractions|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Abstractions?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Abstractions/)|
 |AspNetCore.AutoHealthCheck|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck/)|
+|AspNetCore.AutoHealthCheck.Abstractions|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Abstractions?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Abstractions/)|
 |AspNetCore.AutoHealthCheck.Diagnostics|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.Diagnostics?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.Diagnostics/)|
 |AspNetCore.AutoHealthCheck.ApplicationInsights|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.ApplicationInsights?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.ApplicationInsights/)|
 |AspNetCore.AutoHealthCheck.AzureStorage|[![NuGet Version and Downloads count](https://buildstats.info/nuget/AspNetCore.AutoHealthCheck.AzureStorage?includePreReleases=true)](https://www.nuget.org/packages/AspNetCore.AutoHealthCheck.AzureStorage/)|
