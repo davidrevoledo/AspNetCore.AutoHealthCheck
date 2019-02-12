@@ -486,8 +486,7 @@ A json file will be saved in a daily container with the health check result, you
 
 ### <a name="raygun"> Raygun </a>
 
-You can easily save your results in an azure storage account (blob).
-Just install the package 
+You can easily track your errors or failed probes to Raygun and have 100% control of what is going on with your app.
 
 ```sh
 PM > Install-Package AspNetCore.AutoHealthCheck.Raygun
