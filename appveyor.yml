@@ -1,8 +1,13 @@
 version: 1.0.{build}
+image:
+  - Visual Studio 2019
+  - Ubuntu
+pull_requests:
+  do_not_increment_build_number: true
 branches:
   only:
   - master
-image: Previous Visual Studio 2017
+  - dev
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
@@ -11,10 +16,14 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
+nuget:
+  disable_publish_on_pr: true
 environment:
   CODECOV_TOKEN: 93f1ba74-2bc4-4b01-8e9e-3a3c97825e91
 build_script:
-- cmd: >-
-    cd src
-    cd AspNetCore.AutoHealthCheck
-    dotnet build
+- ps: "dotnet pack src/AspNetCore.AutoHealthCheck.sln -o ./artefacts/"
+test_script:
+- ps: "dotnet test src/AspNetCore.AutoHealthCheck.sln"
+artifacts:
+- path: ./artefacts/*.nupkg
+  name: NuGet
