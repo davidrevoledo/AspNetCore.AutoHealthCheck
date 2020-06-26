@@ -21,9 +21,15 @@ nuget:
 environment:
   CODECOV_TOKEN: 93f1ba74-2bc4-4b01-8e9e-3a3c97825e91
 build_script:
+<<<<<<< HEAD:appveyor.yml
 - ps: "dotnet pack src/AspNetCore.AutoHealthCheck.sln -o ./artefacts/"
 test_script:
 - ps: "dotnet test src/AspNetCore.AutoHealthCheck.sln"
 artifacts:
 - path: ./artefacts/*.nupkg
   name: NuGet
+=======
+- cmd: "dotnet build src/AspNetCore.AutoHealthCheck.sln"
+test_script:
+- cmd: "dotnet test src/AspNetCore.AutoHealthCheck.sln"
+>>>>>>> 56c624a... Update appveyor test:appveyor-master.yml
