@@ -27,3 +27,18 @@ test_script:
 artifacts:
 - path: ./artefacts/*.nupkg
   name: NuGet
+
+# Publish to nuget when running in ubuntu
+for:
+-
+  matrix:
+    only:
+      - image: Ubuntu
+  deploy:
+  - provider: NuGet
+    name: production
+    api_key:
+      secure: "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Use 'Encrypt configuration data' page in AppVeyor (Account → Encrypt YAML) to encrypt your nuget API key and place it here"
+    on:
+      branch: master
+      appveyor_repo_tag: true
